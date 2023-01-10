@@ -1,6 +1,9 @@
 #include <iostream>
 
+#ifdef _WIN32
 #include <Windows.h>
+#endif
+
 #include <io.h>
 #include <fcntl.h>
 #include <iostream>
