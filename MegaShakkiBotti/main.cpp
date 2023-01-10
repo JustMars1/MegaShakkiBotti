@@ -2,14 +2,14 @@
 
 #ifdef _WIN32
 #include <Windows.h>
+#include <io.h>
 #endif
 
-#include <io.h>
 #include <fcntl.h>
 #include <iostream>
 #include <string>
 #include "kayttoliittyma.h"
-#include "Siirto.h"
+#include "siirto.h"
 #include "asema.h"
 
 using namespace std; 
