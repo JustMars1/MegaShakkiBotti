@@ -30,7 +30,7 @@ bool Siirto::onkoLyhytLinna()
 }
 
 
-bool Siirto::onkoPitkälinna() 
+bool Siirto::onkoPitkalinna() 
 {
 	return 0;
 }
