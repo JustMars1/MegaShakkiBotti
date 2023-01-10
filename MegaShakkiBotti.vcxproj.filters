@@ -39,13 +39,13 @@
     <ClCompile Include="megashakkibotti\vastustaja.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="megashakkibotti\_evaluointi.cpp">
+    <ClCompile Include="megashakkibotti\evaluointi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="megashakkibotti\_laillisetSiirrot.cpp">
+    <ClCompile Include="megashakkibotti\laillisetSiirrot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="megashakkibotti\_pelipuu.cpp">
+    <ClCompile Include="megashakkibotti\pelipuu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,13 +77,13 @@
     <ClInclude Include="megashakkibotti\vastustaja.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="megashakkibotti\_evaluointi.h">
+    <ClInclude Include="megashakkibotti\evaluointi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="megashakkibotti\_laillisetSiirrot.h">
+    <ClInclude Include="megashakkibotti\laillisetSiirrot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="megashakkibotti\_pelipuu.h">
+    <ClInclude Include="megashakkibotti\pelipuu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

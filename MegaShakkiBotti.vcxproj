@@ -106,9 +106,9 @@
     <ClCompile Include="megashakkibotti\ruutu.cpp" />
     <ClCompile Include="megashakkibotti\siirto.cpp" />
     <ClCompile Include="megashakkibotti\vastustaja.cpp" />
-    <ClCompile Include="megashakkibotti\_evaluointi.cpp" />
-    <ClCompile Include="megashakkibotti\_laillisetSiirrot.cpp" />
-    <ClCompile Include="megashakkibotti\_pelipuu.cpp" />
+    <ClCompile Include="megashakkibotti\evaluointi.cpp" />
+    <ClCompile Include="megashakkibotti\laillisetSiirrot.cpp" />
+    <ClCompile Include="megashakkibotti\pelipuu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="megashakkibotti\asema.h" />
@@ -120,9 +120,9 @@
     <ClInclude Include="megashakkibotti\ruutu.h" />
     <ClInclude Include="megashakkibotti\siirto.h" />
     <ClInclude Include="megashakkibotti\vastustaja.h" />
-    <ClInclude Include="megashakkibotti\_evaluointi.h" />
-    <ClInclude Include="megashakkibotti\_laillisetSiirrot.h" />
-    <ClInclude Include="megashakkibotti\_pelipuu.h" />
+    <ClInclude Include="megashakkibotti\evaluointi.h" />
+    <ClInclude Include="megashakkibotti\laillisetSiirrot.h" />
+    <ClInclude Include="megashakkibotti\pelipuu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
