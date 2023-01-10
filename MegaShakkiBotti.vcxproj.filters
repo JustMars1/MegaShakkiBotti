@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="megashakkibotti\asema.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="megashakkibotti\kayttoliittyma.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="megashakkibotti\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="megashakkibotti\nappula.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="megashakkibotti\peli.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="megashakkibotti\ruutu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="megashakkibotti\siirto.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="megashakkibotti\vastustaja.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="megashakkibotti\_evaluointi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="megashakkibotti\_laillisetSiirrot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="megashakkibotti\_pelipuu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="megashakkibotti\asema.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="megashakkibotti\Header.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="megashakkibotti\kayttoliittyma.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="megashakkibotti\minmaxpaluu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="megashakkibotti\nappula.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="megashakkibotti\peli.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="megashakkibotti\ruutu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="megashakkibotti\siirto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="megashakkibotti\vastustaja.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="megashakkibotti\_evaluointi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="megashakkibotti\_laillisetSiirrot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="megashakkibotti\_pelipuu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
