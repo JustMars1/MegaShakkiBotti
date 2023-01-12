@@ -29,6 +29,11 @@ void Kayttoliittyma::piirraLauta()
 {
 	for (int y = 0; y < 8; y++)
 	{
+		
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | BACKGROUND_RED |
+			BACKGROUND_GREEN | BACKGROUND_BLUE);
+		std::wcout << to_wstring(8-y);
+
 		for (int x = 0; x < 8; x++)
 		{
 			//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | BACKGROUND_RED | 
@@ -53,11 +58,15 @@ void Kayttoliittyma::piirraLauta()
 			{
 				testi = _asema->lauta[y][x]->getNimi();
 			}
-			wcout << testi;
+			std::wcout << testi;
 		}
-		wcout << "\n";
+		std::wcout << "\n";
 	}
-}
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | BACKGROUND_RED |
+		BACKGROUND_GREEN | BACKGROUND_BLUE);
+	std::wcout << " abcdefgh";
+} 
 
 
 /*
