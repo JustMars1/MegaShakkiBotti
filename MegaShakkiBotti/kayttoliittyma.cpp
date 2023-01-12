@@ -29,7 +29,6 @@ void Kayttoliittyma::piirraLauta()
 {
 	for (int y = 0; y < 8; y++)
 	{
-		wcout << "\n";
 		for (int x = 0; x < 8; x++)
 		{
 			//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | BACKGROUND_RED | 
@@ -47,16 +46,16 @@ void Kayttoliittyma::piirraLauta()
 					BACKGROUND_GREEN | BACKGROUND_BLUE);
 			}
 
+			std::wstring testi = L" ";
+
 			// Jos NULL niin printataan tyhjä paikka.
-			if (_asema->lauta[y][x] == NULL)
+			if (_asema->lauta[y][x] != NULL)
 			{
-				wcout << L" ";
+				testi = _asema->lauta[y][x]->getNimi();
 			}
-			else
-			{
-				wcout << _asema->lauta[y][x]->getNimi();
-			}
+			wcout << testi;
 		}
+		wcout << "\n";
 	}
 }
 

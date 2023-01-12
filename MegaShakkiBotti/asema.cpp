@@ -22,19 +22,21 @@ Nappula* Asema::ms = new Sotilas(L"\u265F", 1, MS);
 
 Asema::Asema() : lauta
 	{
-		vt, vr, vl, vd, vk, vl, vr, vt,
-		vs, vs, vs, vs, vs, vs, vs, vs,
-		NULL, NULL, NULL, NULL, NULL, NULL,
-		NULL, NULL, NULL, NULL, NULL, NULL,
-		NULL, NULL, NULL, NULL, NULL, NULL,
-		NULL, NULL, NULL, NULL, NULL, NULL,
+
+	// Ensin alustetaan kaikki laudan ruudut nappulla "NULL", koska muuten ruuduissa satunnaista tauhkaa
+
+	// Asetetaan alkuaseman mukaisesti nappulat ruuduille
+
+		mt, mr, ml, md, mk, ml, mr, mt,
 		ms, ms, ms, ms, ms, ms, ms, ms,
-		mt, mr, ml, md, mk, ml, mr, mt
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		vs, vs, vs, vs, vs, vs, vs, vs,
+		vt, vr, vl, vd, vk, vl, vr, vt
 	}
 	{
-		// Ensin alustetaan kaikki laudan ruudut nappulla "NULL", koska muuten ruuduissa satunnaista tauhkaa
-
-		// Asetetaan alkuaseman mukaisesti nappulat ruuduille
 }
 	
 
