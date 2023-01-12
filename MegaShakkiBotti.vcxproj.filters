@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="megashakkibotti\asema.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="megashakkibotti\kayttoliittyma.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,6 +43,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="megashakkibotti\pelipuu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MegaShakkiBotti\asema.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

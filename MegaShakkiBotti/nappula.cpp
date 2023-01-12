@@ -7,9 +7,15 @@ using namespace std;
 
 Nappula::Nappula(wstring unicode, int vari, int koodi)
 {
-
+	_unicode = unicode;
+	_vari = vari;
+	_koodi = koodi;
 }
 
+std::wstring Nappula::getNimi()
+{
+	return _unicode;
+}
 
 void Torni::annaSiirrot(std::list<Siirto>& lista, Ruutu* ruutu, Asema* asema, int vari)
 {

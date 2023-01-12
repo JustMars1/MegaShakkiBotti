@@ -98,7 +98,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="megashakkibotti\asema.cpp" />
+    <ClCompile Include="MegaShakkiBotti\asema.cpp" />
     <ClCompile Include="megashakkibotti\kayttoliittyma.cpp" />
     <ClCompile Include="megashakkibotti\main.cpp" />
     <ClCompile Include="megashakkibotti\nappula.cpp" />

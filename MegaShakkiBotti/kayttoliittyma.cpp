@@ -11,6 +11,11 @@ using namespace std;
 
 Kayttoliittyma* Kayttoliittyma::instance = 0;
 
+Kayttoliittyma::Kayttoliittyma()
+{
+
+}
+
 
 Kayttoliittyma* Kayttoliittyma::getInstance()
 {
@@ -22,6 +27,37 @@ Kayttoliittyma* Kayttoliittyma::getInstance()
 
 void Kayttoliittyma::piirraLauta()
 {
+	for (int y = 0; y < 8; y++)
+	{
+		wcout << "\n";
+		for (int x = 0; x < 8; x++)
+		{
+			//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | BACKGROUND_RED | 
+			//	BACKGROUND_GREEN | BACKGROUND_BLUE);
+
+			// Joka toinen rivi valkoinen
+			if ((x + y) % 2 == 0)
+			{
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | 0 |
+					BACKGROUND_GREEN | BACKGROUND_BLUE);
+			}
+			else
+			{
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | BACKGROUND_RED | 
+					BACKGROUND_GREEN | BACKGROUND_BLUE);
+			}
+
+			// Jos NULL niin printataan tyhjä paikka.
+			if (_asema->lauta[y][x] == NULL)
+			{
+				wcout << L" ";
+			}
+			else
+			{
+				wcout << _asema->lauta[y][x]->getNimi();
+			}
+		}
+	}
 }
 
 

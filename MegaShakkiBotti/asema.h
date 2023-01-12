@@ -19,7 +19,7 @@ class Asema
 public:
 	// Pelilauta sis‰lt‰‰ osoittimet kunkin ruudun nappula-olioon (nullptr/NULL/0 jos ruutu on tyhj‰).
 	// Public-m‰‰reell‰, koska t‰t‰ k‰ytet‰‰n paljon muualla.
-	Nappula* _lauta[8][8];
+	Nappula* lauta[8][8];
 
 	// Nappula-oliot. Huomaa, ett‰ samaa nappulaa voidaan k‰ytt‰‰ useissa eri ruuduissa.
 	// M‰‰ritelty static-m‰‰reell‰, joten nappulat ovat kaikkien lauta-olioiden "yhteisk‰ytˆss‰"

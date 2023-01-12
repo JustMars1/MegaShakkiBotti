@@ -34,7 +34,7 @@ public:
 	void setKoodi(int koodi)				{ _koodi = koodi; }
 	int getKoodi()							{ return _koodi; }
 	void setUnicode(std::wstring unicode)	{ _unicode = unicode;			}
-	std::wstring getUnicode()				{ return _unicode;				}
+	std::wstring getNimi();
 	void setVari(int vari)					{ _vari = vari;					}
 	int getVari()							{ return _vari;					}
 };

@@ -1,4 +1,4 @@
-#include <iostream>
+Ôªø#include <iostream>
 #include "asema.h"
 #include "minMaxPaluu.h"
 #include "nappula.h"
@@ -19,9 +19,8 @@ Nappula* Asema::mr = new Ratsu(L"\u265E", 1, MR);
 Nappula* Asema::ms = new Sotilas(L"\u265F", 1, MS);
 
 
-Asema::Asema()
-{
-	Asema::Asema() : _lauta
+
+Asema::Asema() : lauta
 	{
 		vt, vr, vl, vd, vk, vl, vr, vt,
 		vs, vs, vs, vs, vs, vs, vs, vs,
@@ -36,22 +35,22 @@ Asema::Asema()
 		// Ensin alustetaan kaikki laudan ruudut nappulla "NULL", koska muuten ruuduissa satunnaista tauhkaa
 
 		// Asetetaan alkuaseman mukaisesti nappulat ruuduille
-	}
-	
 }
+	
+
 
 
 void Asema::paivitaAsema(Siirto *siirto)
 {
 
-	// Kaksoisaskel-lippu on oletusarvoisesti pois p‰‰lt‰.
-	// Asetetaan myˆhemmin, jos tarvii.
+	// Kaksoisaskel-lippu on oletusarvoisesti pois p√§√§lt√§.
+	// Asetetaan my√∂hemmin, jos tarvii.
 
 
 	//Tarkastetaan on siirto lyhyt linna
 
 
-	// onko pitk‰ linna
+	// onko pitk√§ linna
 
 
 
@@ -67,19 +66,19 @@ void Asema::paivitaAsema(Siirto *siirto)
 		// Tarkistetaan oliko sotilaan kaksoisaskel
 		// (asetetaan kaksoisaskel-lippu)
 
-		// Ohestalyˆnti on tyhj‰‰n ruutuun. Vieress‰ oleva (sotilas) poistetaan.
+		// Ohestaly√∂nti on tyhj√§√§n ruutuun. Vieress√§ oleva (sotilas) poistetaan.
 
-		//// Katsotaan jos nappula on sotilas ja rivi on p‰‰tyrivi niin ei vaihdeta nappulaa 
-		////eli alkuruutuun laitetaan null ja loppuruudussa on jo kliittym‰n laittama nappula MIIKKA, ei taida minmaxin kanssa hehkua?
+		//// Katsotaan jos nappula on sotilas ja rivi on p√§√§tyrivi niin ei vaihdeta nappulaa 
+		////eli alkuruutuun laitetaan null ja loppuruudussa on jo kliittym√§n laittama nappula MIIKKA, ei taida minmaxin kanssa hehkua?
 
 		//
-		////muissa tapauksissa alkuruutuun null ja loppuruutuun sama alkuruudusta l‰htenyt nappula
+		////muissa tapauksissa alkuruutuun null ja loppuruutuun sama alkuruudusta l√§htenyt nappula
 
-		// katsotaan jos liikkunut nappula on kuningas niin muutetaan onkoKuningasLiikkunut arvo (molemmille v‰reille)
+		// katsotaan jos liikkunut nappula on kuningas niin muutetaan onkoKuningasLiikkunut arvo (molemmille v√§reille)
 
-		// katsotaan jos liikkunut nappula on torni niin muutetaan onkoTorniLiikkunut arvo (molemmille v‰reille ja molemmille torneille)
+		// katsotaan jos liikkunut nappula on torni niin muutetaan onkoTorniLiikkunut arvo (molemmille v√§reille ja molemmille torneille)
 
-	//p‰ivitet‰‰n _siirtovuoro
+	//p√§ivitet√§√§n _siirtovuoro
 
 }
 
@@ -136,22 +135,22 @@ bool Asema::getOnkoMustaKTliikkunut()
 /* 1. Laske nappuloiden arvo
 Daami = 9
 Torni = 5
-L‰hetti = 3,25
+L√§hetti = 3,25
 Ratsu = 3
 Sotilas = 1
 
 2. Kuninkaan hyvyys
-Jos avaus tai keskipeli, niin hyv‰ ett‰ kunigas g1 tai b1/c1
-Loppupeliss‰ vaikea sanoa halutaanko olla auttamassa omaa sotilasta korottumaan
-vai olla est‰m‰ss‰ vastustajan korotusta siksi ei oteta kantaa
+Jos avaus tai keskipeli, niin hyv√§ ett√§ kunigas g1 tai b1/c1
+Loppupeliss√§ vaikea sanoa halutaanko olla auttamassa omaa sotilasta korottumaan
+vai olla est√§m√§ss√§ vastustajan korotusta siksi ei oteta kantaa
 3. Arvosta keskustaa sotilailla ja ratsuilla
-4. Arvosta pitki‰ linjoja daami, torni ja l‰hetti
+4. Arvosta pitki√§ linjoja daami, torni ja l√§hetti
 */
 double Asema::evaluoi() 
 {
 	return 0;
 
-	//kertoimet asetettu sen takia ett‰ niiden avulla asioiden painoarvoa voidaan s‰‰t‰‰ helposti yhdest‰ paikasta
+	//kertoimet asetettu sen takia ett√§ niiden avulla asioiden painoarvoa voidaan s√§√§t√§√§ helposti yhdest√§ paikasta
 	
 	//1. Nappuloiden arvo
 	
@@ -174,8 +173,8 @@ double Asema::laskeNappuloidenArvo(int vari)
 bool Asema::onkoAvausTaiKeskipeli(int vari) 
 {
 	return 0;
-	// Jos upseereita 3 tai v‰hemm‰n on loppupeli
-	// mutta jos daami laudalla on loppueli vasta kun kuin vain daami j‰ljell‰
+	// Jos upseereita 3 tai v√§hemm√§n on loppupeli
+	// mutta jos daami laudalla on loppueli vasta kun kuin vain daami j√§ljell√§
 	
 	//Jos vari on 0 eli valkoiset
 	//niin on keskipeli jos mustalla upseereita yli 2 tai jos daami+1
@@ -219,7 +218,7 @@ double Asema::linjat(int vari)
 }
 
 
-// https://chessprogramming.wikispaces.com/Minimax MinMax-algoritmin pseudokoodi (lis‰sin parametrina aseman)
+// https://chessprogramming.wikispaces.com/Minimax MinMax-algoritmin pseudokoodi (lis√§sin parametrina aseman)
 //int maxi(int depth, asema a) 
 //	if (depth == 0) return evaluate();
 //	int max = -oo;
@@ -249,7 +248,7 @@ MinMaxPaluu Asema::minimax(int syvyys)
 	
 	// Rekursion kantatapaus 1: peli on loppu
 	
-	// Rekursion kantatapaus 2: katkaisusyvyydess‰
+	// Rekursion kantatapaus 2: katkaisusyvyydess√§
 	
 	// Rekursioaskel: kokeillaan jokaista laillista siirtoa s
 	// (alustetaan paluuarvo huonoimmaksi mahdolliseksi).

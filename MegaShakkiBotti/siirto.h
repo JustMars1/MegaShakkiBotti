@@ -18,7 +18,7 @@ public:
 	Ruutu getLoppuruutu();
 	bool onkoLyhytLinna();
 	bool onkoPitkalinna();
-	Nappula* _miksikorotetaan = 0; 
+	Nappula* miksikorotetaan = 0; 
 
 private:
 	Ruutu _alkuRuutu;

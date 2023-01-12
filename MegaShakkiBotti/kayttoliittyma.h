@@ -23,6 +23,6 @@ private:
 	Asema* _asema;
 	static Kayttoliittyma* instance; // osoitin luokan ainoaan olioon (Singleton).
 
-	Kayttoliittyma() {}
+	Kayttoliittyma();
 	Kayttoliittyma(Asema* asema) { this->_asema = asema; }
 };
