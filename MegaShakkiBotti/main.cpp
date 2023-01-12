@@ -19,8 +19,8 @@ int main()
 
 
 	_setmode(_fileno(stdout), _O_U16TEXT);
-	wcout << "Saatana\n";
-	wcout << "Perkele!\n";
+	wcout << "Jee :)\n";
+	wcout << "Toimii :)\n";
 	int lopetus = 100;
 	Asema asema; 
 	Kayttoliittyma::getInstance()->aseta_asema(&asema);
