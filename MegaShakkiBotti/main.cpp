@@ -25,6 +25,8 @@ int main()
 	Asema asema; 
 	Kayttoliittyma::getInstance()->aseta_asema(&asema);
 	Kayttoliittyma::getInstance()->piirraLauta();
+	Siirto testiSiirto;
+	Kayttoliittyma::getInstance()->annaVastustajanSiirto();
 	wcin.get();
 	// Open juttu alla
 	//Peli peli(Kayttoliittyma::getInstance()->

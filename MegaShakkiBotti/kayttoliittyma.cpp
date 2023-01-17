@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <io.h>
 #include <iostream>
+#include <limits>
 #include "kayttoliittyma.h"
 
 using namespace std;
@@ -65,7 +66,7 @@ void Kayttoliittyma::piirraLauta()
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | BACKGROUND_RED |
 		BACKGROUND_GREEN | BACKGROUND_BLUE);
-	std::wcout << " abcdefgh";
+	std::wcout << " abcdefgh\n";
 } 
 
 
@@ -76,9 +77,79 @@ void Kayttoliittyma::piirraLauta()
 */
 Siirto Kayttoliittyma::annaVastustajanSiirto()
 {
-	Siirto siirto;
-	return siirto;
+	string syote;
+
+	std::wcout << "Syötä siirto muodossa: Nappula, alkuruutu ja loppuruutu.\n";
+	std::wcout << "Esim. Rg1-f3. Nappulna kirjain isolla, loput pienellä.\n";
+
+	auto tarkistaRuutu = [](int sarake, int rivi) -> bool
+	{
+		if (sarake > 7 || sarake < 0)
+		{
+			return false;
+		}
+
+		if (rivi > 7 || rivi < 0)
+		{
+			return false;
+		}
+
+	};
+
+	auto tarkistaNappula = [this](char nappulaChar, int sarake, int rivi) -> bool
+	{
+		Nappula* nappula = _asema->lauta[rivi][sarake];
+
+		if (Asema::charToMustaNappula.find(nappulaChar) != Asema::charToMustaNappula.end())
+		{
+			return true;
+		}
+		else if (Asema::charToValkoinenNappula.find(nappulaChar) != Asema::charToValkoinenNappula.end())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	};
+
+	char nappulaChar;
+
+	int alkuSarake;
+	int alkuRivi;
+	int loppuSarake;
+	int loppuRivi;
+
+	do
+	{
+		std::cin >> syote;
+		if(std::cin.fail())
+		{
+			std::cin.clear();
+			std::cin.ignore(1e9, '\n');
+		}
 	
+		nappulaChar = syote[0];
+
+		alkuSarake = syote[1] - 'a';
+		alkuRivi = syote[2] - '0';
+		loppuSarake = syote[4] - 'a';
+		loppuRivi = syote[5] - '0';
+
+	} while (tarkistaRuutu(alkuSarake, alkuRivi) 
+		&& tarkistaRuutu(loppuSarake, loppuRivi) 
+		&& tarkistaNappula(nappulaChar, alkuSarake, alkuRivi));
+
+	Ruutu alku(alkuSarake, alkuRivi);
+	Ruutu loppu(loppuSarake, loppuRivi);
+	
+
+
+	Siirto siirto(alku, loppu);
+	
+
+	return siirto;
 }
 
 

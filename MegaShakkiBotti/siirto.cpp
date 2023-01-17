@@ -3,6 +3,7 @@
 
 Siirto::Siirto(Ruutu _alkuRuutu, Ruutu _loppuRuutu)
 {
+
 }
 
 

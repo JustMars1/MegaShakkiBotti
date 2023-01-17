@@ -2,9 +2,9 @@
 
 #include <list>
 #include <string>
+#include <map>
 #include "minmaxpaluu.h"
 #include "siirto.h"
-
 
 // Ns. "forward declaration". Nyt Asema-luokassa voidaa esitellä Nappula-osoittimia ilman,
 // että nappula.h -tiedostoa täytyy includoida.
@@ -30,7 +30,8 @@ public:
 	// Ohestalyöntiä varten (-1 = sotilaan kaksoisaskelta ei tapahtunut edellisellä siirrolla).
 	int kaksoisaskelSarakkeella = -1;
 
-
+	static std::map<char, Nappula*> charToValkoinenNappula;
+	static std::map<char, Nappula*> charToMustaNappula;
 	Asema();												// Asettaa alkuaseman.
 	void paivitaAsema(Siirto*);								// Päivittää aseman annetulla siirrolla.
 	double evaluoi();										// Aseman numeerinen arviointi.

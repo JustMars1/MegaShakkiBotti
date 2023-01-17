@@ -18,6 +18,24 @@ Nappula* Asema::ml = new Lahetti(L"\u265D", 1, ML);
 Nappula* Asema::mr = new Ratsu(L"\u265E", 1, MR);
 Nappula* Asema::ms = new Sotilas(L"\u265F", 1, MS);
 
+std::map<char, Nappula*> Asema::charToValkoinenNappula = {
+	{'K', Asema::vk}, 
+	{'D', Asema::vd},
+	{'T', Asema::vt},
+	{'L', Asema::vl},
+	{'R', Asema::vr},
+	{'S', Asema::vs}
+};
+
+std::map<char, Nappula*> Asema::charToMustaNappula = {
+	{'K', Asema::mk},
+	{'D', Asema::md},
+	{'T', Asema::mt},
+	{'L', Asema::ml},
+	{'R', Asema::mr},
+	{'S', Asema::ms}
+};
+
 
 
 Asema::Asema() : lauta
