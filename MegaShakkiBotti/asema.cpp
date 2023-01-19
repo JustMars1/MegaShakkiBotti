@@ -19,7 +19,7 @@ Nappula* Asema::mr = new Ratsu(L"\u265E", 1, MR);
 Nappula* Asema::ms = new Sotilas(L"\u265F", 1, MS);
 
 std::map<char, Nappula*> Asema::charToValkoinenNappula = {
-	{'K', Asema::vk}, 
+	{'K', Asema::vk},
 	{'D', Asema::vd},
 	{'T', Asema::vt},
 	{'L', Asema::vl},
@@ -39,7 +39,7 @@ std::map<char, Nappula*> Asema::charToMustaNappula = {
 
 
 Asema::Asema() : lauta
-	{
+{
 
 	// Ensin alustetaan kaikki laudan ruudut nappulla "NULL", koska muuten ruuduissa satunnaista tauhkaa
 
@@ -53,26 +53,136 @@ Asema::Asema() : lauta
 		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
 		vs, vs, vs, vs, vs, vs, vs, vs,
 		vt, vr, vl, vd, vk, vl, vr, vt
-	}
-	{
 }
-	
+{
+	_siirtovuoro = 0;
+	_onkoValkeaKuningasLiikkunut = false;
+	_onkoMustaKuningasLiikkunut = false;	
+	_onkoValkeaDTliikkunut = false;		
+	_onkoValkeaKTliikkunut = false;		
+	_onkoMustaDTliikkunut = false;			
+	_onkoMustaKTliikkunut = false;
+}
 
 
 
-void Asema::paivitaAsema(Siirto *siirto)
+
+void Asema::paivitaAsema(Siirto* siirto)
 {
 
 	// Kaksoisaskel-lippu on oletusarvoisesti pois päältä.
 	// Asetetaan myöhemmin, jos tarvii.
+	//Tarkastetaan on siirto lyhyt linna tai pitkä linna
+
+	if (siirto->onkoLyhytLinna() || siirto->onkoPitkalinna() ) {
+		if (_siirtovuoro == 0)
+		{
+			// vuoro on valkoisen 
+			if (siirto->onkoLyhytLinna())
+			{
+				_onkoValkeaKTliikkunut = true;
+				_onkoValkeaKuningasLiikkunut = true;
+
+				lauta[7][5] = Asema::vt;
+				lauta[7][6] = Asema::vk;
+				lauta[7][4] = NULL;
+				lauta[7][7] = NULL;
+				
+
+			}
+			else if (siirto->onkoPitkalinna())
+			{
+				_onkoValkeaDTliikkunut = true;
+				_onkoValkeaKuningasLiikkunut = true;
+
+				lauta[7][3] = Asema::vt;
+				lauta[7][2] = Asema::vk;
+				lauta[7][0] = NULL;
+				lauta[7][4] = NULL;
+			}
+		}
+		else {
+
+			// on mustan vuoro
+			if (siirto->onkoLyhytLinna())
+			{
+				_onkoMustaKTliikkunut = true;
+				_onkoMustaKuningasLiikkunut = true;
+
+				lauta[0][5] = Asema::mt;
+				lauta[0][6] = Asema::mk;
+				lauta[0][7] = NULL;
+				lauta[0][4] = NULL;
+			}
+			else if (siirto->onkoPitkalinna())
+			{
+				_onkoMustaDTliikkunut = true;
+				_onkoMustaKuningasLiikkunut = true;
+
+				lauta[0][3] = Asema::mt;
+				lauta[0][2] = Asema::mk;
+				lauta[0][0] = NULL;
+				lauta[0][4] = NULL;
+				
+			}
+			
+		}
+
+	}
+	else 
+	{
+
+		int alkuX = siirto->getAlkuruutu().getSarake();
+		int alkuY = siirto->getAlkuruutu().getRivi();
+
+		int loppuX = siirto->getLoppuruutu().getSarake();
+		int loppuY = siirto->getLoppuruutu().getRivi();
+
+		
+		alkuY = 7 - alkuY;
+		loppuY = 7 - loppuY;
+
+		
+
+		Nappula* nappulaPtr = lauta[alkuY][alkuX];
 
 
-	//Tarkastetaan on siirto lyhyt linna
+		if (nappulaPtr == Asema::vk)
+		{
+			_onkoValkeaKuningasLiikkunut = true;
+		}
+		else if (nappulaPtr == Asema::mk)
+		{
+			_onkoMustaKuningasLiikkunut = true;
+		}
+		else if (nappulaPtr == Asema::vt)
+		{
+			if (alkuX == 0 && !_onkoValkeaDTliikkunut)
+			{
+				_onkoValkeaDTliikkunut = true;
+			}
+			else if (alkuX == 7 && !_onkoValkeaKTliikkunut)
+			{
+				_onkoValkeaKTliikkunut = true;
+			}
+		}
+		else if (nappulaPtr == Asema::mt)
+		{
+			if (alkuX == 0 && !_onkoMustaKTliikkunut)
+			{
+				_onkoMustaKTliikkunut = true;
+			}
+			else if (alkuX == 7 && !_onkoMustaDTliikkunut)
+			{
+				_onkoMustaDTliikkunut = true;
+			}
+		}
+		
 
-
-	// onko pitkä linna
-
-
+		lauta[loppuY][loppuX] = nappulaPtr;
+		lauta[alkuY][alkuX] = NULL;
+	}
+	
 
 	// Kaikki muut siirrot
 
@@ -99,56 +209,58 @@ void Asema::paivitaAsema(Siirto *siirto)
 		// katsotaan jos liikkunut nappula on torni niin muutetaan onkoTorniLiikkunut arvo (molemmille väreille ja molemmille torneille)
 
 	//päivitetään _siirtovuoro
-
-}
-
-
-
-int Asema::getSiirtovuoro() 
-{
-	return 0;
-}
-
-
-void Asema::setSiirtovuoro(int vuoro) 
-{
 	
+	_siirtovuoro = _siirtovuoro == 1 ? 0 : 1;
+
 }
 
 
-bool Asema::getOnkoValkeaKuningasLiikkunut() 
+
+int Asema::getSiirtovuoro()
 {
-	return false;
+	return _siirtovuoro;
 }
 
 
-bool Asema::getOnkoMustaKuningasLiikkunut() 
+void Asema::setSiirtovuoro(int vuoro)
 {
-	return false;
+	_siirtovuoro = vuoro;
 }
 
 
-bool Asema::getOnkoValkeaDTliikkunut() 
+bool Asema::getOnkoValkeaKuningasLiikkunut()
 {
-	return false;
+	return _onkoValkeaKuningasLiikkunut;
 }
 
 
-bool Asema::getOnkoValkeaKTliikkunut() 
+bool Asema::getOnkoMustaKuningasLiikkunut()
 {
-	return false;
+	return _onkoMustaKuningasLiikkunut;
 }
 
 
-bool Asema::getOnkoMustaDTliikkunut() 
+bool Asema::getOnkoValkeaDTliikkunut()
 {
-	return false;
+	return _onkoValkeaDTliikkunut;
 }
 
 
-bool Asema::getOnkoMustaKTliikkunut() 
+bool Asema::getOnkoValkeaKTliikkunut()
 {
-	return false;
+	return _onkoValkeaKTliikkunut;
+}
+
+
+bool Asema::getOnkoMustaDTliikkunut()
+{
+	return _onkoMustaDTliikkunut;
+}
+
+
+bool Asema::getOnkoMustaKTliikkunut()
+{
+	return _onkoMustaKTliikkunut;
 }
 
 
@@ -166,44 +278,44 @@ vai olla estämässä vastustajan korotusta siksi ei oteta kantaa
 3. Arvosta keskustaa sotilailla ja ratsuilla
 4. Arvosta pitkiä linjoja daami, torni ja lähetti
 */
-double Asema::evaluoi() 
+double Asema::evaluoi()
 {
 	return 0;
 
 	//kertoimet asetettu sen takia että niiden avulla asioiden painoarvoa voidaan säätää helposti yhdestä paikasta
-	
+
 	//1. Nappuloiden arvo
-	
+
 	//2. Kuningas turvassa
-	
+
 	//3. Arvosta keskustaa
-	
+
 	// 4. Arvosta linjoja
-	
+
 }
 
 
-double Asema::laskeNappuloidenArvo(int vari) 
+double Asema::laskeNappuloidenArvo(int vari)
 {
 	return 0;
-	
+
 }
 
 
-bool Asema::onkoAvausTaiKeskipeli(int vari) 
+bool Asema::onkoAvausTaiKeskipeli(int vari)
 {
 	return 0;
 	// Jos upseereita 3 tai vähemmän on loppupeli
 	// mutta jos daami laudalla on loppueli vasta kun kuin vain daami jäljellä
-	
+
 	//Jos vari on 0 eli valkoiset
 	//niin on keskipeli jos mustalla upseereita yli 2 tai jos daami+1
-	
+
 
 }
 
 
-double Asema::nappuloitaKeskella(int vari) 
+double Asema::nappuloitaKeskella(int vari)
 {
 	return 0;
 
@@ -211,30 +323,30 @@ double Asema::nappuloitaKeskella(int vari)
 	//ratsut ydinkeskustassa + 0.25/napa
 	//sotilaat laitakeskustassa + 0.11/napa
 	//ratsut laitakeskustassa + 0.11/napa
-	
+
 	//valkeille ydinkeskusta
 
-	
-	
+
+
 	//valkeille laitakeskusta
-	
+
 
 
 	//mustille ydinkeskusta
-	
+
 	//mustille laitakeskusta
-	
+
 }
 
 
-double Asema::linjat(int vari) 
+double Asema::linjat(int vari)
 {
 	return 0;
-	
+
 	//valkoiset
-	
+
 	//mustat
-	
+
 }
 
 
@@ -265,26 +377,26 @@ MinMaxPaluu Asema::minimax(int syvyys)
 	MinMaxPaluu paluuarvo;
 
 	// Generoidaan aseman lailliset siirrot.
-	
+
 	// Rekursion kantatapaus 1: peli on loppu
-	
+
 	// Rekursion kantatapaus 2: katkaisusyvyydessä
-	
+
 	// Rekursioaskel: kokeillaan jokaista laillista siirtoa s
 	// (alustetaan paluuarvo huonoimmaksi mahdolliseksi).
-	
+
 	return paluuarvo;
 }
 
 
-MinMaxPaluu Asema::maxi(int syvyys) 
+MinMaxPaluu Asema::maxi(int syvyys)
 {
 	MinMaxPaluu paluu;
 	return paluu;
 }
 
 
-MinMaxPaluu Asema::mini(int syvyys) 
+MinMaxPaluu Asema::mini(int syvyys)
 {
 	MinMaxPaluu paluu;
 	return paluu;
@@ -298,12 +410,12 @@ bool Asema::onkoRuutuUhattu(Ruutu* ruutu, int vastustajanVari)
 }
 
 
-void Asema::huolehdiKuninkaanShakeista(std::list<Siirto>& lista, int vari) 
-{ 
-	
+void Asema::huolehdiKuninkaanShakeista(std::list<Siirto>& lista, int vari)
+{
+
 }
 
 
 void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista) {
-	
+
 }

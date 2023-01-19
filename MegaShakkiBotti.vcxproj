@@ -112,7 +112,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="megashakkibotti\asema.h" />
-    <ClInclude Include="megashakkibotti\Header.h" />
     <ClInclude Include="megashakkibotti\kayttoliittyma.h" />
     <ClInclude Include="megashakkibotti\minmaxpaluu.h" />
     <ClInclude Include="megashakkibotti\nappula.h" />

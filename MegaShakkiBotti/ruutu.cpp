@@ -3,7 +3,8 @@
 
 Ruutu::Ruutu(int sarake, int rivi)
 {
-
+	_sarake = sarake;
+	_rivi = rivi;
 }
 
 

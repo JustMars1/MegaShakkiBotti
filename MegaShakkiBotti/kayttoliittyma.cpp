@@ -67,6 +67,9 @@ void Kayttoliittyma::piirraLauta()
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | BACKGROUND_RED |
 		BACKGROUND_GREEN | BACKGROUND_BLUE);
 	std::wcout << " abcdefgh\n";
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+
 } 
 
 
@@ -77,10 +80,7 @@ void Kayttoliittyma::piirraLauta()
 */
 Siirto Kayttoliittyma::annaVastustajanSiirto()
 {
-	string syote;
-
-	std::wcout << "Syötä siirto muodossa: Nappula, alkuruutu ja loppuruutu.\n";
-	std::wcout << "Esim. Rg1-f3. Nappulna kirjain isolla, loput pienellä.\n";
+	
 
 	auto tarkistaRuutu = [](int sarake, int rivi) -> bool
 	{
@@ -93,6 +93,8 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
 		{
 			return false;
 		}
+
+		return true;
 
 	};
 
@@ -114,42 +116,70 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
 		}
 	};
 
-	char nappulaChar;
+	char nappulaChar = 'i';
 
-	int alkuSarake;
-	int alkuRivi;
-	int loppuSarake;
-	int loppuRivi;
+	int alkuSarake = -1;
+	int alkuRivi = -1;
+	int loppuSarake = -1;
+	int loppuRivi = -1;
+
+	string syote;
+	bool pitkaLinna = false, lyhytLinna = false;
 
 	do
 	{
+		std::wcout << "Syötä siirto muodossa: Nappula, alkuruutu ja loppuruutu.\n";
+		std::wcout << "Esim. Rg1-f3. Nappulan kirjain isolla, loput pienellä.\n";
+
 		std::cin >> syote;
-		if(std::cin.fail())
+
+		pitkaLinna = syote == "O-O-O";
+		lyhytLinna = syote == "O-O";
+		
+		if (pitkaLinna || lyhytLinna) 
 		{
-			std::cin.clear();
-			std::cin.ignore(1e9, '\n');
+			
+			break;
 		}
+
+		if (syote.length() == 6)
+		{
+			nappulaChar = syote[0];
+
+			alkuSarake = syote[1] - 'a';
+			alkuRivi = syote[2] - '0' - 1;
+			loppuSarake = syote[4] - 'a';
+			loppuRivi = syote[5] - '0' - 1;
+
+			
+		}
+		
+
+	} while (!tarkistaRuutu(alkuSarake, alkuRivi) 
+		|| !tarkistaRuutu(loppuSarake, loppuRivi) 
+		|| !tarkistaNappula(nappulaChar, alkuSarake, alkuRivi) );
+
+	std::wcout << "outstanding move\n";
+
+	if (pitkaLinna || lyhytLinna) 
+	{
+		
+		return Siirto(lyhytLinna, pitkaLinna);
+
+	}
+	else 
+	{
+		
+		Ruutu alku(alkuSarake, alkuRivi);
+		Ruutu loppu(loppuSarake, loppuRivi);
+
+		return Siirto(alku, loppu);
+
+	} 
 	
-		nappulaChar = syote[0];
-
-		alkuSarake = syote[1] - 'a';
-		alkuRivi = syote[2] - '0';
-		loppuSarake = syote[4] - 'a';
-		loppuRivi = syote[5] - '0';
-
-	} while (tarkistaRuutu(alkuSarake, alkuRivi) 
-		&& tarkistaRuutu(loppuSarake, loppuRivi) 
-		&& tarkistaNappula(nappulaChar, alkuSarake, alkuRivi));
-
-	Ruutu alku(alkuSarake, alkuRivi);
-	Ruutu loppu(loppuSarake, loppuRivi);
 	
-
-
-	Siirto siirto(alku, loppu);
 	
-
-	return siirto;
+	
 }
 
 
