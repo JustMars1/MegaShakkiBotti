@@ -25,7 +25,6 @@ private:
 
 public:
 	Nappula(std::wstring, int, int);
-	Nappula() {}
 
 	// Siirtojen generointi. Puhdas virtuaalifunktio, eli aliluokat toteuttavat t‰m‰n
 	// omalla tavallaan.
@@ -44,14 +43,14 @@ public:
 class Torni : public virtual Nappula {
 public:
 	Torni(std::wstring unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
-	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari);
+	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari) override;
 };
 
 // Ratsu-aliluokka.
 class Ratsu : public Nappula {
 public:
 	Ratsu(std::wstring unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
-	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari);
+	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari) override;
 };
 
 // L‰hetti-aliluokka. Virtuaalinen perint‰ tarkoittaa, ett‰ kantaluokka perit‰‰n moniperinn‰ss‰ vain kerran
@@ -59,7 +58,7 @@ public:
 class Lahetti : public virtual Nappula {
 public:
 	Lahetti(std::wstring unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
-	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari);
+	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari) override;
 };
 
 // Daami-aliluokka. Perii sek‰ l‰hetin ett‰ tornin.
@@ -67,21 +66,21 @@ class Daami : public Lahetti, public Torni {
 public:
 	Daami(std::wstring unicode, int vari, int koodi) : 
 		Nappula(unicode, vari, koodi), Lahetti(unicode, vari, koodi), Torni(unicode, vari, koodi) {}
-	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari);
+	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari) override;
 };
 
 // Kuningas-aliluokka.
 class Kuningas : public Nappula {
 public:
 	Kuningas(std::wstring unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
-	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari);
+	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari) override;
 };
 
 // Sotilas-aliluokka.
 class Sotilas : public Nappula {
 public:
 	Sotilas(std::wstring unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
-	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari);
+	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari) override;
 private:
 	void lisaaSotilaanKorotukset(Siirto*, std::list<Siirto>& lista, Asema*);
 };

@@ -16,24 +16,25 @@ using namespace std;
 
 int main()
 {
-
-
 	_setmode(_fileno(stdout), _O_U16TEXT);
 	wcout << "Jee :)\n";
 	wcout << "Toimii :)\n";
-	int lopetus = 100;
 	Asema asema; 
 	Kayttoliittyma::getInstance()->aseta_asema(&asema);
 	Kayttoliittyma::getInstance()->piirraLauta();
+
+	std::list<Siirto> siirrot;
 	
 	while (true) {
 		Siirto testiSiirto = Kayttoliittyma::getInstance()->annaVastustajanSiirto();
 		asema.paivitaAsema(&testiSiirto);
+
 		Kayttoliittyma::getInstance()->piirraLauta();
+		asema.annaLaillisetSiirrot(siirrot);
 	}
 	
 	wcin.get();
-	wcin.get();
+	//int lopetus = 100;
 	// Open juttu alla
 	//Peli peli(Kayttoliittyma::getInstance()->
 	//	kysyVastustajanVari());

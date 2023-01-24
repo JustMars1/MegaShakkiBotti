@@ -9,14 +9,7 @@
 
 using namespace std;
 
-
 Kayttoliittyma* Kayttoliittyma::instance = 0;
-
-Kayttoliittyma::Kayttoliittyma()
-{
-
-}
-
 
 Kayttoliittyma* Kayttoliittyma::getInstance()
 {
@@ -28,12 +21,11 @@ Kayttoliittyma* Kayttoliittyma::getInstance()
 
 void Kayttoliittyma::piirraLauta()
 {
-	for (int y = 0; y < 8; y++)
+	for (int y = 7; y >= 0; y--)
 	{
-		
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | BACKGROUND_RED |
 			BACKGROUND_GREEN | BACKGROUND_BLUE);
-		std::wcout << to_wstring(8-y);
+		std::wcout << to_wstring(y + 1);
 
 		for (int x = 0; x < 8; x++)
 		{
@@ -69,7 +61,6 @@ void Kayttoliittyma::piirraLauta()
 	std::wcout << " abcdefgh\n";
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-
 } 
 
 
@@ -80,8 +71,6 @@ void Kayttoliittyma::piirraLauta()
 */
 Siirto Kayttoliittyma::annaVastustajanSiirto()
 {
-	
-
 	auto tarkistaRuutu = [](int sarake, int rivi) -> bool
 	{
 		if (sarake > 7 || sarake < 0)
@@ -95,7 +84,6 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
 		}
 
 		return true;
-
 	};
 
 	auto tarkistaNappula = [this](char nappulaChar, int sarake, int rivi) -> bool
@@ -138,7 +126,6 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
 		
 		if (pitkaLinna || lyhytLinna) 
 		{
-			
 			break;
 		}
 
@@ -150,8 +137,6 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
 			alkuRivi = syote[2] - '0' - 1;
 			loppuSarake = syote[4] - 'a';
 			loppuRivi = syote[5] - '0' - 1;
-
-			
 		}
 		
 
@@ -163,23 +148,15 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
 
 	if (pitkaLinna || lyhytLinna) 
 	{
-		
 		return Siirto(lyhytLinna, pitkaLinna);
-
 	}
 	else 
 	{
-		
 		Ruutu alku(alkuSarake, alkuRivi);
 		Ruutu loppu(loppuSarake, loppuRivi);
 
 		return Siirto(alku, loppu);
-
 	} 
-	
-	
-	
-	
 }
 
 

@@ -36,23 +36,18 @@ std::map<char, Nappula*> Asema::charToMustaNappula = {
 	{'S', Asema::ms}
 };
 
-
-
 Asema::Asema() : lauta
 {
-
 	// Ensin alustetaan kaikki laudan ruudut nappulla "NULL", koska muuten ruuduissa satunnaista tauhkaa
-
 	// Asetetaan alkuaseman mukaisesti nappulat ruuduille
-
-		mt, mr, ml, md, mk, ml, mr, mt,
-		ms, ms, ms, ms, ms, ms, ms, ms,
-		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		vt, vr, vl, vd, vk, vl, vr, vt,
 		vs, vs, vs, vs, vs, vs, vs, vs,
-		vt, vr, vl, vd, vk, vl, vr, vt
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+		ms, ms, ms, ms, ms, ms, ms, ms,
+		mt, mr, ml, md, mk, ml, mr, mt
 }
 {
 	_siirtovuoro = 0;
@@ -64,12 +59,8 @@ Asema::Asema() : lauta
 	_onkoMustaKTliikkunut = false;
 }
 
-
-
-
 void Asema::paivitaAsema(Siirto* siirto)
 {
-
 	// Kaksoisaskel-lippu on oletusarvoisesti pois päältä.
 	// Asetetaan myöhemmin, jos tarvii.
 	//Tarkastetaan on siirto lyhyt linna tai pitkä linna
@@ -123,29 +114,18 @@ void Asema::paivitaAsema(Siirto* siirto)
 				lauta[0][2] = Asema::mk;
 				lauta[0][0] = NULL;
 				lauta[0][4] = NULL;
-				
 			}
-			
 		}
-
 	}
 	else 
 	{
-
 		int alkuX = siirto->getAlkuruutu().getSarake();
 		int alkuY = siirto->getAlkuruutu().getRivi();
 
 		int loppuX = siirto->getLoppuruutu().getSarake();
 		int loppuY = siirto->getLoppuruutu().getRivi();
 
-		
-		alkuY = 7 - alkuY;
-		loppuY = 7 - loppuY;
-
-		
-
 		Nappula* nappulaPtr = lauta[alkuY][alkuX];
-
 
 		if (nappulaPtr == Asema::vk)
 		{
@@ -183,7 +163,6 @@ void Asema::paivitaAsema(Siirto* siirto)
 		lauta[alkuY][alkuX] = NULL;
 	}
 	
-
 	// Kaikki muut siirrot
 
 
@@ -214,55 +193,45 @@ void Asema::paivitaAsema(Siirto* siirto)
 
 }
 
-
-
 int Asema::getSiirtovuoro()
 {
 	return _siirtovuoro;
 }
-
 
 void Asema::setSiirtovuoro(int vuoro)
 {
 	_siirtovuoro = vuoro;
 }
 
-
 bool Asema::getOnkoValkeaKuningasLiikkunut()
 {
 	return _onkoValkeaKuningasLiikkunut;
 }
-
 
 bool Asema::getOnkoMustaKuningasLiikkunut()
 {
 	return _onkoMustaKuningasLiikkunut;
 }
 
-
 bool Asema::getOnkoValkeaDTliikkunut()
 {
 	return _onkoValkeaDTliikkunut;
 }
-
 
 bool Asema::getOnkoValkeaKTliikkunut()
 {
 	return _onkoValkeaKTliikkunut;
 }
 
-
 bool Asema::getOnkoMustaDTliikkunut()
 {
 	return _onkoMustaDTliikkunut;
 }
 
-
 bool Asema::getOnkoMustaKTliikkunut()
 {
 	return _onkoMustaKTliikkunut;
 }
-
 
 /* 1. Laske nappuloiden arvo
 Daami = 9
@@ -294,13 +263,11 @@ double Asema::evaluoi()
 
 }
 
-
 double Asema::laskeNappuloidenArvo(int vari)
 {
 	return 0;
 
 }
-
 
 bool Asema::onkoAvausTaiKeskipeli(int vari)
 {
@@ -313,7 +280,6 @@ bool Asema::onkoAvausTaiKeskipeli(int vari)
 
 
 }
-
 
 double Asema::nappuloitaKeskella(int vari)
 {
@@ -338,7 +304,6 @@ double Asema::nappuloitaKeskella(int vari)
 
 }
 
-
 double Asema::linjat(int vari)
 {
 	return 0;
@@ -348,7 +313,6 @@ double Asema::linjat(int vari)
 	//mustat
 
 }
-
 
 // https://chessprogramming.wikispaces.com/Minimax MinMax-algoritmin pseudokoodi (lisäsin parametrina aseman)
 //int maxi(int depth, asema a) 
@@ -388,13 +352,11 @@ MinMaxPaluu Asema::minimax(int syvyys)
 	return paluuarvo;
 }
 
-
 MinMaxPaluu Asema::maxi(int syvyys)
 {
 	MinMaxPaluu paluu;
 	return paluu;
 }
-
 
 MinMaxPaluu Asema::mini(int syvyys)
 {
@@ -402,20 +364,26 @@ MinMaxPaluu Asema::mini(int syvyys)
 	return paluu;
 }
 
-
 bool Asema::onkoRuutuUhattu(Ruutu* ruutu, int vastustajanVari)
 {
 
 	return false;
 }
 
-
 void Asema::huolehdiKuninkaanShakeista(std::list<Siirto>& lista, int vari)
 {
 
 }
 
-
 void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista) {
-
+	for (int y = 0; y < 8; y++)
+	{
+		for (int x = 0; x < 8; x++)
+		{
+			if (lauta[y][x] != NULL) {
+				Ruutu ruutu(x, y);
+				lauta[y][x]->annaSiirrot(lista, &ruutu, this, lauta[y][x]->getVari());
+			}
+		}
+	}
 }
