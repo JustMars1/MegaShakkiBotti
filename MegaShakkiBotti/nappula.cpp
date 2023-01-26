@@ -125,7 +125,53 @@ void Torni::annaSiirrot(std::list<Siirto>& lista, Ruutu* ruutu, Asema* asema, in
 
 void Ratsu::annaSiirrot(std::list<Siirto>& lista, Ruutu* ruutu, Asema* asema, int vari)
 {
+	int x = ruutu->getSarake();
+	int y = ruutu->getRivi();
 
+	//suhteellinen sijainti mista ruudusta tahansa
+	int x_sarake[] = { -1, 1, 1, -1, 2, -2, 2, -2 };
+	int y_rivi[] = { 2, 2, -2, -2, 1, 1, -1, -1 };
+
+	for (int i = 0; i < 8; i++)
+	{
+		//valkea ratsu
+		int xv = x + x_sarake[i];
+		int yv = y + y_rivi[i];
+
+		//musta ratsu
+		int xm = x - x_sarake[i];
+		int ym = y - y_rivi[i];
+
+		//onko valkean ratsun siirto laudan ulkopuolella
+		if ((xv >= 0 && xv < 8) && (yv >= 0 && yv < 8))
+		{
+			//tarkistetaan, voiko ruutuun liikkua
+			if (asema->lauta[yv][xv] == NULL)
+			{
+				lista.push_back(Siirto(*ruutu, Ruutu(xv, yv)));
+			}
+
+			else if (asema->lauta[yv][xv] != NULL && asema->lauta[yv][xv]->getVari() != vari)
+			{
+				lista.push_back(Siirto(*ruutu, Ruutu(xv, yv)));
+			}
+		}
+
+		//onko mustan ratsun siirto laudan ulkopuolella
+		if ((xm >= 0 && xm < 8) && (ym >= 0 && ym < 8))
+		{
+			//tarkistetaan, voiko ruutuun liikkua
+			if (asema->lauta[ym][xm] == NULL)
+			{
+				lista.push_back(Siirto(*ruutu, Ruutu(xm, ym)));
+			}
+
+			else if (asema->lauta[ym][xm] != NULL && asema->lauta[ym][xm]->getVari() != vari)
+			{
+				lista.push_back(Siirto(*ruutu, Ruutu(xm, ym)));
+			}
+		}
+	}
 }
 
 void Lahetti::annaSiirrot(std::list<Siirto>& lista, Ruutu* ruutu, Asema* asema, int vari)

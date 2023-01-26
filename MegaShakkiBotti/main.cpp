@@ -31,6 +31,7 @@ int main()
 
 		Kayttoliittyma::getInstance()->piirraLauta();
 		asema.annaLaillisetSiirrot(siirrot);
+		siirrot.clear();
 	}
 	
 	wcin.get();
