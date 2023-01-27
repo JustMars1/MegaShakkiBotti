@@ -190,9 +190,65 @@ void Kuningas::annaSiirrot(std::list<Siirto>& lista, Ruutu* ruutu, Asema* asema,
 	oman nappulan päälle ei voi mennä ja vastustajan nappulan voi syödä.
 
 	Kaikki muu kuninkaaseen liittyvä tarkistus tehdään eri paikassa*/
+	int x = ruutu->getSarake();
+	int y = ruutu->getRivi();
 
+	// Suhteellinen sijainti mista ruudusta tahansa.
+	int x_sarake[] = { -1, 0, 1, 1, 1, 0, -1, -1};
+	int y_rivi[] = { 1, 1, 1, 0, -1, -1, -1, 0};
 
+	//// Valkea kunigas
+	//int xv = 0;
+	//int yv = 0;
 
+	//// Musta kuningas
+	//int xm = 0;
+	//int ym = 0;
+
+	for (int i = 0; i < 8; i++)
+	{
+		// Valkea kuningas
+		int xv = x + x_sarake[i];
+		int yv = y + y_rivi[i];
+
+		// Musta kuningas		
+		int xm = x - x_sarake[i];
+		int ym = y - y_rivi[i];	
+
+		// Onko valkean kuninkaan siirto laudan ulkopuolella
+		if ((xv >= 0 && xv < 8) && (yv >= 0 && yv < 8))
+		{
+			// Tarkistetaan, voiko ruutuun liikkua
+			if (asema->lauta[yv][xv] == NULL)
+			{
+				lista.push_back(Siirto(*ruutu, Ruutu(xv, yv)));
+			}
+			else if (asema->lauta[yv][xv] != NULL && asema->lauta[yv][xv]->getVari() != vari)
+			{
+				lista.push_back(Siirto(*ruutu, Ruutu(xv, yv)));
+			}
+		}
+
+		// Onko mustan kuninkaan siirto laudan ulkopuolella
+		if ((xm >= 0 && xm < 8) && (ym >= 0 && ym < 8))
+		{
+			// Tarkistetaan, voiko ruutuun liikkua
+			if (asema->lauta[ym][xm] == NULL)
+			{
+				lista.push_back(Siirto(*ruutu, Ruutu(xm, ym)));
+			}
+			else if (asema->lauta[ym][xm] != NULL && asema->lauta[ym][xm]->getVari() != vari)
+			{
+				lista.push_back(Siirto(*ruutu, Ruutu(xm, ym)));
+			}
+		}
+	}
+
+	// Näytetään mahdolliset siirrot
+	//if (lista.size() > 0)
+	//{
+	//	tulostaSiirrot(lista);
+	//}
 }
 
 void Sotilas::annaSiirrot(std::list<Siirto>& lista, Ruutu* ruutu, Asema* asema, int vari)
