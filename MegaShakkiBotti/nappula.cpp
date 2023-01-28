@@ -27,7 +27,7 @@ namespace {
 					std::wcout << "x";
 				}
 				else {
-					std::wcout << "o";
+					std::wcout << "-";
 				}
 			}
 			std::wcout << "\n";
@@ -125,57 +125,141 @@ void Torni::annaSiirrot(std::list<Siirto>& lista, Ruutu* ruutu, Asema* asema, in
 
 void Ratsu::annaSiirrot(std::list<Siirto>& lista, Ruutu* ruutu, Asema* asema, int vari)
 {
-	int x = ruutu->getSarake();
-	int y = ruutu->getRivi();
+	//int x = ruutu->getSarake();
+	//int y = ruutu->getRivi();
 
-	//suhteellinen sijainti mista ruudusta tahansa
-	int x_sarake[] = { -1, 1, 1, -1, 2, -2, 2, -2 };
-	int y_rivi[] = { 2, 2, -2, -2, 1, 1, -1, -1 };
+	////suhteellinen sijainti mista ruudusta tahansa
+	//int x_sarake[] = { -1, 1, 1, -1, 2, -2, 2, -2 };
+	//int y_rivi[] = { 2, 2, -2, -2, 1, 1, -1, -1 };
 
-	for (int i = 0; i < 8; i++)
-	{
-		//valkea ratsu
-		int xv = x + x_sarake[i];
-		int yv = y + y_rivi[i];
+	//for (int i = 0; i < 8; i++)
+	//{
+	//	//valkea ratsu
+	//	int xv = x + x_sarake[i];
+	//	int yv = y + y_rivi[i];
 
-		//musta ratsu
-		int xm = x - x_sarake[i];
-		int ym = y - y_rivi[i];
+	//	//musta ratsu
+	//	int xm = x - x_sarake[i];
+	//	int ym = y - y_rivi[i];
 
-		//onko valkean ratsun siirto laudan ulkopuolella
-		if ((xv >= 0 && xv < 8) && (yv >= 0 && yv < 8))
-		{
-			//tarkistetaan, voiko ruutuun liikkua
-			if (asema->lauta[yv][xv] == NULL)
-			{
-				lista.push_back(Siirto(*ruutu, Ruutu(xv, yv)));
-			}
+	//	//onko valkean ratsun siirto laudan ulkopuolella
+	//	if ((xv >= 0 && xv < 8) && (yv >= 0 && yv < 8))
+	//	{
+	//		//tarkistetaan, voiko ruutuun liikkua
+	//		if (asema->lauta[yv][xv] == NULL)
+	//		{
+	//			lista.push_back(Siirto(*ruutu, Ruutu(xv, yv)));
+	//		}
 
-			else if (asema->lauta[yv][xv] != NULL && asema->lauta[yv][xv]->getVari() != vari)
-			{
-				lista.push_back(Siirto(*ruutu, Ruutu(xv, yv)));
-			}
-		}
+	//		else if (asema->lauta[yv][xv] != NULL && asema->lauta[yv][xv]->getVari() != vari)
+	//		{
+	//			lista.push_back(Siirto(*ruutu, Ruutu(xv, yv)));
+	//		}
+	//	}
 
-		//onko mustan ratsun siirto laudan ulkopuolella
-		if ((xm >= 0 && xm < 8) && (ym >= 0 && ym < 8))
-		{
-			//tarkistetaan, voiko ruutuun liikkua
-			if (asema->lauta[ym][xm] == NULL)
-			{
-				lista.push_back(Siirto(*ruutu, Ruutu(xm, ym)));
-			}
+	//	//onko mustan ratsun siirto laudan ulkopuolella
+	//	if ((xm >= 0 && xm < 8) && (ym >= 0 && ym < 8))
+	//	{
+	//		//tarkistetaan, voiko ruutuun liikkua
+	//		if (asema->lauta[ym][xm] == NULL)
+	//		{
+	//			lista.push_back(Siirto(*ruutu, Ruutu(xm, ym)));
+	//		}
 
-			else if (asema->lauta[ym][xm] != NULL && asema->lauta[ym][xm]->getVari() != vari)
-			{
-				lista.push_back(Siirto(*ruutu, Ruutu(xm, ym)));
-			}
-		}
-	}
+	//		else if (asema->lauta[ym][xm] != NULL && asema->lauta[ym][xm]->getVari() != vari)
+	//		{
+	//			lista.push_back(Siirto(*ruutu, Ruutu(xm, ym)));
+	//		}
+	//	}
+
+	//}
+
 }
 
 void Lahetti::annaSiirrot(std::list<Siirto>& lista, Ruutu* ruutu, Asema* asema, int vari)
 {
+	int x = ruutu->getSarake();
+	int y = ruutu->getRivi();
+
+	// "korkeus", eli lauta pituussuunnassa / y-akseli. 
+	int korkeus = 1;
+	
+
+	// Oikea-Ylä: 
+	for (int i = x + 1; i < 8; i++) 
+	{
+		
+		if (asema->lauta[y + korkeus][i] == NULL) {
+			lista.push_back(Siirto(*ruutu, Ruutu(i, y + korkeus)));
+		}
+		else {
+
+			
+			if ((i >= 0 && i < 8) && (y+korkeus >= 0 && y+korkeus < 8) && asema->lauta[y + korkeus][i]->getVari() != vari ) {
+				lista.push_back(Siirto(*ruutu, Ruutu(i, y + korkeus)));
+			}
+
+			break;
+		}
+		korkeus++;
+		
+	}
+
+	korkeus = 1;
+
+	// Vasen- Ylä: 
+	for (int i = x - 1; i >= 0; i--) {
+
+		if (asema->lauta[y + korkeus][i] == NULL) {
+			lista.push_back(Siirto(*ruutu, Ruutu(i, y + korkeus)));
+		}
+		else {
+
+			if ((i >= 0 && i < 8) && (y + korkeus >= 0 && y + korkeus < 8) &&  asema->lauta[y + korkeus][i]->getVari() != vari) {
+				lista.push_back(Siirto(*ruutu, Ruutu(i, y + korkeus)));
+			}
+
+			break;
+		}
+		korkeus++;
+	} 
+	
+	korkeus = 1;
+
+	// Oikea -Alas: 
+	for (int i = x + 1; x < 8; i++) {
+
+		if (asema->lauta[y - korkeus][i] == NULL) {
+			lista.push_back(Siirto(*ruutu, Ruutu(i, y - korkeus)));
+		}
+		else {
+			if ((i >= 0 && i < 8) && (y - korkeus >= 0 && y - korkeus < 8) &&  asema->lauta[y - korkeus][i]->getVari() != vari) {
+				lista.push_back(Siirto(*ruutu, Ruutu(i, y - korkeus)));
+			}
+
+			break;
+		}
+		korkeus++;
+	}
+
+	korkeus = 1;
+
+	// Vasen -Alas: 
+	for (int i = x - 1; i >= 0; i--) {
+
+		if (asema->lauta[y - korkeus][i] == NULL) {
+			lista.push_back(Siirto(*ruutu, Ruutu(i, y - korkeus)));
+		}
+		else {
+			if ((i >= 0 && i < 8) && (y - korkeus >= 0 && y - korkeus < 8) &&  asema->lauta[y - korkeus][i]->getVari() != vari) {
+				lista.push_back(Siirto(*ruutu, Ruutu(i, y - korkeus)));
+			}
+
+			break;
+		}
+		korkeus++;
+	}
+
 
 }
 
