@@ -246,14 +246,6 @@ void Kuningas::annaSiirrot(list<Siirto>& lista, Ruutu* ruutu, Asema* asema, int 
 	int x_sarake[] = { -1, 0, 1, 1, 1, 0, -1, -1};
 	int y_rivi[] = { 1, 1, 1, 0, -1, -1, -1, 0};
 
-	//// Valkea kunigas
-	//int xv = 0;
-	//int yv = 0;
-
-	//// Musta kuningas
-	//int xm = 0;
-	//int ym = 0;
-
 	for (int i = 0; i < 8; i++)
 	{
 		// Valkea kuningas
