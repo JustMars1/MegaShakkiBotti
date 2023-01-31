@@ -24,27 +24,27 @@ namespace {
 			for (int x = 0; x < 8; x++)
 			{
 				if (ruudut[y][x]) {
-					std::wcout << "x";
+					std::cout << "x";
 				}
 				else {
-					std::wcout << "-";
+					std::cout << "-";
 				}
 			}
-			std::wcout << "\n";
+			std::cout << "\n";
 		}
 
-		std::wcout << "\n";
+		std::cout << "\n";
 	}
 }
 
-Nappula::Nappula(wstring unicode, int vari, int koodi)
+Nappula::Nappula(string unicode, int vari, int koodi)
 {
 	_unicode = unicode;
 	_vari = vari;
 	_koodi = koodi;
 }
 
-std::wstring Nappula::getNimi()
+std::string Nappula::getNimi()
 {
 	return _unicode;
 }

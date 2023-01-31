@@ -15,11 +15,8 @@ public:
 	Siirto annaVastustajanSiirto();
 	int kysyVastustajanVari();
 
-	static Kayttoliittyma* getInstance();
+	static Kayttoliittyma& getInstance();
 private:
-
 	Asema* _asema;
-	static Kayttoliittyma* instance; // osoitin luokan ainoaan olioon (Singleton).
-
 	Kayttoliittyma() {}
 };

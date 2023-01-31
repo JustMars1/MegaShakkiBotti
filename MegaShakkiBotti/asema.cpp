@@ -1,22 +1,22 @@
-﻿#include <iostream>
+#include <iostream>
 #include "asema.h"
-#include "minMaxPaluu.h"
+#include "minmaxpaluu.h"
 #include "nappula.h"
 #include "ruutu.h"
 
-Nappula* Asema::vk = new Kuningas(L"\u2654", 0, VK);
-Nappula* Asema::vd = new Daami(L"\u2655", 0, VD);
-Nappula* Asema::vt = new Torni(L"\u2656", 0, VT);
-Nappula* Asema::vl = new Lahetti(L"\u2657", 0, VL);
-Nappula* Asema::vr = new Ratsu(L"\u2658", 0, VR);
-Nappula* Asema::vs = new Sotilas(L"\u2659", 0, VS);
+Nappula* Asema::vk = new Kuningas("\u2654", 0, VK);
+Nappula* Asema::vd = new Daami("\u2655", 0, VD);
+Nappula* Asema::vt = new Torni("\u2656", 0, VT);
+Nappula* Asema::vl = new Lahetti("\u2657", 0, VL);
+Nappula* Asema::vr = new Ratsu("\u2658", 0, VR);
+Nappula* Asema::vs = new Sotilas("\u2659", 0, VS);
 
-Nappula* Asema::mk = new Kuningas(L"\u265A", 1, MK);
-Nappula* Asema::md = new Daami(L"\u265B", 1, MD);
-Nappula* Asema::mt = new Torni(L"\u265C", 1, MT);
-Nappula* Asema::ml = new Lahetti(L"\u265D", 1, ML);
-Nappula* Asema::mr = new Ratsu(L"\u265E", 1, MR);
-Nappula* Asema::ms = new Sotilas(L"\u265F", 1, MS);
+Nappula* Asema::mk = new Kuningas("\u265A", 1, MK);
+Nappula* Asema::md = new Daami("\u265B", 1, MD);
+Nappula* Asema::mt = new Torni("\u265C", 1, MT);
+Nappula* Asema::ml = new Lahetti("\u265D", 1, ML);
+Nappula* Asema::mr = new Ratsu("\u265E", 1, MR);
+Nappula* Asema::ms = new Sotilas("\u265F", 1, MS);
 
 std::map<char, Nappula*> Asema::charToValkoinenNappula = {
 	{'K', Asema::vk},

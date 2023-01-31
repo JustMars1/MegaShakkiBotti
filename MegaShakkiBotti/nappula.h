@@ -19,12 +19,12 @@ class Nappula
 {
 
 private:
-	std::wstring	_unicode;	// nappulaa vastaava unicode-merkki
+	std::string	    _unicode;	// nappulaa vastaava unicode-merkki
 	int				_vari;		// valkea = 0, musta = 1
 	int				_koodi;		// VT, VR, MT tms.
 
 public:
-	Nappula(std::wstring, int, int);
+	Nappula(std::string, int, int);
 
 	// Siirtojen generointi. Puhdas virtuaalifunktio, eli aliluokat toteuttavat tämän
 	// omalla tavallaan.
@@ -32,8 +32,8 @@ public:
 
 	void setKoodi(int koodi)				{ _koodi = koodi; }
 	int getKoodi()							{ return _koodi; }
-	void setUnicode(std::wstring unicode)	{ _unicode = unicode;			}
-	std::wstring getNimi();
+	void setUnicode(std::string unicode)	{ _unicode = unicode;			}
+	std::string getNimi();
 	void setVari(int vari)					{ _vari = vari;					}
 	int getVari()							{ return _vari;					}
 };
@@ -42,14 +42,14 @@ public:
 // (koska daami perii sekä tornin että lähetin).
 class Torni : public virtual Nappula {
 public:
-	Torni(std::wstring unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
+	Torni(std::string unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
 	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari) override;
 };
 
 // Ratsu-aliluokka.
 class Ratsu : public Nappula {
 public:
-	Ratsu(std::wstring unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
+	Ratsu(std::string unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
 	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari) override;
 };
 
@@ -57,14 +57,14 @@ public:
 // (koska daami perii sekä tornin että lähetin).
 class Lahetti : public virtual Nappula {
 public:
-	Lahetti(std::wstring unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
+	Lahetti(std::string unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
 	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari) override;
 };
 
 // Daami-aliluokka. Perii sekä lähetin että tornin.
 class Daami : public Lahetti, public Torni {
 public:
-	Daami(std::wstring unicode, int vari, int koodi) : 
+	Daami(std::string unicode, int vari, int koodi) :
 		Nappula(unicode, vari, koodi), Lahetti(unicode, vari, koodi), Torni(unicode, vari, koodi) {}
 	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari) override;
 };
@@ -72,14 +72,14 @@ public:
 // Kuningas-aliluokka.
 class Kuningas : public Nappula {
 public:
-	Kuningas(std::wstring unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
+	Kuningas(std::string unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
 	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari) override;
 };
 
 // Sotilas-aliluokka.
 class Sotilas : public Nappula {
 public:
-	Sotilas(std::wstring unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
+	Sotilas(std::string unicode, int vari, int koodi) : Nappula(unicode, vari, koodi) {}
 	void annaSiirrot(std::list<Siirto>& lista, Ruutu*, Asema*, int vari) override;
 private:
 	void lisaaSotilaanKorotukset(Siirto*, std::list<Siirto>& lista, Asema*);

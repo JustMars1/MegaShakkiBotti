@@ -1,14 +1,13 @@
 #include "vastustaja.h"
 using namespace std;
 
-
-Vastustaja::Vastustaja(wstring nimimerkki)
+Vastustaja::Vastustaja(string nimimerkki)
 {
 	this->_nimimerkki = nimimerkki;
 }
 
 
-wstring Vastustaja::getNimimerkki()
+string Vastustaja::getNimimerkki()
 {
 	return _nimimerkki;
 }

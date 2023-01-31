@@ -3,11 +3,13 @@
 #ifdef _WIN32
 #include <Windows.h>
 #include <io.h>
+#include <fcntl.h>
 #endif
 
-#include <fcntl.h>
 #include <iostream>
 #include <string>
+#include <clocale>
+
 #include "kayttoliittyma.h"
 #include "siirto.h"
 #include "asema.h"
@@ -16,25 +18,29 @@ using namespace std;
 
 int main()
 {
-	_setmode(_fileno(stdout), _O_U16TEXT);
-	wcout << "Jee :)\n";
-	wcout << "Toimii :)\n";
+#ifdef _WIN32
+	_SetConsoleOutputCP(CP_UTF8);
+#endif
+    setlocale(LC_ALL, "fi_FI.UTF-8");
+    cout.imbue(std::locale());
+    
+	cout << "Jee :)\n";
+	cout << "Toimii :)\n";
 	Asema asema; 
-	Kayttoliittyma::getInstance()->aseta_asema(&asema);
-	Kayttoliittyma::getInstance()->piirraLauta();
+	Kayttoliittyma::getInstance().aseta_asema(&asema);
+	Kayttoliittyma::getInstance().piirraLauta();
 
-	std::list<Siirto> siirrot;
+	list<Siirto> siirrot;
 	
 	while (true) {
-		Siirto testiSiirto = Kayttoliittyma::getInstance()->annaVastustajanSiirto();
+		Siirto testiSiirto = Kayttoliittyma::getInstance().annaVastustajanSiirto();
 		asema.paivitaAsema(&testiSiirto);
 
-		Kayttoliittyma::getInstance()->piirraLauta();
+		Kayttoliittyma::getInstance().piirraLauta();
 		asema.annaLaillisetSiirrot(siirrot);
 		siirrot.clear();
 	}
 	
-	wcin.get();
 	//int lopetus = 100;
 	// Open juttu alla
 	//Peli peli(Kayttoliittyma::getInstance()->
@@ -46,12 +52,12 @@ int main()
 	//while (lopetus != 0) {
 	//	lista.clear();
 	//	Kayttoliittyma::getInstance()->piirraLauta();
-	//	wcout << "\n";
+	//	cout << "\n";
 	//	// Tarkasta onko peli loppu?
 	//	asema.annaLaillisetSiirrot(lista);
 	//	if (lista.size() == 0) {
 	//		lopetus = 0;
-	//		std::wcout << "Peli loppui";
+	//		std::cout << "Peli loppui";
 	//		continue;
 	//	}
 	//	Siirto siirto;
