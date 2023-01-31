@@ -28,7 +28,7 @@ void Kayttoliittyma::piirraLauta() {
         for (int x = 0; x < 8; x++) {
             // Joka toinen rivi valkoinen
             if ((x + y) % 2 == 0) {
-                cout << taustavari(musta) << tekstivari(valkoinen);
+                cout << taustavari(turkoosi) << tekstivari(musta);
             }
             else {
                 cout << taustavari(valkoinen) << tekstivari(musta);

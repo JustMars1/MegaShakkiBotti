@@ -28,6 +28,7 @@ void tulostaSiirrot(list<Siirto>& lista) {
     
     for (int y = 7; y >= 0; y--)
     {
+        cout << to_string(y + 1) << " ";
         for (int x = 0; x < 8; x++)
         {
             if (ruudut[y][x]) {
@@ -40,7 +41,7 @@ void tulostaSiirrot(list<Siirto>& lista) {
         cout << "\n";
     }
     
-    cout << "\n";
+    cout << "  abcdefgh\n";
 }
 
 int main()

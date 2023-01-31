@@ -294,9 +294,55 @@ void Kuningas::annaSiirrot(list<Siirto>& lista, Ruutu* ruutu, Asema* asema, int 
 	}
 }
 
-void Sotilas::annaSiirrot(list<Siirto>& lista, Ruutu* ruutu, Asema* asema, int vari)
-{
-
+void Sotilas::annaSiirrot(list<Siirto>& lista, Ruutu* ruutu, Asema* asema, int vari) {
+    int x0 = ruutu->getSarake();
+    int y0 = ruutu->getRivi();
+    
+    int dir = vari == 0 ? 1 : -1;
+    
+    int maxLiike = 1;
+    if (vari == 0 && y0 == 1) {
+        maxLiike++;
+    }
+    else if (y0 == 6){
+        maxLiike++;
+    }
+    
+    for (int i = 1; i <= maxLiike; i++) {
+        int y = y0 + dir * i;
+        
+        if (y < 0 || y > 7) {
+            break;
+        }
+        
+        if (asema->lauta[y][x0] != NULL) {
+            break;
+        }
+        
+        lista.push_back(Siirto(*ruutu, Ruutu(x0, y)));
+    }
+    
+    {
+        int y = y0 + dir;
+        int x = x0 + 1;
+        
+        if (y >= 0 && y < 8 && x >= 0 && x < 8) {
+            if (asema->lauta[y][x] != NULL && asema->lauta[y][x]->getVari() != vari) {
+                lista.push_back(Siirto(*ruutu, Ruutu(x, y)));
+            }
+        }
+    }
+    
+    {
+        int y = y0 + dir;
+        int x = x0 - 1;
+        
+        if (y >= 0 && y < 8 && x >= 0 && x < 8) {
+            if (asema->lauta[y][x] != NULL && asema->lauta[y][x]->getVari() != vari) {
+                lista.push_back(Siirto(*ruutu, Ruutu(x, y)));
+            }
+        }
+    }
 }
 
 void Sotilas::lisaaSotilaanKorotukset(Siirto* siirto, list<Siirto>& lista, Asema* asema) {
