@@ -48,6 +48,9 @@
     <ClCompile Include="MegaShakkiBotti\asema.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MegaShakkiBotti\varikoodit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="megashakkibotti\asema.h">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="megashakkibotti\pelipuu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MegaShakkiBotti\varikoodit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

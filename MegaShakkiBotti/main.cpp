@@ -19,8 +19,14 @@ using namespace std;
 int main()
 {
 #ifdef _WIN32
-	_SetConsoleOutputCP(CP_UTF8);
+	SetConsoleOutputCP(CP_UTF8);
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD dwMode = 0;
+	GetConsoleMode(hOut, &dwMode);
+	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+	SetConsoleMode(hOut, dwMode);
 #endif
+
     setlocale(LC_ALL, "fi_FI.UTF-8");
     cout.imbue(std::locale());
     

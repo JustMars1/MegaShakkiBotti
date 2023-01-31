@@ -1,4 +1,6 @@
 #ifdef _WIN32
+
+#define NOMINMAX
 #include <Windows.h>
 #include <io.h>
 #include <fcntl.h>
@@ -34,7 +36,7 @@ void Kayttoliittyma::piirraLauta() {
             
             string merkki = " ";
             
-            // Jos NULL niin printataan tyhjŠ paikka.
+            // Jos NULL niin printataan tyhjä paikka.
             if (_asema->lauta[y][x] != NULL) {
                 merkki = _asema->lauta[y][x]->getNimi();
             }
@@ -42,16 +44,16 @@ void Kayttoliittyma::piirraLauta() {
             cout << merkki;
         }
         
-        cout << resetoiVarit() << endl;
+        cout << resetoiVarit() << " |\n";
     }
     
     cout << resetoiVarit() << " abcdefgh\n";
 }
 
 /*
- Aliohjelma tarkistaa ettŠ kŠyttŠjŠn antama syšte siirroksi on
+ Aliohjelma tarkistaa että käyttäjän antama syšte siirroksi on
  muodollisesti korrekti (ei tarkista aseman laillisuutta)
- Ottaa irti myšs nappulan kirjaimen (K/D/L/R/T), tarkistaa että kirjain korrekti
+ Ottaa irti myös nappulan kirjaimen (K/D/L/R/T), tarkistaa että kirjain korrekti
  */
 Siirto Kayttoliittyma::annaVastustajanSiirto() {
     auto tarkistaRuutu = [](int sarake, int rivi) -> bool {
@@ -87,8 +89,8 @@ Siirto Kayttoliittyma::annaVastustajanSiirto() {
     bool pitkaLinna = false, lyhytLinna = false;
     
     do {
-        cout << "SyštŠ siirto muodossa: Nappula, alkuruutu ja loppuruutu.\n";
-        cout << "Esim. Rg1-f3. Nappulan kirjain isolla, loput pienellŠ.\n";
+        cout << "Sy\xc3\xb6t\xc3\xa4 siirto muodossa: Nappula, alkuruutu ja loppuruutu.\n";
+        cout << "Esim. Rg1-f3. Nappulan kirjain isolla, loput pienell\xc3\xa4.\n";
         
         string syote;
         cin >> syote;

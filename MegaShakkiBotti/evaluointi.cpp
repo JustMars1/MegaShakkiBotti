@@ -29,24 +29,24 @@ double Evaluointi::evaluoi(Asema* asema, LaillisetSiirrot* lailliset) {
 	//if (onkoAvausTaiKeskipeli(asema, 0)) {
 	//	// Jos lyhellä puolella saa lisäarvoa 2 edellyttää että f ja g sotilas  paikallaan 
 	//	if (asema->lauta[6][0] != NULL && asema->lauta[5][1] != NULL && asema->lauta[6][1] != NULL) {
-	//		if (asema->lauta[6][0]->getNimi() == L"vk" && (asema->lauta[5][1]->getNimi() == L"vs" && (asema->lauta[6][1]->getNimi() == L"vs")))
+	//		if (asema->lauta[6][0]->getNimi() == "vk" && (asema->lauta[5][1]->getNimi() == "vs" && (asema->lauta[6][1]->getNimi() == "vs")))
 	//			valkeaArvo += 2 * kuningasKerroin;
 	//	}
 	//	// Jos pitkällä puolella saa lisäarvooa 1 edelyttää että  c ja b sotilas paikallaan
 	//	if (asema->lauta[1][0] != NULL && asema->lauta[2][0] != NULL && asema->lauta[1][1] != NULL && asema->lauta[2][1] != NULL) {
-	//		if (asema->lauta[1][0]->getNimi() == L"vk" || asema->lauta[2][0]->getNimi() == L"vk" && (asema->lauta[1][1]->getNimi() == L"vs" && (asema->lauta[2][1]->getNimi() == L"vs")))
+	//		if (asema->lauta[1][0]->getNimi() == "vk" || asema->lauta[2][0]->getNimi() == "vk" && (asema->lauta[1][1]->getNimi() == "vs" && (asema->lauta[2][1]->getNimi() == "vs")))
 	//			valkeaArvo += 1 * kuningasKerroin;
 	//	}
 	//}
 	//if (onkoAvausTaiKeskipeli(asema, 1)) {
 	//	// Jos lyhellä puolella saa lisäarvoa 2 edellyttää että f ja g sotilas  paikallaan 
 	//	if (asema->lauta[6][7] != NULL && asema->lauta[5][6] != NULL && asema->lauta[6][6] != NULL) {
-	//		if (asema->lauta[6][7]->getNimi() == L"mk" && (asema->lauta[5][6]->getNimi() == L"ms" && (asema->lauta[6][6]->getNimi() == L"ms")))
+	//		if (asema->lauta[6][7]->getNimi() == "mk" && (asema->lauta[5][6]->getNimi() == "ms" && (asema->lauta[6][6]->getNimi() == "ms")))
 	//			valkeaArvo += 2 * kuningasKerroin;
 	//	}
 	//	// Jos pitkällä puolella saa lisäarvooa 1 edelyttää että  c ja b sotilas paikallaan
 	//	if (asema->lauta[1][7] != NULL && asema->lauta[2][7] != NULL && asema->lauta[1][7] != NULL && asema->lauta[2][7] != NULL) {
-	//		if (asema->lauta[1][7]->getNimi() == L"mk" || asema->lauta[2][7]->getNimi() == L"mk" && (asema->lauta[1][7]->getNimi() == L"ms" && (asema->lauta[2][7]->getNimi() == L"ms")))
+	//		if (asema->lauta[1][7]->getNimi() == "mk" || asema->lauta[2][7]->getNimi() == "mk" && (asema->lauta[1][7]->getNimi() == "ms" && (asema->lauta[2][7]->getNimi() == "ms")))
 	//			valkeaArvo += 1 * kuningasKerroin;
 	//	}
 	//}
@@ -65,28 +65,28 @@ double Evaluointi::laskeNappuloidenArvo(Asema* asema, int vari) {
 	for (int x = 0; x < 8; x++) {
 		for (int y = 0; y < 8; y++) {
 			if (asema->lauta[x][y] != NULL) {
-				std::wstring nappulanNimi = asema->lauta[x][y]->getNimi();
+				std::string nappulanNimi = asema->lauta[x][y]->getNimi();
 				//Valkoiset
-				if (nappulanNimi == L"vd")
+				if (nappulanNimi == "vd")
 					valkeaArvo += 9;
-				if (nappulanNimi == L"vt")
+				if (nappulanNimi == "vt")
 					valkeaArvo += 5;
-				if (nappulanNimi == L"vl")
+				if (nappulanNimi == "vl")
 					valkeaArvo += 3.25;
-				if (nappulanNimi == L"vr")
+				if (nappulanNimi == "vr")
 					valkeaArvo += 3;
-				if (nappulanNimi == L"vs")
+				if (nappulanNimi == "vs")
 					valkeaArvo += 1;
 				//Mustat
-				if (nappulanNimi == L"md")
+				if (nappulanNimi == "md")
 					mustaArvo += 9;
-				if (nappulanNimi == L"mt")
+				if (nappulanNimi == "mt")
 					mustaArvo += 5;
-				if (nappulanNimi == L"ml")
+				if (nappulanNimi == "ml")
 					mustaArvo += 3.25;
-				if (nappulanNimi == L"mr")
+				if (nappulanNimi == "mr")
 					mustaArvo += 3;
-				if (nappulanNimi == L"ms")
+				if (nappulanNimi == "ms")
 					mustaArvo += 1;
 			}
 		}
@@ -108,29 +108,29 @@ bool Evaluointi::onkoAvausTaiKeskipeli(Asema* asema, int vari) {
 			if (asema->lauta[x][y] == NULL) {
 				continue;
 			}
-			std::wstring nappulanNimi = asema->lauta[x][y]->getNimi();
+			std::string nappulanNimi = asema->lauta[x][y]->getNimi();
 			//Valkoiset
-			if (nappulanNimi == L"vd") {
+			if (nappulanNimi == "vd") {
 				valkeaUpseeriLkm += 1;
 				valkeaDaami = true;
 			}
-			if (nappulanNimi == L"vt")
+			if (nappulanNimi == "vt")
 				valkeaUpseeriLkm += 1;
-			if (nappulanNimi == L"vl")
+			if (nappulanNimi == "vl")
 				valkeaUpseeriLkm += 1;
-			if (nappulanNimi == L"vr")
+			if (nappulanNimi == "vr")
 				valkeaUpseeriLkm += 1;
 
 			//Mustat
-			if (nappulanNimi == L"md") {
+			if (nappulanNimi == "md") {
 				valkeaUpseeriLkm += 1;
 				mustaDaami = true;
 			}
-			if (nappulanNimi == L"mt")
+			if (nappulanNimi == "mt")
 				valkeaUpseeriLkm += 1;
-			if (nappulanNimi == L"ml")
+			if (nappulanNimi == "ml")
 				valkeaUpseeriLkm += 1;
-			if (nappulanNimi == L"mr")
+			if (nappulanNimi == "mr")
 				valkeaUpseeriLkm += 1;
 		}
 	}
@@ -160,63 +160,63 @@ double Evaluointi::nappuloitaKeskella(Asema* asema, int vari) {
 	double mustaKeskella = 0;
 	//valkeille ydinkeskusta
 	
-	if (asema->lauta[3][3] != NULL && (asema->lauta[3][3]->getNimi() == L"vs" || asema->lauta[3][3]->getNimi() == L"vr")) {
+	if (asema->lauta[3][3] != NULL && (asema->lauta[3][3]->getNimi() == "vs" || asema->lauta[3][3]->getNimi() == "vr")) {
 		valkeaKeskella +=  0.25;
 	}
-	if (asema->lauta[4][3] && (asema->lauta[4][3]->getNimi() == L"vs" || asema->lauta[4][3]->getNimi() == L"vr")) {
+	if (asema->lauta[4][3] && (asema->lauta[4][3]->getNimi() == "vs" || asema->lauta[4][3]->getNimi() == "vr")) {
 		valkeaKeskella += 0.25;
 	}
-	if (asema->lauta[3][4] != NULL && (asema->lauta[3][4]->getNimi() == L"vs" || asema->lauta[3][4]->getNimi() == L"vr")) {
+	if (asema->lauta[3][4] != NULL && (asema->lauta[3][4]->getNimi() == "vs" || asema->lauta[3][4]->getNimi() == "vr")) {
 		valkeaKeskella += 0.25;
 	}
-	if (asema->lauta[4][4] != NULL && (asema->lauta[4][4]->getNimi() == L"vs" || asema->lauta[4][4]->getNimi() == L"vr")) {
+	if (asema->lauta[4][4] != NULL && (asema->lauta[4][4]->getNimi() == "vs" || asema->lauta[4][4]->getNimi() == "vr")) {
 		valkeaKeskella += 0.25;
 	}
 	//valkeille laitakeskusta
 	for (int x = 2; x < 6; x++) {
-		if (asema->lauta[x][2] != NULL && (asema->lauta[x][2]->getNimi() == L"vs" || asema->lauta[x][2]->getNimi() == L"vr")) {
+		if (asema->lauta[x][2] != NULL && (asema->lauta[x][2]->getNimi() == "vs" || asema->lauta[x][2]->getNimi() == "vr")) {
 			valkeaKeskella += 0.11;
 		}
-		if (asema->lauta[x][5] != NULL && (asema->lauta[x][5]->getNimi() == L"vs" || asema->lauta[x][5]->getNimi() == L"vr")) {
+		if (asema->lauta[x][5] != NULL && (asema->lauta[x][5]->getNimi() == "vs" || asema->lauta[x][5]->getNimi() == "vr")) {
 			valkeaKeskella += 0.11;
 		}
 	}
 	for (int y = 3; y < 5; y++) {
-		if (asema->lauta[2][y] != NULL && (asema->lauta[2][y]->getNimi() == L"vs" || asema->lauta[2][y]->getNimi() == L"vr")) {
+		if (asema->lauta[2][y] != NULL && (asema->lauta[2][y]->getNimi() == "vs" || asema->lauta[2][y]->getNimi() == "vr")) {
 			valkeaKeskella += 0.11;
 		}
-		if (asema->lauta[5][y] != NULL && (asema->lauta[5][y]->getNimi() == L"vs" || asema->lauta[5][y]->getNimi() == L"vr")) {
+		if (asema->lauta[5][y] != NULL && (asema->lauta[5][y]->getNimi() == "vs" || asema->lauta[5][y]->getNimi() == "vr")) {
 			valkeaKeskella += 0.11;
 		}
 	}
 
 	//mustille ydinkeskusta
-	if (asema->lauta[3][3] != NULL && (asema->lauta[3][3]->getNimi() == L"ms" || asema->lauta[3][3]->getNimi() == L"mr")) {
+	if (asema->lauta[3][3] != NULL && (asema->lauta[3][3]->getNimi() == "ms" || asema->lauta[3][3]->getNimi() == "mr")) {
 		mustaKeskella += 0.25;
 	}
-	if (asema->lauta[4][3] != NULL && (asema->lauta[4][3]->getNimi() == L"ms" || asema->lauta[4][3]->getNimi() == L"mr")) {
+	if (asema->lauta[4][3] != NULL && (asema->lauta[4][3]->getNimi() == "ms" || asema->lauta[4][3]->getNimi() == "mr")) {
 		mustaKeskella += 0.25;
 	}
-	if (asema->lauta[3][4] != NULL && (asema->lauta[3][4]->getNimi() == L"ms" || asema->lauta[3][4]->getNimi() == L"mr")) {
+	if (asema->lauta[3][4] != NULL && (asema->lauta[3][4]->getNimi() == "ms" || asema->lauta[3][4]->getNimi() == "mr")) {
 		mustaKeskella += 0.25;
 	}
-	if (asema->lauta[4][4] != NULL && (asema->lauta[4][4]->getNimi() == L"ms" || asema->lauta[4][4]->getNimi() == L"mr")) {
+	if (asema->lauta[4][4] != NULL && (asema->lauta[4][4]->getNimi() == "ms" || asema->lauta[4][4]->getNimi() == "mr")) {
 		mustaKeskella += 0.25;
 	}
 	//mustille laitakeskusta
 	for (int x = 2; x < 6; x++) {
-		if (asema->lauta[x][2] != NULL && (asema->lauta[x][2]->getNimi() == L"ms" || asema->lauta[x][2]->getNimi() == L"mr")) {
+		if (asema->lauta[x][2] != NULL && (asema->lauta[x][2]->getNimi() == "ms" || asema->lauta[x][2]->getNimi() == "mr")) {
 			mustaKeskella += 0.11;
 		}
-		if (asema->lauta[x][5] != NULL && (asema->lauta[x][5]->getNimi() == L"ms" || asema->lauta[x][5]->getNimi() == L"mr")) {
+		if (asema->lauta[x][5] != NULL && (asema->lauta[x][5]->getNimi() == "ms" || asema->lauta[x][5]->getNimi() == "mr")) {
 			mustaKeskella += 0.11;
 		}
 	}
 	for (int y = 3; y < 5; y++) {
-		if (asema->lauta[2][y] != NULL && (asema->lauta[2][y]->getNimi() == L"ms" || asema->lauta[2][y]->getNimi() == L"mr")) {
+		if (asema->lauta[2][y] != NULL && (asema->lauta[2][y]->getNimi() == "ms" || asema->lauta[2][y]->getNimi() == "mr")) {
 			mustaKeskella += 0.11;
 		}
-		if (asema->lauta[5][y] != NULL && (asema->lauta[5][y]->getNimi() == L"ms" || asema->lauta[5][y]->getNimi() == L"mr")) {
+		if (asema->lauta[5][y] != NULL && (asema->lauta[5][y]->getNimi() == "ms" || asema->lauta[5][y]->getNimi() == "mr")) {
 			mustaKeskella += 0.11;
 		}
 	}
@@ -236,11 +236,11 @@ double Evaluointi::linjat(Asema* asema, int vari, LaillisetSiirrot* lailliset) {
 			if (asema->lauta[x][y] == NULL) {
 				continue;
 			}
-			if(asema->lauta[x][y]->getNimi() == L"vl")
+			if(asema->lauta[x][y]->getNimi() == "vl")
 				lailliset->annaLahetinLaillisetSiirrot(valkealista, &Ruutu(x,y),asema, 0);
-			if (asema->lauta[x][y]->getNimi() == L"vt")
+			if (asema->lauta[x][y]->getNimi() == "vt")
 				lailliset->annaTorninLaillisetSiirrot(valkealista, &Ruutu(x, y), asema, 0);
-			if (asema->lauta[x][y]->getNimi() == L"vd")
+			if (asema->lauta[x][y]->getNimi() == "vd")
 				lailliset->annaDaaminLaillisetSiirrot(valkealista, &Ruutu(x, y), asema, 0);
 		}
 	}
@@ -250,11 +250,11 @@ double Evaluointi::linjat(Asema* asema, int vari, LaillisetSiirrot* lailliset) {
 			if (asema->lauta[x][y] == NULL) {
 				continue;
 			}
-			if (asema->lauta[x][y]->getNimi() == L"ml")
+			if (asema->lauta[x][y]->getNimi() == "ml")
 				lailliset->annaLahetinLaillisetSiirrot(mustalista, &Ruutu(x, y), asema, 0);
-			if (asema->lauta[x][y]->getNimi() == L"mt")
+			if (asema->lauta[x][y]->getNimi() == "mt")
 				lailliset->annaTorninLaillisetSiirrot(mustalista, &Ruutu(x, y), asema, 0);
-			if (asema->lauta[x][y]->getNimi() == L"md")
+			if (asema->lauta[x][y]->getNimi() == "md")
 				lailliset->annaDaaminLaillisetSiirrot(mustalista, &Ruutu(x, y), asema, 0);
 		}
 	}
