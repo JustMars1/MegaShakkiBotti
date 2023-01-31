@@ -16,6 +16,33 @@
 
 using namespace std; 
 
+void tulostaSiirrot(list<Siirto>& lista) {
+    bool ruudut[8][8] = { false };
+    
+    for (auto& siirto : lista)
+    {
+        int x = siirto.getLoppuruutu().getSarake();
+        int y = siirto.getLoppuruutu().getRivi();
+        ruudut[y][x] = true;
+    }
+    
+    for (int y = 7; y >= 0; y--)
+    {
+        for (int x = 0; x < 8; x++)
+        {
+            if (ruudut[y][x]) {
+                cout << "x";
+            }
+            else {
+                cout << "-";
+            }
+        }
+        cout << "\n";
+    }
+    
+    cout << "\n";
+}
+
 int main()
 {
 #ifdef _WIN32
@@ -26,12 +53,8 @@ int main()
 	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 	SetConsoleMode(hOut, dwMode);
 #endif
-
     setlocale(LC_ALL, "fi_FI.UTF-8");
     cout.imbue(std::locale());
-    
-	cout << "Jee :)\n";
-	cout << "Toimii :)\n";
 	Asema asema; 
 	Kayttoliittyma::getInstance().aseta_asema(&asema);
 	Kayttoliittyma::getInstance().piirraLauta();
@@ -41,9 +64,9 @@ int main()
 	while (true) {
 		Siirto testiSiirto = Kayttoliittyma::getInstance().annaVastustajanSiirto();
 		asema.paivitaAsema(&testiSiirto);
-
-		Kayttoliittyma::getInstance().piirraLauta();
-		asema.annaLaillisetSiirrot(siirrot);
+        asema.annaLaillisetSiirrot(siirrot);
+        tulostaSiirrot(siirrot);
+        Kayttoliittyma::getInstance().piirraLauta();
 		siirrot.clear();
 	}
 	

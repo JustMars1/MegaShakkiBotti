@@ -372,7 +372,7 @@ bool Asema::onkoRuutuUhattu(Ruutu* ruutu, int vastustajanVari)
 
 void Asema::huolehdiKuninkaanShakeista(std::list<Siirto>& lista, int vari)
 {
-
+    
 }
 
 void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista) {

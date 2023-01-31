@@ -23,7 +23,7 @@ Kayttoliittyma& Kayttoliittyma::getInstance() {
 
 void Kayttoliittyma::piirraLauta() {
     for (int y = 7; y >= 0; y--) {
-        cout << resetoiVarit() << to_string(y + 1);
+        cout << resetoiVarit() << to_string(y + 1) << " ";
         
         for (int x = 0; x < 8; x++) {
             // Joka toinen rivi valkoinen
@@ -47,7 +47,7 @@ void Kayttoliittyma::piirraLauta() {
         cout << resetoiVarit() << " |\n";
     }
     
-    cout << resetoiVarit() << " abcdefgh\n";
+    cout << resetoiVarit() << "  abcdefgh\n";
 }
 
 /*
@@ -89,17 +89,17 @@ Siirto Kayttoliittyma::annaVastustajanSiirto() {
     bool pitkaLinna = false, lyhytLinna = false;
     
     do {
-        cout << "Sy\xc3\xb6t\xc3\xa4 siirto muodossa: Nappula, alkuruutu ja loppuruutu.\n";
-        cout << "Esim. Rg1-f3. Nappulan kirjain isolla, loput pienell\xc3\xa4.\n";
-        
-        string syote;
-        cin >> syote;
-        
         if (cin.fail()) {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            continue;
         }
+        else {
+            cout << "Sy\xc3\xb6t\xc3\xa4 siirto muodossa: Nappula, alkuruutu ja loppuruutu.\n";
+            cout << "Esim. Rg1-f3. Nappulan kirjain isolla, loput pienell\xc3\xa4.\n";
+        }
+        
+        string syote;
+        cin >> syote;
         
         pitkaLinna = syote == "O-O-O";
         lyhytLinna = syote == "O-O";
