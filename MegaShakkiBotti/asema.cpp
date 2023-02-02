@@ -366,16 +366,94 @@ MinMaxPaluu Asema::mini(int syvyys)
 
 bool Asema::onkoRuutuUhattu(Ruutu* ruutu, int vastustajanVari)
 {
+	// Tarkistetaan siirtojen laillisuus. Eli asettaako siirto kunkinaan uhatuksi.
+
+	// Valkoinen = 0, musta = 1.
+
+	int x = ruutu->getSarake();
+	int y = ruutu->getRivi();
+
+	// Tarkistetaan asettuuko valkoinen kuningas uhatuksi.
+	if (lauta[x][y] == vk && vastustajanVari == 0)
+	{
+		std::cout << "\n|| Laiton siirto. Valkoinen kuningas uhattu. ||\n";
+		return true;
+	}
+	// Tarkistetaan asettuuko musta kuningas uhatuksi.
+	else if (lauta[x][y] == mk && vastustajanVari == 1)
+	{
+		std::cout << "\n|| Laiton siirto. Musta kuningas uhattu. ||\n";
+		return true;
+	}
 
 	return false;
 }
 
 void Asema::huolehdiKuninkaanShakeista(std::list<Siirto>& lista, int vari)
 {
-    
+	/* Jotain Janin säätöjä. Saa poistaa jos ei tarvita */
+
+	// Kuninkaiden ruudut.
+	Ruutu vkRuutu(0,0);
+	Ruutu mkRuutu(0,0);
+
+	// Etsitään kuninkaiden ruudut
+	// Laitetaanko if-lauseen sisään, joka tarkastaa onko kuninkaiden ruutujen paikka muuttunut?
+	for (int x = 0; x < 8; x++)
+	{
+		for (int y = 0; y < 8; y++)
+		{
+			// Valkea kuningas.
+			if (lauta[x][y] == vk)
+			{
+				vkRuutu.setRivi(x);
+				vkRuutu.setSarake(y);
+			}
+			// Musta kuningas.
+			if (lauta[x][y] == mk)
+			{
+				mkRuutu.setRivi(x);
+				mkRuutu.setSarake(y);
+			}
+		}
+	}
+
+
+	// Käydään läpi siirrot.
+	for (auto& s : lista)
+	{
+		// Etsitään valkoisen kuninkaan uhat.
+		if (vari == 0)
+		{
+			if (onkoRuutuUhattu(&vkRuutu, 1))
+			{
+				//lista.remove(s);
+			}
+		}
+		else if (vari == 1)
+		{
+			if (onkoRuutuUhattu(&mkRuutu, 0))
+			{
+				//lista.remove(s);
+			}
+		}
+	}
 }
 
 void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista) {
+
+	// Kuninkaiden ruudut.
+	Ruutu vkRuutu(0, 0);
+	Ruutu mkRuutu(0, 0);
+
+	// Asema missä katsotaan siirtojen laillisuutta.
+	Asema uusiAsema;
+
+	// Mustan siirrot.
+	std::list<Siirto> mSiirrot;
+	// Valkoisen siirrot.
+	std::list<Siirto> vSiirrot;
+
 	for (int y = 0; y < 8; y++)
 	{
 		for (int x = 0; x < 8; x++)
@@ -383,7 +461,139 @@ void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista) {
 			if (lauta[y][x] != NULL) {
 				Ruutu ruutu(x, y);
 				lauta[y][x]->annaSiirrot(lista, &ruutu, this, lauta[y][x]->getVari());
+
+				// Tallennetaan kuninkaiden ruudut.
+				// Valkea kuningas
+				if (lauta[y][x] == vk)
+				{
+					vkRuutu.setRivi(y);
+					vkRuutu.setSarake(x);
+				}
+				// Musta kuningas
+				if (lauta[y][x] == mk)
+				{
+					mkRuutu.setRivi(y);
+					mkRuutu.setSarake(x);
+				}
 			}
 		}
 	}
+
+	// Debug luku millä yritin saada selville missä kohtaa laittomat liikkeet päätyy listalle.
+	int debug = 0;
+
+	// Käydään läpi siirtojen lista.
+	for (auto& s : lista)
+	{
+		int xAlku = s.getAlkuruutu().getRivi();
+		int yAlku = s.getAlkuruutu().getSarake();
+		int xLoppu = s.getLoppuruutu().getRivi();
+		int yLoppu = s.getLoppuruutu().getSarake();
+
+		// Valkoisen siirtovuoro, tsekataan mustan siirrot.
+		if (lauta[xAlku][yAlku]->getVari() == 1)
+		{
+			Ruutu ruutuM(yAlku, xAlku);
+			lauta[xAlku][yAlku]->annaSiirrot(mSiirrot, &ruutuM, &uusiAsema, lauta[xAlku][yAlku]->getVari());
+		}
+
+		// Mustan siirtovuoro, tsekataan valkoisen siirrot.
+		if (lauta[xAlku][yAlku]->getVari() == 0)
+		{
+			Ruutu ruutuV(yAlku, xAlku);
+			lauta[xAlku][yAlku]->annaSiirrot(vSiirrot, &ruutuV, &uusiAsema, lauta[xAlku][yAlku]->getVari());
+		}
+
+		uusiAsema.paivitaAsema(&s);
+
+
+		// Debuggausta
+		//std::wcout << debug << "\n";
+		//bool ruudut[8][8] = { false };
+
+		//for (auto& siirto : vSiirrot)
+		//{
+		//	int x = siirto.getLoppuruutu().getSarake();
+		//	int y = siirto.getLoppuruutu().getRivi();
+		//	ruudut[y][x] = true;
+		//}
+
+		//for (int y = 7; y >= 0; y--)
+		//{
+		//	std::cout << std::to_string(y + 1) << " ";
+		//	for (int x = 0; x < 8; x++)
+		//	{
+		//		if (ruudut[y][x]) {
+		//			std::cout << "v";
+		//		}
+		//		else {
+		//			std::cout << "-";
+		//		}
+		//	}
+		//	std::cout << "\n";
+		//}
+
+		//std::cout << "  abcdefgh\n";
+		//debug++;
+
+	}
+	// Helpottamaan valkoisen siirtojen havainnollistamista.
+	std::cout << "Valkoisen lailliset siirrot: \n";
+	bool ruudutV[8][8] = { false };
+
+	for (auto& siirto : vSiirrot)
+	{
+		int x = siirto.getLoppuruutu().getSarake();
+		int y = siirto.getLoppuruutu().getRivi();
+		ruudutV[y][x] = true;
+	}
+
+	for (int y = 7; y >= 0; y--)
+	{
+		std::cout << std::to_string(y + 1) << " ";
+		for (int x = 0; x < 8; x++)
+		{
+			if (ruudutV[y][x]) {
+				std::cout << "v";
+			}
+			else {
+				std::cout << "-";
+			}
+		}
+		std::cout << "\n";
+	}
+
+	std::cout << "  abcdefgh\n";
+
+
+	// Helpottamaan mustan siirtojen havainnointia.
+	std::cout << "Mustan lailliset siirrot: \n";
+	bool ruudutM[8][8] = { false };
+
+	for (auto& siirto : mSiirrot)
+	{
+		int x = siirto.getLoppuruutu().getSarake();
+		int y = siirto.getLoppuruutu().getRivi();
+		ruudutM[y][x] = true;
+	}
+
+	for (int y = 7; y >= 0; y--)
+	{
+		std::cout << std::to_string(y + 1) << " ";
+		for (int x = 0; x < 8; x++)
+		{
+			if (ruudutM[y][x]) {
+				std::cout << "m";
+			}
+			else {
+				std::cout << "-";
+			}
+		}
+		std::cout << "\n";
+	}
+
+	std::cout << "  abcdefgh\n";
+
+	vSiirrot.clear();
+	mSiirrot.clear();
 }

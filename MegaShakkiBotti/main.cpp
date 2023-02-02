@@ -65,8 +65,8 @@ int main()
 	while (true) {
 		Siirto testiSiirto = Kayttoliittyma::getInstance().annaVastustajanSiirto();
 		asema.paivitaAsema(&testiSiirto);
-        asema.annaLaillisetSiirrot(siirrot);
-        tulostaSiirrot(siirrot);
+		asema.annaLaillisetSiirrot(siirrot);
+		tulostaSiirrot(siirrot);
         Kayttoliittyma::getInstance().piirraLauta();
 		siirrot.clear();
 	}
