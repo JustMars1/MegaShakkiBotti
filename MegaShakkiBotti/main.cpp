@@ -35,13 +35,24 @@ int main()
     list<Siirto> siirrot;
     asema.annaLaillisetSiirrot(siirrot);
     kayttoliittyma.piirraLauta(siirrot);
-	
+	std::cout << "Siirtovuoro: Valkoinen.\n";
+
 	while (true) {
         siirrot.clear();
 		Siirto testiSiirto = kayttoliittyma.annaVastustajanSiirto();
 		asema.paivitaAsema(testiSiirto);
 		asema.annaLaillisetSiirrot(siirrot);
         kayttoliittyma.piirraLauta(siirrot);
+
+		// Näyttää kenen siirtovuoro.
+		if (asema.getSiirtovuoro() == 1)
+		{
+			std::cout << "Siirtovuoro: Musta.\n";
+		}
+		else if (asema.getSiirtovuoro() == 0)
+		{
+			std::cout << "Siirtovuoro: Valkoinen. \n";
+		}
 	}
 	
 	//int lopetus = 100;
