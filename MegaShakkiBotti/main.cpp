@@ -14,35 +14,7 @@
 #include "siirto.h"
 #include "asema.h"
 
-using namespace std; 
-
-void tulostaSiirrot(list<Siirto>& lista) {
-    bool ruudut[8][8] = { false };
-    
-    for (auto& siirto : lista)
-    {
-        int x = siirto.getLoppuruutu().getSarake();
-        int y = siirto.getLoppuruutu().getRivi();
-        ruudut[y][x] = true;
-    }
-    
-    for (int y = 7; y >= 0; y--)
-    {
-        cout << to_string(y + 1) << " ";
-        for (int x = 0; x < 8; x++)
-        {
-            if (ruudut[y][x]) {
-                cout << "x";
-            }
-            else {
-                cout << "-";
-            }
-        }
-        cout << "\n";
-    }
-    
-    cout << "  abcdefgh\n";
-}
+using namespace std;
 
 int main()
 {
@@ -55,20 +27,21 @@ int main()
 	SetConsoleMode(hOut, dwMode);
 #endif
     setlocale(LC_ALL, "fi_FI.UTF-8");
-    cout.imbue(std::locale());
-	Asema asema; 
-	Kayttoliittyma::getInstance().aseta_asema(&asema);
-	Kayttoliittyma::getInstance().piirraLauta();
-
-	list<Siirto> siirrot;
+    cout.imbue(locale());
+    
+    auto& kayttoliittyma = Kayttoliittyma::getInstance();
+    Asema& asema = kayttoliittyma.getAsema();
+    
+    list<Siirto> siirrot;
+    asema.annaLaillisetSiirrot(siirrot);
+    kayttoliittyma.piirraLauta(siirrot);
 	
 	while (true) {
-		Siirto testiSiirto = Kayttoliittyma::getInstance().annaVastustajanSiirto();
-		asema.paivitaAsema(&testiSiirto);
+        siirrot.clear();
+		Siirto testiSiirto = kayttoliittyma.annaVastustajanSiirto();
+		asema.paivitaAsema(testiSiirto);
 		asema.annaLaillisetSiirrot(siirrot);
-		tulostaSiirrot(siirrot);
-        Kayttoliittyma::getInstance().piirraLauta();
-		siirrot.clear();
+        kayttoliittyma.piirraLauta(siirrot);
 	}
 	
 	//int lopetus = 100;

@@ -4,19 +4,19 @@
 #include "peli.h"
 #include "siirto.h"
 
-
 // Shakkiohjelman käyttöliittymä, joka osaa visualisoida nykyisen aseman
 // ja lukea käyttäjän syöttämät siirrot. Singleton.
-class Kayttoliittyma
-{
-public:
-	void aseta_asema(Asema* asema) { this->_asema = asema;  }
-	void piirraLauta();
-	Siirto annaVastustajanSiirto();
-	int kysyVastustajanVari();
 
-	static Kayttoliittyma& getInstance();
+class Kayttoliittyma {
+public:
+    static Kayttoliittyma& getInstance();
+    
+    void piirraLauta(const std::list<Siirto>& siirrot = {});
+    Siirto annaVastustajanSiirto();
+    int kysyVastustajanVari();
+    
+    const Asema& getAsema() const;
+    Asema& getAsema();
 private:
-	Asema* _asema;
-	Kayttoliittyma() {}
+	Asema _asema;
 };

@@ -21,33 +21,57 @@ Kayttoliittyma& Kayttoliittyma::getInstance() {
     return instance;
 }
 
-void Kayttoliittyma::piirraLauta() {
+const Asema& Kayttoliittyma::getAsema() const { return _asema; }
+Asema& Kayttoliittyma::getAsema() { return _asema; }
+
+void Kayttoliittyma::piirraLauta(const list<Siirto>& siirrot) {
+    bool siirtoRuudut[8][8] = { false };
+    
+    for (auto& siirto : siirrot)
+    {
+        int x = siirto.getLoppuruutu().getSarake();
+        int y = siirto.getLoppuruutu().getRivi();
+        siirtoRuudut[y][x] = true;
+    }
+    
     for (int y = 7; y >= 0; y--) {
         cout << resetoiVarit() << to_string(y + 1) << " ";
         
         for (int x = 0; x < 8; x++) {
             // Joka toinen rivi valkoinen
             if ((x + y) % 2 == 0) {
-                cout << taustavari(turkoosi) << tekstivari(musta);
+                cout << tekstivari(musta);
+                if (siirtoRuudut[y][x]) {
+                    cout << taustavari(punainen);
+                }
+                else {
+                    cout << taustavari(turkoosi);
+                }
             }
             else {
-                cout << taustavari(valkoinen) << tekstivari(musta);
+                cout << tekstivari(musta);
+                if (siirtoRuudut[y][x]) {
+                    cout << taustavari(kirkkaan_punainen);
+                }
+                else {
+                    cout << taustavari(valkoinen);
+                }
             }
             
             string merkki = " ";
             
             // Jos NULL niin printataan tyhjä paikka.
-            if (_asema->lauta[y][x] != NULL) {
-                merkki = _asema->lauta[y][x]->getNimi();
+            if (_asema.lauta[y][x] != NULL) {
+                merkki = _asema.lauta[y][x]->getMerkki();
             }
             
-            cout << merkki;
+            cout << " " << merkki << " ";
         }
         
         cout << resetoiVarit() << " |\n";
     }
     
-    cout << resetoiVarit() << "  abcdefgh\n";
+    cout << resetoiVarit() << "   a  b  c  d  e  f  g  h  \n";
 }
 
 /*
@@ -68,30 +92,20 @@ Siirto Kayttoliittyma::annaVastustajanSiirto() {
         return true;
     };
     
-    auto tarkistaNappula = [this](char nappulaChar, int sarake, int rivi) -> bool {
+    auto tarkistaNappula = [this](char nappulaChar) -> bool {
         if (Asema::charToMustaNappula.find(nappulaChar) != Asema::charToMustaNappula.end()) {
             return true;
         }
         else if (Asema::charToValkoinenNappula.find(nappulaChar) != Asema::charToValkoinenNappula.end()) {
             return true;
         }
-        else {
-            return false;
-        }
+        
+        return false;
     };
     
-    char nappulaChar = 'i';
-    
-    int alkuSarake = -1;
-    int alkuRivi = -1;
-    int loppuSarake = -1;
-    int loppuRivi = -1;
-    bool pitkaLinna = false, lyhytLinna = false;
-    
-    do {
+    while(true) {
         if (cin.fail()) {
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
         else {
             cout << "Sy\xc3\xb6t\xc3\xa4 siirto muodossa: Nappula, alkuruutu ja loppuruutu.\n";
@@ -101,36 +115,34 @@ Siirto Kayttoliittyma::annaVastustajanSiirto() {
         string syote;
         cin >> syote;
         
-        pitkaLinna = syote == "O-O-O";
-        lyhytLinna = syote == "O-O";
+        if (cin.fail()) {
+            continue;
+        }
         
+        bool pitkaLinna = syote == "O-O-O";
+        bool lyhytLinna = syote == "O-O";
         if (pitkaLinna || lyhytLinna) {
-            break;
+            return Siirto(lyhytLinna, pitkaLinna);
         }
         
         if (syote.length() == 6) {
+            char nappulaChar = 'i';
+            int sarake0 = -1;
+            int rivi0 = -1;
+            int sarake1 = -1;
+            int rivi1 = -1;
+            
             nappulaChar = syote[0];
             
-            alkuSarake = syote[1] - 'a';
-            alkuRivi = syote[2] - '0' - 1;
-            loppuSarake = syote[4] - 'a';
-            loppuRivi = syote[5] - '0' - 1;
+            sarake0 = syote[1] - 'a';
+            rivi0 = syote[2] - '0' - 1;
+            sarake1 = syote[4] - 'a';
+            rivi1 = syote[5] - '0' - 1;
+            
+            if (tarkistaRuutu(sarake0, rivi0) && tarkistaRuutu(sarake1, rivi1) && tarkistaNappula(nappulaChar)) {
+                return Siirto(Ruutu(sarake0, rivi0), Ruutu(sarake1, rivi1));
+            }
         }
-    }
-    while (!tarkistaRuutu(alkuSarake, alkuRivi)
-           || !tarkistaRuutu(loppuSarake, loppuRivi)
-           || !tarkistaNappula(nappulaChar, alkuSarake, alkuRivi));
-    
-    cout << "outstanding move\n";
-    
-    if (pitkaLinna || lyhytLinna) {
-        return Siirto(lyhytLinna, pitkaLinna);
-    }
-    else {
-        Ruutu alku(alkuSarake, alkuRivi);
-        Ruutu loppu(loppuSarake, loppuRivi);
-        
-        return Siirto(alku, loppu);
     }
 }
 

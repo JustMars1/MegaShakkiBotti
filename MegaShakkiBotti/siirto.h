@@ -12,14 +12,12 @@ class Siirto
 {
 public:
 	Siirto(Ruutu, Ruutu);
-	Siirto(){}
 	Siirto(bool, bool); // Linnoitus lyhesti (K-siipi) tai pitkästi (D-siipi)?
-	Ruutu getAlkuruutu();
-	Ruutu getLoppuruutu();
-	bool onkoLyhytLinna();
-	bool onkoPitkalinna();
-	Nappula* miksikorotetaan = 0; 
-
+	const Ruutu& getAlkuruutu() const;
+	const Ruutu& getLoppuruutu() const;
+	bool onkoLyhytLinna() const;
+	bool onkoPitkalinna() const;
+	Nappula* miksikorotetaan;
 private:
 	Ruutu _alkuRuutu;
 	Ruutu _loppuRuutu;

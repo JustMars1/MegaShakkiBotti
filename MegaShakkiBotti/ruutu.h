@@ -2,15 +2,15 @@
 
 
 // Shakkilaudan ruutu tietyssä (rivi, sarake) -koordinaatissa.
-class Ruutu{
+class Ruutu {
 public:
-	Ruutu(int, int);
-	Ruutu() {}
-	int getRivi();
-	int getSarake();
+	Ruutu(int sarake, int rivi);
+    
+	int getRivi() const;
+	int getSarake() const;
+    
 	void setRivi(int);
 	void setSarake(int);
-
 private:
 	int _sarake;
 	int _rivi;
