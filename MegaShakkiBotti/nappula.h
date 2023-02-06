@@ -7,20 +7,22 @@
 class Asema;
 
 // Vakioarvot nappulatyypeille.
-enum {
-	VT,VR,VL,VD,VK,VS,
-	MT,MR,ML,MD,MK,MS
+enum
+{
+    VT,VR,VL,VD,VK,VS,
+    MT,MR,ML,MD,MK,MS
 };
 
 // Yliluokka shakkinappuloille.
-class Nappula {
+class Nappula
+{
 public:
-	Nappula(std::string merkki, int vari, int koodi);
-
-	// Siirtojen generointi. Puhdas virtuaalifunktio, eli aliluokat toteuttavat t‰m‰n
-	// omalla tavallaan.
-	virtual void annaSiirrot(std::list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) = 0;
-
+    Nappula(std::string merkki, int vari, int koodi);
+    
+    // Siirtojen generointi. Puhdas virtuaalifunktio, eli aliluokat toteuttavat t‰m‰n
+    // omalla tavallaan.
+    virtual void annaSiirrot(std::list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) = 0;
+    
     int getKoodi() const;
     void setKoodi(int koodi);
     
@@ -37,7 +39,8 @@ protected:
 
 // Torni-aliluokka. Virtuaalinen perint‰ tarkoittaa, ett‰ kantaluokka perit‰‰n moniperinn‰ss‰ vain kerran
 // (koska daami perii sek‰ tornin ett‰ l‰hetin).
-class Torni : public virtual Nappula {
+class Torni : public virtual Nappula
+{
 public:
     using Nappula::Nappula;
     void annaSiirrot(std::list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) override;
@@ -45,38 +48,43 @@ public:
 
 // L‰hetti-aliluokka. Virtuaalinen perint‰ tarkoittaa, ett‰ kantaluokka perit‰‰n moniperinn‰ss‰ vain kerran
 // (koska daami perii sek‰ tornin ett‰ l‰hetin).
-class Lahetti : public virtual Nappula {
+class Lahetti : public virtual Nappula
+{
 public:
     using Nappula::Nappula;
-	void annaSiirrot(std::list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) override;
+    void annaSiirrot(std::list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) override;
 };
 
 // Daami-aliluokka. Perii sek‰ l‰hetin ett‰ tornin.
-class Daami : public Lahetti, public Torni {
+class Daami : public Lahetti, public Torni
+{
 public:
     Daami(std::string merkki, int vari, int koodi);
-	void annaSiirrot(std::list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) override;
+    void annaSiirrot(std::list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) override;
 };
 
 // Kuningas-aliluokka.
-class Kuningas : public Nappula {
+class Kuningas : public Nappula
+{
 public:
     using Nappula::Nappula;
-	void annaSiirrot(std::list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) override;
+    void annaSiirrot(std::list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) override;
 };
 
 // Ratsu-aliluokka.
-class Ratsu : public Nappula {
+class Ratsu : public Nappula
+{
 public:
     using Nappula::Nappula;
     void annaSiirrot(std::list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) override;
 };
 
 // Sotilas-aliluokka.
-class Sotilas : public Nappula {
+class Sotilas : public Nappula
+{
 public:
     using Nappula::Nappula;
-	void annaSiirrot(std::list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) override;
+    void annaSiirrot(std::list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) override;
 private:
-	void lisaaSotilaanKorotukset(const Siirto& siirto, std::list<Siirto>& lista, const Asema& asema);
+    void lisaaSotilaanKorotukset(const Siirto& siirto, std::list<Siirto>& lista, const Asema& asema);
 };

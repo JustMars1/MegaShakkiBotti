@@ -37,7 +37,8 @@ int main()
     kayttoliittyma.piirraLauta(siirrot);
 	std::cout << "Siirtovuoro: Valkoinen.\n";
 
-	while (true) {
+	while (true)
+    {
         siirrot.clear();
 		Siirto testiSiirto = kayttoliittyma.annaVastustajanSiirto();
 		asema.paivitaAsema(testiSiirto);

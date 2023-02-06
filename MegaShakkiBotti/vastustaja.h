@@ -2,7 +2,8 @@
 #include <string>
 
 // Vastustajan tiedot.
-class Vastustaja {
+class Vastustaja
+{
 public:
 	Vastustaja(std::string);
 	std::string getNimimerkki();

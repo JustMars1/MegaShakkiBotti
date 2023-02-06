@@ -2,7 +2,8 @@
 #include <string>
 #include <string_view>
 
-enum Vari : uint8_t {
+enum Vari : uint8_t
+{
     musta = 30,
     punainen = 31,
     vihrea = 32,

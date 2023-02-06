@@ -7,7 +7,8 @@
 // Shakkiohjelman käyttöliittymä, joka osaa visualisoida nykyisen aseman
 // ja lukea käyttäjän syöttämät siirrot. Singleton.
 
-class Kayttoliittyma {
+class Kayttoliittyma
+{
 public:
     static Kayttoliittyma& getInstance();
     

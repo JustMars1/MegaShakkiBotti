@@ -2,7 +2,8 @@
 
 
 // Shakkilaudan ruutu tietyssä (rivi, sarake) -koordinaatissa.
-class Ruutu {
+class Ruutu
+{
 public:
 	Ruutu(int sarake, int rivi);
     

@@ -16,7 +16,8 @@
 
 using namespace std;
 
-Kayttoliittyma& Kayttoliittyma::getInstance() {
+Kayttoliittyma& Kayttoliittyma::getInstance()
+{
     static Kayttoliittyma instance;
     return instance;
 }
@@ -24,7 +25,8 @@ Kayttoliittyma& Kayttoliittyma::getInstance() {
 const Asema& Kayttoliittyma::getAsema() const { return _asema; }
 Asema& Kayttoliittyma::getAsema() { return _asema; }
 
-void Kayttoliittyma::piirraLauta(const list<Siirto>& siirrot) {
+void Kayttoliittyma::piirraLauta(const list<Siirto>& siirrot)
+{
     bool siirtoRuudut[8][8] = { false };
     
     for (auto& siirto : siirrot)
@@ -34,26 +36,34 @@ void Kayttoliittyma::piirraLauta(const list<Siirto>& siirrot) {
         siirtoRuudut[y][x] = true;
     }
     
-    for (int y = 7; y >= 0; y--) {
+    for (int y = 7; y >= 0; y--)
+    {
         cout << resetoiVarit() << to_string(y + 1) << " ";
         
-        for (int x = 0; x < 8; x++) {
+        for (int x = 0; x < 8; x++)
+        {
             // Joka toinen rivi valkoinen
-            if ((x + y) % 2 == 0) {
+            if ((x + y) % 2 == 0)
+            {
                 cout << tekstivari(musta);
-                if (siirtoRuudut[y][x]) {
+                if (siirtoRuudut[y][x])
+                {
                     cout << taustavari(punainen);
                 }
-                else {
+                else
+                {
                     cout << taustavari(turkoosi);
                 }
             }
-            else {
+            else
+            {
                 cout << tekstivari(musta);
-                if (siirtoRuudut[y][x]) {
+                if (siirtoRuudut[y][x])
+                {
                     cout << taustavari(kirkkaan_punainen);
                 }
-                else {
+                else
+                {
                     cout << taustavari(valkoinen);
                 }
             }
@@ -61,7 +71,8 @@ void Kayttoliittyma::piirraLauta(const list<Siirto>& siirrot) {
             string merkki = " ";
             
             // Jos NULL niin printataan tyhjä paikka.
-            if (_asema.lauta[y][x] != NULL) {
+            if (_asema.lauta[y][x] != NULL)
+            {
                 merkki = _asema.lauta[y][x]->getMerkki();
             }
             
@@ -79,53 +90,66 @@ void Kayttoliittyma::piirraLauta(const list<Siirto>& siirrot) {
  muodollisesti korrekti (ei tarkista aseman laillisuutta)
  Ottaa irti myös nappulan kirjaimen (K/D/L/R/T), tarkistaa että kirjain korrekti
  */
-Siirto Kayttoliittyma::annaVastustajanSiirto() {
-    auto tarkistaRuutu = [](int sarake, int rivi) -> bool {
-        if (sarake > 7 || sarake < 0) {
+Siirto Kayttoliittyma::annaVastustajanSiirto()
+{
+    auto tarkistaRuutu = [](int sarake, int rivi) -> bool
+    {
+        if (sarake > 7 || sarake < 0)
+        {
             return false;
         }
         
-        if (rivi > 7 || rivi < 0) {
+        if (rivi > 7 || rivi < 0)
+        {
             return false;
         }
         
         return true;
     };
     
-    auto tarkistaNappula = [this](char nappulaChar) -> bool {
-        if (Asema::charToMustaNappula.find(nappulaChar) != Asema::charToMustaNappula.end()) {
+    auto tarkistaNappula = [this](char nappulaChar) -> bool
+    {
+        if (Asema::charToMustaNappula.find(nappulaChar) != Asema::charToMustaNappula.end())
+        {
             return true;
         }
-        else if (Asema::charToValkoinenNappula.find(nappulaChar) != Asema::charToValkoinenNappula.end()) {
+        else if (Asema::charToValkoinenNappula.find(nappulaChar) != Asema::charToValkoinenNappula.end())
+        {
             return true;
         }
         
         return false;
     };
     
-    while(true) {
-        if (cin.fail()) {
+    while(true)
+    {
+        if (cin.fail())
+        {
             cin.clear();
         }
-        else {
-             cout << "Sy\xc3\xb6t\xc3\xa4 siirto muodossa: Nappula, alkuruutu ja loppuruutu.\n";
+        else
+        {
+            cout << "Sy\xc3\xb6t\xc3\xa4 siirto muodossa: Nappula, alkuruutu ja loppuruutu.\n";
             cout << "Esim. Rg1-f3. Nappulan kirjain isolla, loput pienell\xc3\xa4.\n";
         }
         
         string syote;
         cin >> syote;
         
-        if (cin.fail()) {
+        if (cin.fail())
+        {
             continue;
         }
         
         bool pitkaLinna = syote == "O-O-O";
         bool lyhytLinna = syote == "O-O";
-        if (pitkaLinna || lyhytLinna) {
+        if (pitkaLinna || lyhytLinna)
+        {
             return Siirto(lyhytLinna, pitkaLinna);
         }
         
-        if (syote.length() == 6) {
+        if (syote.length() == 6)
+        {
             char nappulaChar = 'i';
             int sarake0 = -1;
             int rivi0 = -1;
@@ -139,7 +163,8 @@ Siirto Kayttoliittyma::annaVastustajanSiirto() {
             sarake1 = syote[4] - 'a';
             rivi1 = syote[5] - '0' - 1;
             
-            if (tarkistaRuutu(sarake0, rivi0) && tarkistaRuutu(sarake1, rivi1) && tarkistaNappula(nappulaChar)) {
+            if (tarkistaRuutu(sarake0, rivi0) && tarkistaRuutu(sarake1, rivi1) && tarkistaNappula(nappulaChar))
+            {
                 return Siirto(Ruutu(sarake0, rivi0), Ruutu(sarake1, rivi1));
             }
         }
@@ -147,6 +172,7 @@ Siirto Kayttoliittyma::annaVastustajanSiirto() {
 }
 
 
-int Kayttoliittyma::kysyVastustajanVari() {
+int Kayttoliittyma::kysyVastustajanVari()
+{
     return 0;
 }

@@ -71,7 +71,7 @@ private:
     bool onkoAvausTaiKeskipeli(int vari);
     double nappuloitaKeskella(int vari);
     double linjat(int vari);
-    bool onkoRuutuUhattu(Ruutu* ruutu, int vastustajanVari);
+    bool onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari);
     void annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari);
     
     // Karsii siirrot, jotka jättävät oman K:n shakkiin.
