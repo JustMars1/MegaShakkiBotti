@@ -66,48 +66,64 @@ void Asema::paivitaAsema(const Siirto& siirto) {
         if (_siirtovuoro == 0)
         {
             // vuoro on valkoisen
-            if (siirto.onkoLyhytLinna())
+            if (siirto.onkoLyhytLinna() && lauta[0][5] == NULL && lauta[0][6] == NULL && !onkoValkeaKTliikkunut() && !onkoValkeaKuningasLiikkunut())
             {
                 _onkoValkeaKTliikkunut = true;
                 _onkoValkeaKuningasLiikkunut = true;
                 
-                lauta[7][5] = &Asema::vt;
-                lauta[7][6] = &Asema::vk;
-                lauta[7][4] = NULL;
-                lauta[7][7] = NULL;
+                lauta[0][5] = &Asema::vt;
+                lauta[0][6] = &Asema::vk;
+                lauta[0][4] = NULL;
+                lauta[0][7] = NULL;
+
+                _siirtovuoro = 1;
             }
-            else if (siirto.onkoPitkalinna())
+            else if (siirto.onkoPitkalinna() && lauta[0][3] == NULL && lauta[0][2] == NULL && lauta[0][1] == NULL && !onkoValkeaDTliikkunut() && !onkoValkeaKuningasLiikkunut())
             {
                 _onkoValkeaDTliikkunut = true;
                 _onkoValkeaKuningasLiikkunut = true;
                 
-                lauta[7][3] = &Asema::vt;
-                lauta[7][2] = &Asema::vk;
-                lauta[7][0] = NULL;
-                lauta[7][4] = NULL;
+                lauta[0][3] = &Asema::vt;
+                lauta[0][2] = &Asema::vk;
+                lauta[0][0] = NULL;
+                lauta[0][4] = NULL;
+
+                _siirtovuoro = 1;
+            } 
+            else {
+                std::cout << "Tornitus ei ole mahdollinen. \n";
+                
             }
+            
         }
         else {
             // on mustan vuoro
-            if (siirto.onkoLyhytLinna())
+            if (siirto.onkoLyhytLinna() && lauta[7][5] == NULL && lauta[7][6] == NULL && !onkoMustaKTliikkunut() && !onkoMustaKuningasLiikkunut())
             {
                 _onkoMustaKTliikkunut = true;
                 _onkoMustaKuningasLiikkunut = true;
                 
-                lauta[0][5] = &Asema::mt;
-                lauta[0][6] = &Asema::mk;
-                lauta[0][7] = NULL;
-                lauta[0][4] = NULL;
+                lauta[7][5] = &Asema::mt;
+                lauta[7][6] = &Asema::mk;
+                lauta[7][7] = NULL;
+                lauta[7][4] = NULL;
+
+                _siirtovuoro = 0;
             }
-            else if (siirto.onkoPitkalinna())
+            else if (siirto.onkoPitkalinna() && lauta[7][3] == NULL && lauta[7][2] == NULL && lauta[7][1] == NULL && !onkoMustaDTliikkunut() && !onkoMustaKuningasLiikkunut())
             {
                 _onkoMustaDTliikkunut = true;
                 _onkoMustaKuningasLiikkunut = true;
                 
-                lauta[0][3] = &Asema::mt;
-                lauta[0][2] = &Asema::mk;
-                lauta[0][0] = NULL;
-                lauta[0][4] = NULL;
+                lauta[7][3] = &Asema::mt;
+                lauta[7][2] = &Asema::mk;
+                lauta[7][0] = NULL;
+                lauta[7][4] = NULL;
+
+                _siirtovuoro = 0;
+            }
+            else {
+                std::cout << "Tornitus ei ole mahdollinen. \n";
             }
         }
     }
@@ -154,6 +170,8 @@ void Asema::paivitaAsema(const Siirto& siirto) {
         
         lauta[loppuY][loppuX] = nappulaPtr;
         lauta[alkuY][alkuX] = NULL;
+
+        _siirtovuoro = 1 - _siirtovuoro;
     }
     
     // Kaikki muut siirrot
@@ -182,7 +200,7 @@ void Asema::paivitaAsema(const Siirto& siirto) {
     
     //päivitetään _siirtovuoro
     
-    _siirtovuoro = 1 - _siirtovuoro;
+    //_siirtovuoro = 1 - _siirtovuoro;
 }
 
 int Asema::getSiirtovuoro() const { return _siirtovuoro; }
@@ -347,6 +365,59 @@ bool Asema::onkoRuutuUhattu(Ruutu* ruutu, int vastustajanVari)
     return false;
 }
 
+void Asema::annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari) {
+
+    if (vari == 0) {
+        // valkea, lyhyt linna 
+        if (!onkoValkeaKuningasLiikkunut() && !onkoValkeaKTliikkunut() 
+            && onkoRuutuUhattu(&Ruutu(4, 0), 1) 
+            && onkoRuutuUhattu(&Ruutu(6, 0), 1) 
+            && lauta[0][5] == NULL 
+            && lauta[0][6] == NULL) {
+
+            lista.push_back(Siirto(true, false)); 
+        }
+
+        // valkea, pitkä linna 
+        if (!onkoValkeaKuningasLiikkunut() && !onkoValkeaDTliikkunut() 
+            && onkoRuutuUhattu(&Ruutu(4, 0), 1) 
+            && onkoRuutuUhattu(&Ruutu(2, 0), 1) 
+            && lauta[0][1] == NULL 
+            && lauta[0][2] == NULL 
+            && lauta[0][3] == NULL) {
+
+            lista.push_back(Siirto(false, true));
+
+        }
+
+    }
+
+    if (vari == 1)
+    {
+        // musta, lyhyt linna 
+        if (!onkoMustaKuningasLiikkunut() && !onkoMustaKTliikkunut()
+            && onkoRuutuUhattu(&Ruutu(4, 7), 0)
+            && onkoRuutuUhattu(&Ruutu(5, 7), 0)
+            && lauta[7][5] == NULL
+            && lauta[7][6] == NULL) {
+
+            lista.push_back(Siirto(true, false));
+        }
+
+        // musta, pitkä linna
+        if (!onkoMustaKuningasLiikkunut() && !onkoMustaDTliikkunut()
+            && onkoRuutuUhattu(&Ruutu(4, 7), 0)
+            && onkoRuutuUhattu(&Ruutu(3, 7), 0)
+            && lauta[7][1] == NULL
+            && lauta[7][2] == NULL
+            && lauta[7][3] == NULL) {
+
+            lista.push_back(Siirto(false, true));
+        }
+    }
+    
+}
+
 void Asema::huolehdiKuninkaanShakeista(std::list<Siirto>& lista, int vari)
 {
 }
@@ -446,6 +517,8 @@ void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista) {
         //uusiAsema.paivitaAsema(s);
         index++;
     }
+
+    annaLinnoitusSiirrot(lista, _siirtovuoro);
 
     // Tyhjennetään siirtolista ja lisätään sinne sen puolen siirrot, kenen vuoro on.
     if (_siirtovuoro == 1)

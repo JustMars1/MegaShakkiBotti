@@ -32,6 +32,8 @@ void Torni::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& as
 	int x = ruutu.getSarake();
 	int y = ruutu.getRivi();
 
+
+
 	// Oikea
 	for (int i = x + 1; i < 8; i++)
 	{
@@ -95,6 +97,11 @@ void Torni::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& as
 			break;
 		}
 	}
+
+	// tornitus: 
+	
+	
+
 }
 
 void Ratsu::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) {
