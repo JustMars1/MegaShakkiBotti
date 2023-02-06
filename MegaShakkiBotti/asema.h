@@ -35,7 +35,7 @@ public:
     static Sotilas ms;
     
     // Ohestalyöntiä varten (-1 = sotilaan kaksoisaskelta ei tapahtunut edellisellä siirrolla).
-    int kaksoisaskelSarakkeella = -1;
+    int kaksoisAskel = -1;
     
     static std::map<char, Nappula*> charToValkoinenNappula;
     static std::map<char, Nappula*> charToMustaNappula;

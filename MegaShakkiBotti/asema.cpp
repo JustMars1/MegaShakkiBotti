@@ -58,8 +58,6 @@ Asema::Asema()
 , _onkoMustaKTliikkunut{false} {}
 
 void Asema::paivitaAsema(const Siirto& siirto) {
-    // Kaksoisaskel-lippu on oletusarvoisesti pois päältä.
-    // Asetetaan myöhemmin, jos tarvii.
     // Tarkastetaan on siirto lyhyt linna tai pitkä linna
     
     if (siirto.onkoLyhytLinna() || siirto.onkoPitkalinna() ) {
@@ -136,7 +134,7 @@ void Asema::paivitaAsema(const Siirto& siirto) {
         int loppuY = siirto.getLoppuruutu().getRivi();
         
         Nappula* nappulaPtr = lauta[alkuY][alkuX];
-        
+
         if (nappulaPtr == &Asema::vk)
         {
             _onkoValkeaKuningasLiikkunut = true;
@@ -167,6 +165,28 @@ void Asema::paivitaAsema(const Siirto& siirto) {
                 _onkoMustaDTliikkunut = true;
             }
         }
+
+        // Tarkistetaan, onko ohestalyönti mahdollinen
+        else if (nappulaPtr == &Asema::vs || &Asema::ms)
+        {
+            if (alkuY == 1 || alkuY == 6 && loppuY == 3 || loppuY == 4) kaksoisAskel = loppuX;
+
+            // Valkosen sotilaan ohestalyönti (paitsi väliaikaisratkasun kohdalla)
+            else if (kaksoisAskel != -1 && lauta[loppuY][loppuX] == lauta[5][kaksoisAskel])
+            {
+                if (nappulaPtr == &Asema::ms) lauta[loppuY - 1 + 2][kaksoisAskel] = NULL;  // Väliaikaisratkasu, koska loppuY - 1 antaa väärän tuloksen
+                else lauta[loppuY - 1][kaksoisAskel] = NULL;  // Normaalitilanne
+            }
+
+            // Mustan sotilaan ohestalyönti
+            else if (kaksoisAskel != -1 && lauta[loppuY][loppuX] == lauta[2][kaksoisAskel])
+            {
+                lauta[loppuY - 1][kaksoisAskel] = NULL;
+            }
+
+            // Ohestalyönti ei ole mahdollinen
+            else kaksoisAskel = -1;
+        }
         
         lauta[loppuY][loppuX] = nappulaPtr;
         lauta[alkuY][alkuX] = NULL;
@@ -181,12 +201,6 @@ void Asema::paivitaAsema(const Siirto& siirto) {
     
     
     //Laittaa talteen otetun nappulan uuteen ruutuun
-    
-    
-    // Tarkistetaan oliko sotilaan kaksoisaskel
-    // (asetetaan kaksoisaskel-lippu)
-    
-    // Ohestalyönti on tyhjään ruutuun. Vieressä oleva (sotilas) poistetaan.
     
     //// Katsotaan jos nappula on sotilas ja rivi on päätyrivi niin ei vaihdeta nappulaa
     ////eli alkuruutuun laitetaan null ja loppuruudussa on jo kliittymän laittama nappula MIIKKA, ei taida minmaxin kanssa hehkua?

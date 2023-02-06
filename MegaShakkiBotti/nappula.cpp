@@ -355,6 +355,22 @@ void Sotilas::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& 
             }
         }
     }
+
+	//Ohestalyönnin siirrot
+	if (asema.kaksoisAskel != -1)
+	{
+		if (vari == 0 && y0 == 4)
+		{
+			if (asema.lauta[4][asema.kaksoisAskel] && asema.lauta[4][asema.kaksoisAskel]->getKoodi() == MS)
+				lista.push_back(Siirto(ruutu, Ruutu(asema.kaksoisAskel, 5)));
+		}
+
+		if (vari == 1 && y0 == 3)
+		{
+			if (asema.lauta[3][asema.kaksoisAskel] && asema.lauta[3][asema.kaksoisAskel]->getKoodi() == VS)
+				lista.push_back(Siirto(ruutu, Ruutu(asema.kaksoisAskel, 2)));
+		}
+	}
 }
 
 void Sotilas::lisaaSotilaanKorotukset(const Siirto& siirto, list<Siirto>& lista, const Asema& asema) {
