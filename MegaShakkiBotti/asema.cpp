@@ -499,30 +499,6 @@ void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista)
     std::list<Siirto> mSiirrot;
     // Valkoisen siirrot.
     std::list<Siirto> vSiirrot;
-    //for (int y = 0; y < 8; y++)
-    //{
-    //    for (int x = 0; x < 8; x++)
-    //    {
-    //        if (lauta[y][x] != NULL) {
-    //            Ruutu ruutu(x, y);
-    //            lauta[y][x]->annaSiirrot(lista, ruutu, *this, lauta[y][x]->getVari());
-    
-    //            // Tallennetaan kuninkaiden ruudut.
-    //            // Valkea kuningas
-    //            if (lauta[y][x] == &vk)
-    //            {
-    //                vkRuutu.setRivi(y);
-    //                vkRuutu.setSarake(x);
-    //            }
-    //            // Musta kuningas
-    //            if (lauta[y][x] == &mk)
-    //            {
-    //                mkRuutu.setRivi(y);
-    //                mkRuutu.setSarake(x);
-    //            }
-    //        }
-    //    }
-    //}
     
     int index = 0;
     // Käydään läpi siirtojen lista.
@@ -565,7 +541,6 @@ void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista)
             }
         }
         
-        //uusiAsema.paivitaAsema(s);
         index++;
     }
     
@@ -582,64 +557,7 @@ void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista)
         lista.clear();
         lista = vSiirrot;
     }
-    
-    //// Helpottamaan valkoisen siirtojen havainnollistamista.
-    //std::cout << "Valkoisen lailliset siirrot: \n";
-    //bool ruudutV[8][8] = { false };
-    
-    //for (auto& siirto : vSiirrot)
-    //{
-    //    int x = siirto.getLoppuruutu().getSarake();
-    //    int y = siirto.getLoppuruutu().getRivi();
-    //    ruudutV[y][x] = true;
-    //}
-    
-    //for (int y = 7; y >= 0; y--)
-    //{
-    //    std::cout << std::to_string(y + 1) << " ";
-    //    for (int x = 0; x < 8; x++)
-    //    {
-    //        if (ruudutV[y][x]) {
-    //            std::cout << "v";
-    //        }
-    //        else {
-    //            std::cout << "-";
-    //        }
-    //    }
-    //    std::cout << "\n";
-    //}
-    
-    //std::cout << "  abcdefgh\n";
-    
-    
-    //// Helpottamaan mustan siirtojen havainnointia.
-    //std::cout << "Mustan lailliset siirrot: \n";
-    //bool ruudutM[8][8] = { false };
-    
-    //for (auto& siirto : mSiirrot)
-    //{
-    //    int x = siirto.getLoppuruutu().getSarake();
-    //    int y = siirto.getLoppuruutu().getRivi();
-    //    ruudutM[y][x] = true;
-    //}
-    
-    //for (int y = 7; y >= 0; y--)
-    //{
-    //    std::cout << std::to_string(y + 1) << " ";
-    //    for (int x = 0; x < 8; x++)
-    //    {
-    //        if (ruudutM[y][x]) {
-    //            std::cout << "m";
-    //        }
-    //        else {
-    //            std::cout << "-";
-    //        }
-    //    }
-    //    std::cout << "\n";
-    //}
-    
-    //std::cout << "  abcdefgh\n";
-    
+   
     // Apulistojen tyhjennys.
     vSiirrot.clear();
     mSiirrot.clear();
