@@ -596,7 +596,6 @@ void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista)
                     std::advance(listaFront, index);
                     
                     mSiirrot.push_back(*listaFront);
-                    //lauta[yAlku][xAlku]->annaSiirrot(mSiirrot, ruutuM, uusiAsema, lauta[yAlku][xAlku]->getVari());
                 }
             }
         }
@@ -611,9 +610,7 @@ void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista)
                     auto listaFront = lista.begin();
                     std::advance(listaFront, index);
                     
-                    vSiirrot.push_back(*listaFront);
-                    //lauta[yAlku][xAlku]->annaSiirrot(vSiirrot, ruutuV, uusiAsema, lauta[yAlku][xAlku]->getVari());
-                    
+                    vSiirrot.push_back(*listaFront);                  
                 }
             }
         }
