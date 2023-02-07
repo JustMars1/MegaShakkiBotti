@@ -188,31 +188,22 @@ bool Asema::paivitaAsema(const Siirto& siirto)
             _onkoMustaDTliikkunut = true;
         }
     }
-    
-    // Tarkistetaan, onko ohestalyönti mahdollinen
     else if (nappulaPtr == &Asema::vs || nappulaPtr == &Asema::ms)
     {
-        if (alkuY == 1 || (alkuY == 6 && loppuY == 3) || loppuY == 4)
+        // Tarkistetaan, onko ohestalyönti mahdollinen
+        if ((alkuY == 1 || alkuY == 6) && (loppuY == 3 || loppuY == 4))
         {
             kaksoisAskel = loppuX;
         }
-        
-        // Valkosen sotilaan ohestalyönti (paitsi väliaikaisratkasun kohdalla)
-        else if (kaksoisAskel != -1 && lauta[loppuY][loppuX] == lauta[5][kaksoisAskel])
+        else if (_siirtovuoro == 0 && kaksoisAskel != -1 && lauta[loppuY][loppuX] == lauta[5][kaksoisAskel])
         {
-            if (nappulaPtr == &Asema::ms)
-            {
-                lauta[loppuY - 1 + 2][kaksoisAskel] = NULL;
-            }  // Väliaikaisratkasu, koska loppuY - 1 antaa väärän tuloksen
-            else
-            {
-                lauta[loppuY - 1][kaksoisAskel] = NULL;  // Normaalitilanne
-            }
+            // Valkosen sotilaan ohestalyönti
+            lauta[loppuY - 1][kaksoisAskel] = NULL;
         }
-        else if (kaksoisAskel != -1 && lauta[loppuY][loppuX] == lauta[2][kaksoisAskel])
+        else if (_siirtovuoro == 1 && kaksoisAskel != -1 && lauta[loppuY][loppuX] == lauta[2][kaksoisAskel])
         {
             // Mustan sotilaan ohestalyönti
-            lauta[loppuY - 1][kaksoisAskel] = NULL;
+            lauta[loppuY + 1][kaksoisAskel] = NULL;
         }
         else {
             // Ohestalyönti ei ole mahdollinen
