@@ -7,16 +7,16 @@
 
 using namespace std;
 
-Nappula::Nappula(string merkki, int vari, int koodi)
+Nappula::Nappula(string merkki, int vari, NappulaKoodi koodi)
 : _merkki(merkki)
 , _vari{vari}
 , _koodi{koodi} {}
 
-int Nappula::getKoodi() const { return _koodi; }
+NappulaKoodi Nappula::getKoodi() const { return _koodi; }
 int Nappula::getVari() const { return _vari; }
 const string& Nappula::getMerkki() const { return _merkki; }
 
-void Nappula::setKoodi(int koodi)
+void Nappula::setKoodi(NappulaKoodi koodi)
 {
     _koodi = koodi;
 }
@@ -276,7 +276,7 @@ void Lahetti::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& 
     }
 }
 
-Daami::Daami(string merkki, int vari, int koodi)
+Daami::Daami(string merkki, int vari, NappulaKoodi koodi)
 : Nappula(merkki, vari, koodi)
 , Torni(merkki, vari, koodi)
 , Lahetti(merkki, vari, koodi) {}

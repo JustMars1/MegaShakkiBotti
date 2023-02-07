@@ -41,9 +41,11 @@ public:
     static std::map<char, Nappula*> charToValkoinenNappula;
     static std::map<char, Nappula*> charToMustaNappula;
     
+    static std::map<NappulaKoodi, float> nappulaKoodiToArvo;
+    
     Asema();												// Asettaa alkuaseman.
     bool paivitaAsema(const Siirto& siirto);				// P‰ivitt‰‰ aseman annetulla siirrolla.
-    double evaluoi();										// Aseman numeerinen arviointi.
+    float evaluoi();										// Aseman numeerinen arviointi.
     MinMaxPaluu maxi(int syvyys);							// Minimax (max:n siirtovuoro).
     MinMaxPaluu mini(int syvyys);							// Minimax (min:n siirtovuoro).
     MinMaxPaluu minimax(int syvyys);						// Minimax-algoritmi.
@@ -68,10 +70,10 @@ private:
     bool _onkoMustaDTliikkunut;			// Linnoitus ei ole sallittu, jos daamisuvustan torni on liikkunut.
     bool _onkoMustaKTliikkunut;			// Linnoitus ei ole sallittu, jos kuningassivustan torni on liikkunut.
     
-    double laskeNappuloidenArvo(int vari);
+    float laskeNappuloidenArvo(int vari);
     bool onkoAvausTaiKeskipeli(int vari);
-    double nappuloitaKeskella(int vari);
-    double linjat(int vari);
+    float nappuloitaKeskella(int vari);
+    float linjat(int vari);
     bool onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari);
     void annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari);
     

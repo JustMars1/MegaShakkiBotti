@@ -37,6 +37,20 @@ std::map<char, Nappula*> Asema::charToMustaNappula = {
     {'S', &Asema::ms}
 };
 
+std::map<NappulaKoodi, float> Asema::nappulaKoodiToArvo = {
+    {VD, 9},
+    {VT, 5},
+    {VL, 3.25},
+    {VR, 3},
+    {VS, 1},
+    {MD, -9},
+    {MT, -5},
+    {ML, -3.25},
+    {MR, -3},
+    {MS, -1}
+};
+
+
 // Ensin alustetaan kaikki laudan ruudut nappulla "NULL", koska muuten ruuduissa satunnaista tauhkaa
 // Asetetaan alkuaseman mukaisesti nappulat ruuduille
 Asema::Asema()
@@ -274,9 +288,10 @@ bool Asema::onkoMustaKTliikkunut() const { return _onkoMustaKTliikkunut; }
  3. Arvosta keskustaa sotilailla ja ratsuilla
  4. Arvosta pitkiä linjoja daami, torni ja lähetti
  */
-double Asema::evaluoi()
+float Asema::evaluoi()
 {
-    return 0;
+    float summa = laskeNappuloidenArvo(_siirtovuoro);
+    return summa;
     
     //kertoimet asetettu sen takia että niiden avulla asioiden painoarvoa voidaan säätää helposti yhdestä paikasta
     
@@ -290,23 +305,94 @@ double Asema::evaluoi()
     
 }
 
-double Asema::laskeNappuloidenArvo(int vari)
+float Asema::laskeNappuloidenArvo(int vari)
 {
-    return 0;
+    float summa = 0;
+    for (int y = 0; y < 8; y++)
+    {
+        for (int x = 0; x < 8; x++)
+        {
+            Nappula* nappula = lauta[y][x];
+            
+            if (nappula == nullptr) {
+                continue;
+            }
+            
+            float kerroin = _siirtovuoro == 0 ? 1 : -1;
+            float arvo = kerroin * nappulaKoodiToArvo[nappula->getKoodi()];
+            
+            summa += arvo;
+        }
+    }
     
+    return summa;
 }
 
 bool Asema::onkoAvausTaiKeskipeli(int vari)
 {
-    return 0;
+    int mustanUpseerit = 0;
+    int valkoisenUpseerit = 0;
+    
+    bool mustanDaami = false;
+    bool valkoisenDaami = false;
+    
+    for (int y = 0; y < 8; y++)
+    {
+        for (int x = 0; x < 8; x++)
+        {
+            Nappula* nappula = lauta[y][x];
+            
+            if (nappula == &vd)
+            {
+                valkoisenDaami = true;
+                valkoisenUpseerit++;
+            }
+            if (nappula == &md)
+            {
+                mustanDaami = true;
+                mustanUpseerit++;
+            }
+            
+            switch (nappula->getKoodi())
+            {
+                case VT:
+                case MT:
+                case VL:
+                case ML:
+                case VR:
+                case MR:
+                    mustanUpseerit++;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
+//    if (valkoisenUpseerit + mustanUpseerit < 4 || mustanDaami || valkoisenDaami)
+//    {
+//        return false;
+//    }
+//
+//
+//    if (vari == 0)
+//    {
+//        return valkoisenUpseerit < 4 || mustanUpseerit > 2 || (mustanDaami && mustanUpseerit > 1);
+//    }
+//    else {
+//        return mustanUpseerit < 4;
+//    }
+    
     // Jos upseereita 3 tai vähemmän on loppupeli
     // mutta jos daami laudalla on loppueli vasta kun kuin vain daami jäljellä
     
     //Jos vari on 0 eli valkoiset
     //niin on keskipeli jos mustalla upseereita yli 2 tai jos daami+1
+    
+    return false;
 }
 
-double Asema::nappuloitaKeskella(int vari)
+float Asema::nappuloitaKeskella(int vari)
 {
     return 0;
     
@@ -325,7 +411,7 @@ double Asema::nappuloitaKeskella(int vari)
     
 }
 
-double Asema::linjat(int vari)
+float Asema::linjat(int vari)
 {
     return 0;
     
