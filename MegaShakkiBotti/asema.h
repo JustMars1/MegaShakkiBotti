@@ -10,7 +10,8 @@
 
 // Asema sis‰lt‰‰ kaiken tarvittavan informaation pelitilanteen kuvaamiseksi
 // (nappuloiden sijainti, siirtovuoro, linnoitusoikeudet jne.).
-class Asema {
+class Asema
+{
 public:
     // Pelilauta sis‰lt‰‰ osoittimet kunkin ruudun nappula-olioon (nullptr/NULL/0 jos ruutu on tyhj‰).
     // Public-m‰‰reell‰, koska t‰t‰ k‰ytet‰‰n paljon muualla.
@@ -41,7 +42,7 @@ public:
     static std::map<char, Nappula*> charToMustaNappula;
     
     Asema();												// Asettaa alkuaseman.
-    void paivitaAsema(const Siirto& siirto);				// P‰ivitt‰‰ aseman annetulla siirrolla.
+    bool paivitaAsema(const Siirto& siirto);				// P‰ivitt‰‰ aseman annetulla siirrolla.
     double evaluoi();										// Aseman numeerinen arviointi.
     MinMaxPaluu maxi(int syvyys);							// Minimax (max:n siirtovuoro).
     MinMaxPaluu mini(int syvyys);							// Minimax (min:n siirtovuoro).

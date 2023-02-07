@@ -107,18 +107,20 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
         return true;
     };
     
-    auto tarkistaNappula = [this](char nappulaChar) -> bool
+    auto tarkistaNappula = [this](char nappulaChar) -> Nappula*
     {
-        if (Asema::charToMustaNappula.find(nappulaChar) != Asema::charToMustaNappula.end())
-        {
-            return true;
+        if (_asema.getSiirtovuoro() == 0) {
+            if (Asema::charToValkoinenNappula.find(nappulaChar) != Asema::charToValkoinenNappula.end())
+            {
+                return Asema::charToValkoinenNappula[nappulaChar];
+            }
         }
-        else if (Asema::charToValkoinenNappula.find(nappulaChar) != Asema::charToValkoinenNappula.end())
+        else if (Asema::charToMustaNappula.find(nappulaChar) != Asema::charToMustaNappula.end())
         {
-            return true;
+            return Asema::charToMustaNappula[nappulaChar];
         }
         
-        return false;
+        return nullptr;
     };
     
     while(true)
@@ -151,26 +153,62 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
         if (syote.length() == 6)
         {
             char nappulaChar = 'i';
-            int sarake0 = -1;
-            int rivi0 = -1;
-            int sarake1 = -1;
-            int rivi1 = -1;
+            int alkuSarake = -1;
+            int alkuRivi = -1;
+            int loppuSarake = -1;
+            int loppuRivi = -1;
             
             nappulaChar = syote[0];
             
-            sarake0 = syote[1] - 'a';
-            rivi0 = syote[2] - '0' - 1;
-            sarake1 = syote[4] - 'a';
-            rivi1 = syote[5] - '0' - 1;
+            alkuSarake = syote[1] - 'a';
+            alkuRivi = syote[2] - '0' - 1;
+            loppuSarake = syote[4] - 'a';
+            loppuRivi = syote[5] - '0' - 1;
             
-            if (tarkistaRuutu(sarake0, rivi0) && tarkistaRuutu(sarake1, rivi1) && tarkistaNappula(nappulaChar))
+            Nappula* nappula = tarkistaNappula(nappulaChar);
+            if (tarkistaRuutu(alkuSarake, alkuRivi) && tarkistaRuutu(loppuSarake, loppuRivi) && nappula != nullptr)
             {
-                return Siirto(Ruutu(sarake0, rivi0), Ruutu(sarake1, rivi1));
+                Siirto siirto(Ruutu(alkuSarake, alkuRivi), Ruutu(loppuSarake, loppuRivi));
+                if ((nappula == &Asema::ms && loppuRivi == 0) || (nappula == &Asema::vs && loppuRivi == 7))
+                {
+                    while (true)
+                    {
+                        Nappula* korotus = nullptr;
+                        if (cin.fail())
+                        {
+                            cin.clear();
+                        }
+                        else
+                        {
+                            cout << "Sy\xc3\xb6t\xc3\xa4 miksi korotetaan:\nEsim. D, R, T tai L.\n";
+                        }
+                        
+                        char korotusChar;
+                        cin >> korotusChar;
+                        
+                        if (cin.fail())
+                        {
+                            continue;
+                        }
+                        
+                        korotus = tarkistaNappula(korotusChar);
+                        if (korotus != nullptr && korotus != &Asema::ms && korotus != &Asema::vs) {
+                            siirto.miksikorotetaan = korotus;
+                            break;
+                        }
+                    }
+                }
+                
+                return siirto;
             }
         }
     }
 }
 
+void Kayttoliittyma::tulostaVirhe(string virhe)
+{
+    cout << tekstivari(punainen) << "! " << virhe <<  " !" << resetoiVarit() << std::endl;
+}
 
 int Kayttoliittyma::kysyVastustajanVari()
 {

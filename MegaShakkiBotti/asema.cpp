@@ -3,6 +3,7 @@
 #include "minmaxpaluu.h"
 #include "nappula.h"
 #include "ruutu.h"
+#include "kayttoliittyma.h"
 
 Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK);
 Daami Asema::vd = Daami("\xe2\x99\x95", 0, VD);
@@ -58,7 +59,7 @@ Asema::Asema()
 , _onkoMustaDTliikkunut{false}
 , _onkoMustaKTliikkunut{false} {}
 
-void Asema::paivitaAsema(const Siirto& siirto)
+bool Asema::paivitaAsema(const Siirto& siirto)
 {
     // Tarkastetaan on siirto lyhyt linna tai pitkä linna
     
@@ -78,6 +79,7 @@ void Asema::paivitaAsema(const Siirto& siirto)
                 lauta[0][7] = NULL;
                 
                 _siirtovuoro = 1;
+                return true;
             }
             else if (siirto.onkoPitkalinna() && lauta[0][3] == NULL && lauta[0][2] == NULL && lauta[0][1] == NULL && !onkoValkeaDTliikkunut() && !onkoValkeaKuningasLiikkunut())
             {
@@ -90,12 +92,8 @@ void Asema::paivitaAsema(const Siirto& siirto)
                 lauta[0][4] = NULL;
                 
                 _siirtovuoro = 1;
+                return true;
             }
-            else
-            {
-                std::cout << "Tornitus ei ole mahdollinen. \n";
-            }
-            
         }
         else
         {
@@ -111,6 +109,7 @@ void Asema::paivitaAsema(const Siirto& siirto)
                 lauta[7][4] = NULL;
                 
                 _siirtovuoro = 0;
+                return true;
             }
             else if (siirto.onkoPitkalinna() && lauta[7][3] == NULL && lauta[7][2] == NULL && lauta[7][1] == NULL && !onkoMustaDTliikkunut() && !onkoMustaKuningasLiikkunut())
             {
@@ -123,81 +122,116 @@ void Asema::paivitaAsema(const Siirto& siirto)
                 lauta[7][4] = NULL;
                 
                 _siirtovuoro = 0;
+                return true;
             }
+        }
+        
+        Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen.");
+        return false;
+    }
+    
+    int alkuX = siirto.getAlkuruutu().getSarake();
+    int alkuY = siirto.getAlkuruutu().getRivi();
+    
+    int loppuX = siirto.getLoppuruutu().getSarake();
+    int loppuY = siirto.getLoppuruutu().getRivi();
+    
+    if (alkuY < 0 || alkuY > 7 || alkuX < 0 || alkuX > 7) {
+        Kayttoliittyma::tulostaVirhe("Siirron alkuruutu laudan ulkopuolella.");
+        return false;
+    }
+    
+    if (loppuY < 0 || loppuY > 7 || loppuX < 0 || loppuX > 7) {
+        Kayttoliittyma::tulostaVirhe("Siirron loppuruutu laudan ulkopuolella.");
+        return false;
+    }
+    
+    Nappula* nappulaPtr = lauta[alkuY][alkuX];
+    
+    if (nappulaPtr == nullptr) {
+        Kayttoliittyma::tulostaVirhe("Siirron alkuruudussa ei ole nappulaa.");
+        return false;
+    }
+    
+    if (nappulaPtr->getVari() != _siirtovuoro) {
+        Kayttoliittyma::tulostaVirhe("Et voi siirtää vastustajan nappulaa.");
+        return false;
+    }
+    
+    if (nappulaPtr == &Asema::vk)
+    {
+        _onkoValkeaKuningasLiikkunut = true;
+    }
+    else if (nappulaPtr == &Asema::mk)
+    {
+        _onkoMustaKuningasLiikkunut = true;
+    }
+    else if (nappulaPtr == &Asema::vt)
+    {
+        if (alkuX == 0 && !_onkoValkeaDTliikkunut)
+        {
+            _onkoValkeaDTliikkunut = true;
+        }
+        else if (alkuX == 7 && !_onkoValkeaKTliikkunut)
+        {
+            _onkoValkeaKTliikkunut = true;
+        }
+    }
+    else if (nappulaPtr == &Asema::mt)
+    {
+        if (alkuX == 0 && !_onkoMustaKTliikkunut)
+        {
+            _onkoMustaKTliikkunut = true;
+        }
+        else if (alkuX == 7 && !_onkoMustaDTliikkunut)
+        {
+            _onkoMustaDTliikkunut = true;
+        }
+    }
+    
+    // Tarkistetaan, onko ohestalyönti mahdollinen
+    else if (nappulaPtr == &Asema::vs || nappulaPtr == &Asema::ms)
+    {
+        if (alkuY == 1 || (alkuY == 6 && loppuY == 3) || loppuY == 4)
+        {
+            kaksoisAskel = loppuX;
+        }
+        
+        // Valkosen sotilaan ohestalyönti (paitsi väliaikaisratkasun kohdalla)
+        else if (kaksoisAskel != -1 && lauta[loppuY][loppuX] == lauta[5][kaksoisAskel])
+        {
+            if (nappulaPtr == &Asema::ms)
+            {
+                lauta[loppuY - 1 + 2][kaksoisAskel] = NULL;
+            }  // Väliaikaisratkasu, koska loppuY - 1 antaa väärän tuloksen
             else
             {
-                std::cout << "Tornitus ei ole mahdollinen. \n";
+                lauta[loppuY - 1][kaksoisAskel] = NULL;  // Normaalitilanne
             }
         }
-    }
-    else
-    {
-        int alkuX = siirto.getAlkuruutu().getSarake();
-        int alkuY = siirto.getAlkuruutu().getRivi();
-        
-        int loppuX = siirto.getLoppuruutu().getSarake();
-        int loppuY = siirto.getLoppuruutu().getRivi();
-        
-        Nappula* nappulaPtr = lauta[alkuY][alkuX];
-        
-        if (nappulaPtr == &Asema::vk)
+        else if (kaksoisAskel != -1 && lauta[loppuY][loppuX] == lauta[2][kaksoisAskel])
         {
-            _onkoValkeaKuningasLiikkunut = true;
-        }
-        else if (nappulaPtr == &Asema::mk)
-        {
-            _onkoMustaKuningasLiikkunut = true;
-        }
-        else if (nappulaPtr == &Asema::vt)
-        {
-            if (alkuX == 0 && !_onkoValkeaDTliikkunut)
-            {
-                _onkoValkeaDTliikkunut = true;
-            }
-            else if (alkuX == 7 && !_onkoValkeaKTliikkunut)
-            {
-                _onkoValkeaKTliikkunut = true;
-            }
-        }
-        else if (nappulaPtr == &Asema::mt)
-        {
-            if (alkuX == 0 && !_onkoMustaKTliikkunut)
-            {
-                _onkoMustaKTliikkunut = true;
-            }
-            else if (alkuX == 7 && !_onkoMustaDTliikkunut)
-            {
-                _onkoMustaDTliikkunut = true;
-            }
-        }
-        
-        // Tarkistetaan, onko ohestalyönti mahdollinen
-        else if (nappulaPtr == &Asema::vs || nappulaPtr == &Asema::ms)
-        {
-            if (alkuY == 1 || (alkuY == 6 && loppuY == 3) || loppuY == 4) kaksoisAskel = loppuX;
-            
-            // Valkosen sotilaan ohestalyönti (paitsi väliaikaisratkasun kohdalla)
-            else if (kaksoisAskel != -1 && lauta[loppuY][loppuX] == lauta[5][kaksoisAskel])
-            {
-                if (nappulaPtr == &Asema::ms) lauta[loppuY - 1 + 2][kaksoisAskel] = NULL;  // Väliaikaisratkasu, koska loppuY - 1 antaa väärän tuloksen
-                else lauta[loppuY - 1][kaksoisAskel] = NULL;  // Normaalitilanne
-            }
-            
             // Mustan sotilaan ohestalyönti
-            else if (kaksoisAskel != -1 && lauta[loppuY][loppuX] == lauta[2][kaksoisAskel])
-            {
-                lauta[loppuY - 1][kaksoisAskel] = NULL;
-            }
-            
-            // Ohestalyönti ei ole mahdollinen
-            else kaksoisAskel = -1;
+            lauta[loppuY - 1][kaksoisAskel] = NULL;
         }
-        
-        lauta[loppuY][loppuX] = nappulaPtr;
-        lauta[alkuY][alkuX] = NULL;
-        
-        _siirtovuoro = 1 - _siirtovuoro;
+        else {
+            // Ohestalyönti ei ole mahdollinen
+            kaksoisAskel = -1;
+        }
     }
+    
+    if (siirto.miksikorotetaan != nullptr) {
+        lauta[loppuY][loppuX] = siirto.miksikorotetaan;
+    }
+    else {
+        lauta[loppuY][loppuX] = nappulaPtr;
+    }
+    
+    lauta[alkuY][alkuX] = NULL;
+    
+    _siirtovuoro = 1 - _siirtovuoro;
+    
+    return true;
     
     // Kaikki muut siirrot
     

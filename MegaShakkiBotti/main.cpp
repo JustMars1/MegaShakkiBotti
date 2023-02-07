@@ -41,9 +41,10 @@ int main()
     {
         siirrot.clear();
 		Siirto testiSiirto = kayttoliittyma.annaVastustajanSiirto();
-		asema.paivitaAsema(testiSiirto);
-		asema.annaLaillisetSiirrot(siirrot);
-        kayttoliittyma.piirraLauta(siirrot);
+        if (asema.paivitaAsema(testiSiirto)) {
+            asema.annaLaillisetSiirrot(siirrot);
+            kayttoliittyma.piirraLauta(siirrot);
+        }
 
 		// N‰ytt‰‰ kenen siirtovuoro.
 		if (asema.getSiirtovuoro() == 1)

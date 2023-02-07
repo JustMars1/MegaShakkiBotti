@@ -16,6 +16,8 @@ public:
     Siirto annaVastustajanSiirto();
     int kysyVastustajanVari();
     
+    static void tulostaVirhe(std::string virhe);
+    
     const Asema& getAsema() const;
     Asema& getAsema();
 private:
