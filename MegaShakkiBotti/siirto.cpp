@@ -17,4 +17,4 @@ Siirto::Siirto(bool lyhytLinna, bool pitkaLinna)
 const Ruutu& Siirto::getAlkuruutu() const { return _alkuRuutu; }
 const Ruutu& Siirto::getLoppuruutu() const { return _loppuRuutu; }
 bool Siirto::onkoLyhytLinna() const { return _lyhytLinna; }
-bool Siirto::onkoPitkalinna() const { return _pitkaLinna; }
+bool Siirto::onkoPitkaLinna() const { return _pitkaLinna; }

@@ -16,7 +16,7 @@ public:
 	const Ruutu& getAlkuruutu() const;
 	const Ruutu& getLoppuruutu() const;
 	bool onkoLyhytLinna() const;
-	bool onkoPitkalinna() const;
+	bool onkoPitkaLinna() const;
 	Nappula* miksikorotetaan;
 private:
 	Ruutu _alkuRuutu;

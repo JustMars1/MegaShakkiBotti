@@ -77,12 +77,15 @@ bool Asema::paivitaAsema(const Siirto& siirto)
 {
     // Tarkastetaan on siirto lyhyt linna tai pitkä linna
     
-    if (siirto.onkoLyhytLinna() || siirto.onkoPitkalinna() )
+    bool lyhytlinna = siirto.onkoLyhytLinna();
+    bool pitkaLinna = siirto.onkoPitkaLinna();
+    
+    if (lyhytlinna || pitkaLinna)
     {
         if (_siirtovuoro == 0)
         {
             // vuoro on valkoisen
-            if (siirto.onkoLyhytLinna() && lauta[0][5] == NULL && lauta[0][6] == NULL && !onkoValkeaKTliikkunut() && !onkoValkeaKuningasLiikkunut())
+            if (lyhytlinna && lauta[0][5] == NULL && lauta[0][6] == NULL && !onkoValkeaKTliikkunut() && !onkoValkeaKuningasLiikkunut())
             {
                 _onkoValkeaKTliikkunut = true;
                 _onkoValkeaKuningasLiikkunut = true;
@@ -95,7 +98,7 @@ bool Asema::paivitaAsema(const Siirto& siirto)
                 _siirtovuoro = 1;
                 return true;
             }
-            else if (siirto.onkoPitkalinna() && lauta[0][3] == NULL && lauta[0][2] == NULL && lauta[0][1] == NULL && !onkoValkeaDTliikkunut() && !onkoValkeaKuningasLiikkunut())
+            else if (pitkaLinna && lauta[0][3] == NULL && lauta[0][2] == NULL && lauta[0][1] == NULL && !onkoValkeaDTliikkunut() && !onkoValkeaKuningasLiikkunut())
             {
                 _onkoValkeaDTliikkunut = true;
                 _onkoValkeaKuningasLiikkunut = true;
@@ -112,7 +115,7 @@ bool Asema::paivitaAsema(const Siirto& siirto)
         else
         {
             // on mustan vuoro
-            if (siirto.onkoLyhytLinna() && lauta[7][5] == NULL && lauta[7][6] == NULL && !onkoMustaKTliikkunut() && !onkoMustaKuningasLiikkunut())
+            if (lyhytlinna && lauta[7][5] == NULL && lauta[7][6] == NULL && !onkoMustaKTliikkunut() && !onkoMustaKuningasLiikkunut())
             {
                 _onkoMustaKTliikkunut = true;
                 _onkoMustaKuningasLiikkunut = true;
@@ -125,7 +128,7 @@ bool Asema::paivitaAsema(const Siirto& siirto)
                 _siirtovuoro = 0;
                 return true;
             }
-            else if (siirto.onkoPitkalinna() && lauta[7][3] == NULL && lauta[7][2] == NULL && lauta[7][1] == NULL && !onkoMustaDTliikkunut() && !onkoMustaKuningasLiikkunut())
+            else if (pitkaLinna && lauta[7][3] == NULL && lauta[7][2] == NULL && lauta[7][1] == NULL && !onkoMustaDTliikkunut() && !onkoMustaKuningasLiikkunut())
             {
                 _onkoMustaDTliikkunut = true;
                 _onkoMustaKuningasLiikkunut = true;
@@ -150,24 +153,28 @@ bool Asema::paivitaAsema(const Siirto& siirto)
     int loppuX = siirto.getLoppuruutu().getSarake();
     int loppuY = siirto.getLoppuruutu().getRivi();
     
-    if (alkuY < 0 || alkuY > 7 || alkuX < 0 || alkuX > 7) {
+    if (alkuY < 0 || alkuY > 7 || alkuX < 0 || alkuX > 7)
+    {
         Kayttoliittyma::tulostaVirhe("Siirron alkuruutu laudan ulkopuolella.");
         return false;
     }
     
-    if (loppuY < 0 || loppuY > 7 || loppuX < 0 || loppuX > 7) {
+    if (loppuY < 0 || loppuY > 7 || loppuX < 0 || loppuX > 7)
+    {
         Kayttoliittyma::tulostaVirhe("Siirron loppuruutu laudan ulkopuolella.");
         return false;
     }
     
     Nappula* nappulaPtr = lauta[alkuY][alkuX];
     
-    if (nappulaPtr == nullptr) {
+    if (nappulaPtr == nullptr)
+    {
         Kayttoliittyma::tulostaVirhe("Siirron alkuruudussa ei ole nappulaa.");
         return false;
     }
     
-    if (nappulaPtr->getVari() != _siirtovuoro) {
+    if (nappulaPtr->getVari() != _siirtovuoro)
+    {
         Kayttoliittyma::tulostaVirhe("Et voi siirtää vastustajan nappulaa.");
         return false;
     }
@@ -205,30 +212,38 @@ bool Asema::paivitaAsema(const Siirto& siirto)
     else if (nappulaPtr == &Asema::vs || nappulaPtr == &Asema::ms)
     {
         // Tarkistetaan, onko ohestalyönti mahdollinen
-        if ((alkuY == 1 || alkuY == 6) && (loppuY == 3 || loppuY == 4))
+        if ((alkuY == 1 && loppuY == 3) || (alkuY == 6 && loppuY == 4))
         {
-            kaksoisAskel = loppuX;
+            kaksoisaskel = loppuX;
         }
-        else if (_siirtovuoro == 0 && kaksoisAskel != -1 && lauta[loppuY][loppuX] == lauta[5][kaksoisAskel])
+        else if (kaksoisaskel != -1)
         {
-            // Valkosen sotilaan ohestalyönti
-            lauta[loppuY - 1][kaksoisAskel] = NULL;
-        }
-        else if (_siirtovuoro == 1 && kaksoisAskel != -1 && lauta[loppuY][loppuX] == lauta[2][kaksoisAskel])
-        {
-            // Mustan sotilaan ohestalyönti
-            lauta[loppuY + 1][kaksoisAskel] = NULL;
-        }
-        else {
-            // Ohestalyönti ei ole mahdollinen
-            kaksoisAskel = -1;
+            if (_siirtovuoro == 0 && lauta[loppuY][loppuX] == lauta[5][kaksoisaskel])
+            {
+                // Valkosen sotilaan ohestalyönti
+                lauta[loppuY - 1][kaksoisaskel] = NULL;
+            }
+            else if (_siirtovuoro == 1 && lauta[loppuY][loppuX] == lauta[2][kaksoisaskel])
+            {
+                // Mustan sotilaan ohestalyönti
+                lauta[loppuY + 1][kaksoisaskel] = NULL;
+            }
+            
+            kaksoisaskel = -1;
         }
     }
     
-    if (siirto.miksikorotetaan != nullptr) {
+    if (nappulaPtr != &Asema::vs && nappulaPtr != &Asema::ms)
+    {
+        kaksoisaskel = -1;
+    }
+    
+    if (siirto.miksikorotetaan != nullptr)
+    {
         lauta[loppuY][loppuX] = siirto.miksikorotetaan;
     }
-    else {
+    else
+    {
         lauta[loppuY][loppuX] = nappulaPtr;
     }
     
@@ -237,28 +252,6 @@ bool Asema::paivitaAsema(const Siirto& siirto)
     _siirtovuoro = 1 - _siirtovuoro;
     
     return true;
-    
-    // Kaikki muut siirrot
-    
-    
-    //Ottaa siirron alkuruudussa olleen nappulan talteen
-    
-    
-    //Laittaa talteen otetun nappulan uuteen ruutuun
-    
-    //// Katsotaan jos nappula on sotilas ja rivi on päätyrivi niin ei vaihdeta nappulaa
-    ////eli alkuruutuun laitetaan null ja loppuruudussa on jo kliittymän laittama nappula MIIKKA, ei taida minmaxin kanssa hehkua?
-    
-    //
-    ////muissa tapauksissa alkuruutuun null ja loppuruutuun sama alkuruudusta lähtenyt nappula
-    
-    // katsotaan jos liikkunut nappula on kuningas niin muutetaan onkoKuningasLiikkunut arvo (molemmille väreille)
-    
-    // katsotaan jos liikkunut nappula on torni niin muutetaan onkoTorniLiikkunut arvo (molemmille väreille ja molemmille torneille)
-    
-    //päivitetään _siirtovuoro
-    
-    //_siirtovuoro = 1 - _siirtovuoro;
 }
 
 int Asema::getSiirtovuoro() const { return _siirtovuoro; }
