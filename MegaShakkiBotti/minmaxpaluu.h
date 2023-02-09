@@ -6,10 +6,12 @@
 class MinMaxPaluu
 {
 public:
-	double evaluointiArvo;
+	float evaluointiArvo;
 	Siirto _parasSiirto;
     
-    MinMaxPaluu(double arvo, Siirto siirto)
+    MinMaxPaluu(float arvo, Siirto siirto)
     : evaluointiArvo{arvo}
     , _parasSiirto(siirto) {}
+
+    MinMaxPaluu() : evaluointiArvo{0} , _parasSiirto(Siirto()) {}
 };

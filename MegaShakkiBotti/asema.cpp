@@ -1,9 +1,11 @@
 #include <iostream>
+#include <limits>
 #include "asema.h"
 #include "minmaxpaluu.h"
 #include "nappula.h"
 #include "ruutu.h"
 #include "kayttoliittyma.h"
+
 
 Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK);
 Daami Asema::vd = Daami("\xe2\x99\x95", 0, VD);
@@ -37,7 +39,7 @@ std::map<char, Nappula*> Asema::charToMustaNappula = {
     {'S', &Asema::ms}
 };
 
-std::map<NappulaKoodi, float> Asema::nappulaKoodiToArvo = {
+std::map<NappulaKoodi, float> Asema::arvoMap = {
     {VD, 9},
     {VT, 5},
     {VL, 3.25},
@@ -50,6 +52,7 @@ std::map<NappulaKoodi, float> Asema::nappulaKoodiToArvo = {
     {MS, -1}
 };
 
+float Asema::maxArvo = Asema::arvoMap[VD] + Asema::arvoMap[VT] * 2 + Asema::arvoMap[VL] * 2 + Asema::arvoMap[VR] * 2 + Asema::arvoMap[VS] * 8;
 
 // Ensin alustetaan kaikki laudan ruudut nappulla "NULL", koska muuten ruuduissa satunnaista tauhkaa
 // Asetetaan alkuaseman mukaisesti nappulat ruuduille
@@ -312,13 +315,14 @@ float Asema::laskeNappuloidenArvo(int vari)
             }
             
             float kerroin = _siirtovuoro == 0 ? 1 : -1;
-            float arvo = kerroin * nappulaKoodiToArvo[nappula->getKoodi()];
+            float arvo = kerroin * arvoMap[nappula->getKoodi()];
             
             summa += arvo;
         }
     }
     
-    return summa;
+    
+    return summa / maxArvo;
 }
 
 bool Asema::onkoAvausTaiKeskipeli(int vari)
@@ -362,10 +366,10 @@ bool Asema::onkoAvausTaiKeskipeli(int vari)
         }
     }
     
-//    if (valkoisenUpseerit + mustanUpseerit < 4 || mustanDaami || valkoisenDaami)
-//    {
-//        return false;
-//    }
+    if (valkoisenUpseerit + mustanUpseerit < 4 && (mustanDaami || valkoisenDaami))
+    {
+        return false;
+    }
 //
 //
 //    if (vari == 0)
@@ -413,8 +417,7 @@ float Asema::linjat(int vari)
     //mustat
     
 }
-
-// https://chessprogramming.wikispaces.com/Minimax MinMax-algoritmin pseudokoodi (lisäsin parametrina aseman)
+//
 //int maxi(int depth, asema a) 
 //	if (depth == 0) return evaluate();
 //	int max = -oo;
@@ -454,13 +457,43 @@ MinMaxPaluu Asema::minimax(int syvyys)
 
 MinMaxPaluu Asema::maxi(int syvyys)
 {
-    MinMaxPaluu paluu(0, Siirto(Ruutu(0, 0), Ruutu(0, 0)));
+    if (syvyys == 0) return MinMaxPaluu(evaluoi(), Siirto());
+    MinMaxPaluu paluu;
+    paluu.evaluointiArvo = std::numeric_limits<float>::lowest();
+
+    std::list<Siirto> siirrot;
+    annaLaillisetSiirrot(siirrot);
+    if (siirrot.size() < 1)
+    {
+        return MinMaxPaluu(0, Siirto());
+    }
+    for (auto& siirto : siirrot) {
+        MinMaxPaluu score = mini(syvyys - 1);
+        score._parasSiirto = siirto;
+        if (score.evaluointiArvo > paluu.evaluointiArvo)
+            paluu = score;
+    }
     return paluu;
 }
 
 MinMaxPaluu Asema::mini(int syvyys)
 {
-    MinMaxPaluu paluu(0, Siirto(Ruutu(0, 0), Ruutu(0, 0)));
+    if (syvyys == 0) return MinMaxPaluu(evaluoi(), Siirto());
+    MinMaxPaluu paluu;
+    paluu.evaluointiArvo = std::numeric_limits<float>::max();
+
+    std::list<Siirto> siirrot;
+    annaLaillisetSiirrot(siirrot);
+    if (siirrot.size() < 1)
+    {
+        return MinMaxPaluu(0, Siirto());
+    }
+    for (auto& siirto : siirrot) {
+        MinMaxPaluu score = maxi(syvyys - 1);
+        score._parasSiirto = siirto;
+        if (score.evaluointiArvo < paluu.evaluointiArvo)
+            paluu = score;
+    }
     return paluu;
 }
 
@@ -496,6 +529,7 @@ void Asema::annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari)
         if (!onkoValkeaKuningasLiikkunut() && !onkoValkeaKTliikkunut()
             && onkoRuutuUhattu(Ruutu(4, 0), 1)
             && onkoRuutuUhattu(Ruutu(6, 0), 1)
+            && onkoRuutuUhattu(Ruutu(5, 0), 1)
             && lauta[0][5] == NULL
             && lauta[0][6] == NULL)
         {
@@ -505,6 +539,7 @@ void Asema::annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari)
         // valkea, pitkä linna
         if (!onkoValkeaKuningasLiikkunut() && !onkoValkeaDTliikkunut()
             && onkoRuutuUhattu(Ruutu(4, 0), 1)
+            && onkoRuutuUhattu(Ruutu(3, 0), 1)
             && onkoRuutuUhattu(Ruutu(2, 0), 1)
             && lauta[0][1] == NULL
             && lauta[0][2] == NULL
@@ -521,6 +556,7 @@ void Asema::annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari)
         if (!onkoMustaKuningasLiikkunut() && !onkoMustaKTliikkunut()
             && onkoRuutuUhattu(Ruutu(4, 7), 0)
             && onkoRuutuUhattu(Ruutu(5, 7), 0)
+            && onkoRuutuUhattu(Ruutu(6, 7), 0)
             && lauta[7][5] == NULL
             && lauta[7][6] == NULL)
         {
@@ -531,6 +567,7 @@ void Asema::annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari)
         if (!onkoMustaKuningasLiikkunut() && !onkoMustaDTliikkunut()
             && onkoRuutuUhattu(Ruutu(4, 7), 0)
             && onkoRuutuUhattu(Ruutu(3, 7), 0)
+            && onkoRuutuUhattu(Ruutu(2, 7), 0)
             && lauta[7][1] == NULL
             && lauta[7][2] == NULL
             && lauta[7][3] == NULL)

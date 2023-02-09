@@ -28,7 +28,12 @@ int main()
 #endif
     setlocale(LC_ALL, "fi_FI.UTF-8");
     cout.imbue(locale());
-    
+
+	int koneenVari; 
+	cout << "Kummalla varilla pelaat? (0= valkoinen, 1= musta) \n";
+	cin >> koneenVari;
+	koneenVari = 1 - koneenVari;
+	    
     auto& kayttoliittyma = Kayttoliittyma::getInstance();
     Asema& asema = kayttoliittyma.getAsema();
     
@@ -38,11 +43,34 @@ int main()
     kayttoliittyma.piirraLauta(siirrot);
 	cout << "Siirtovuoro: Valkoinen.\n";
 
+	
+
 	while (true)
     {
         siirrot.clear();
-		Siirto testiSiirto = kayttoliittyma.annaVastustajanSiirto();
-        if (asema.paivitaAsema(testiSiirto)) {
+		Siirto siirto;
+		if (asema.getSiirtovuoro() == koneenVari) 
+		{
+			MinMaxPaluu paluu;
+			if (koneenVari == 0)
+			{
+				paluu = asema.maxi(3);
+			}
+			else
+			{
+				paluu = asema.mini(3);
+			}
+
+			siirto = paluu._parasSiirto;
+
+		}
+		else 
+		{
+			siirto = kayttoliittyma.annaVastustajanSiirto();
+
+		}
+
+        if (asema.paivitaAsema(siirto)) {
             asema.annaLaillisetSiirrot(siirrot);
             cout << "Arvo: "<< asema.evaluoi() << endl;
             kayttoliittyma.piirraLauta(siirrot);

@@ -41,7 +41,8 @@ public:
     static std::map<char, Nappula*> charToValkoinenNappula;
     static std::map<char, Nappula*> charToMustaNappula;
     
-    static std::map<NappulaKoodi, float> nappulaKoodiToArvo;
+    static std::map<NappulaKoodi, float> arvoMap;
+    static float maxArvo;
     
     Asema();												// Asettaa alkuaseman.
     bool paivitaAsema(const Siirto& siirto);				// P‰ivitt‰‰ aseman annetulla siirrolla.
