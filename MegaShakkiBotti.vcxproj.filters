@@ -36,12 +36,6 @@
     <ClCompile Include="megashakkibotti\vastustaja.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="megashakkibotti\evaluointi.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="megashakkibotti\laillisetSiirrot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="megashakkibotti\pelipuu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

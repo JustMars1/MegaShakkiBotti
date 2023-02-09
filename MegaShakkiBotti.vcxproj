@@ -120,8 +120,6 @@
     <ClCompile Include="megashakkibotti\siirto.cpp" />
     <ClCompile Include="MegaShakkiBotti\varikoodit.cpp" />
     <ClCompile Include="megashakkibotti\vastustaja.cpp" />
-    <ClCompile Include="megashakkibotti\evaluointi.cpp" />
-    <ClCompile Include="megashakkibotti\laillisetSiirrot.cpp" />
     <ClCompile Include="megashakkibotti\pelipuu.cpp" />
   </ItemGroup>
   <ItemGroup>
