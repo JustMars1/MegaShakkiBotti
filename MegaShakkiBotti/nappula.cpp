@@ -16,21 +16,6 @@ NappulaKoodi Nappula::getKoodi() const { return _koodi; }
 int Nappula::getVari() const { return _vari; }
 const string& Nappula::getMerkki() const { return _merkki; }
 
-void Nappula::setKoodi(NappulaKoodi koodi)
-{
-    _koodi = koodi;
-}
-
-void Nappula::setVari(int vari)
-{
-    _vari = vari;
-}
-
-void Nappula::setMerkki(const string& merkki)
-{
-    _merkki = merkki;
-}
-
 void Torni::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
 {
     int x = ruutu.getSarake();
@@ -81,7 +66,6 @@ void Torni::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& as
         }
         else
         {
-            
             if (asema.lauta[i][x]->getVari() != vari)
             {
                 lista.push_back(Siirto(ruutu, Ruutu(x, i)));
@@ -108,11 +92,6 @@ void Torni::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& as
             break;
         }
     }
-    
-    // tornitus:
-    
-    
-    
 }
 
 void Ratsu::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
@@ -422,13 +401,17 @@ void Sotilas::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& 
         if (vari == 0 && y0 == 4)
         {
             if (asema.lauta[4][asema.kaksoisaskel] && asema.lauta[4][asema.kaksoisaskel]->getKoodi() == MS)
+            {
                 lista.push_back(Siirto(ruutu, Ruutu(asema.kaksoisaskel, 5)));
+            }
         }
         
         if (vari == 1 && y0 == 3)
         {
             if (asema.lauta[3][asema.kaksoisaskel] && asema.lauta[3][asema.kaksoisaskel]->getKoodi() == VS)
+            {
                 lista.push_back(Siirto(ruutu, Ruutu(asema.kaksoisaskel, 2)));
+            }
         }
     }
 }
@@ -438,37 +421,37 @@ void Sotilas::lisaaSotilaanKorotukset(const Siirto& siirto, list<Siirto>& lista,
     if (siirto.getLoppuruutu().getRivi() == 7)
     {
         Siirto daami = siirto;
-        daami.miksikorotetaan = &Asema::vd;
+        daami.miksiKorotetaan = &Asema::vd;
         lista.push_back(daami);
         
         Siirto torni = siirto;
-        torni.miksikorotetaan = &Asema::vt;
+        torni.miksiKorotetaan = &Asema::vt;
         lista.push_back(torni);
         
         Siirto lahetti = siirto;
-        lahetti.miksikorotetaan = &Asema::vl;
+        lahetti.miksiKorotetaan = &Asema::vl;
         lista.push_back(lahetti);
         
         Siirto ratsu = siirto;
-        ratsu.miksikorotetaan = &Asema::vr;
+        ratsu.miksiKorotetaan = &Asema::vr;
         lista.push_back(ratsu);
     }
     else if (siirto.getLoppuruutu().getRivi() == 0)
     {
         Siirto daami = siirto;
-        daami.miksikorotetaan = &Asema::md;
+        daami.miksiKorotetaan = &Asema::md;
         lista.push_back(daami);
         
         Siirto torni = siirto;
-        torni.miksikorotetaan = &Asema::mt;
+        torni.miksiKorotetaan = &Asema::mt;
         lista.push_back(torni);
         
         Siirto lahetti = siirto;
-        lahetti.miksikorotetaan = &Asema::ml;
+        lahetti.miksiKorotetaan = &Asema::ml;
         lista.push_back(lahetti);
         
         Siirto ratsu = siirto;
-        ratsu.miksikorotetaan = &Asema::mr;
+        ratsu.miksiKorotetaan = &Asema::mr;
         lista.push_back(ratsu);
     }
 }

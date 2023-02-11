@@ -1,5 +1,5 @@
 #pragma once
-
+#include <iostream>
 
 // Shakkilaudan ruutu tietyssä (rivi, sarake) -koordinaatissa.
 class Ruutu
@@ -16,3 +16,5 @@ private:
 	int _sarake;
 	int _rivi;
 };
+
+std::ostream& operator<<(std::ostream& os, const Ruutu& ruutu);

@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include "ruutu.h"
 
 // Ns. "forward declaration". Nyt Asema-luokassa voidaa esitellä Nappula-osoittimia ilman,
@@ -18,10 +19,12 @@ public:
 	const Ruutu& getLoppuruutu() const;
 	bool onkoLyhytLinna() const;
 	bool onkoPitkaLinna() const;
-	Nappula* miksikorotetaan;
+	Nappula* miksiKorotetaan;
 private:
 	Ruutu _alkuRuutu;
 	Ruutu _loppuRuutu;
 	bool _lyhytLinna;
 	bool _pitkaLinna;
 };
+
+std::ostream& operator<<(std::ostream& os, const Siirto& siirto);

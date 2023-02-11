@@ -29,64 +29,61 @@ int main()
     setlocale(LC_ALL, "fi_FI.UTF-8");
     cout.imbue(locale());
 
-	int koneenVari; 
-	cout << "Kummalla varilla pelaat? (0= valkoinen, 1= musta) \n";
+	int koneenVari;
+	cout << "Kummalla varilla pelaat? (0 = valkoinen, 1 = musta)\n";
 	cin >> koneenVari;
 	koneenVari = 1 - koneenVari;
 	    
     auto& kayttoliittyma = Kayttoliittyma::getInstance();
-    Asema& asema = kayttoliittyma.getAsema();
-    
+    auto& asema = kayttoliittyma.getAsema();
     list<Siirto> siirrot;
-    asema.annaLaillisetSiirrot(siirrot);
-    cout << "Arvo: "<< asema.evaluoi() << endl;
-    kayttoliittyma.piirraLauta(siirrot);
-	cout << "Siirtovuoro: Valkoinen.\n";
-
-	
 
 	while (true)
     {
-        siirrot.clear();
-		Siirto siirto;
-		if (asema.getSiirtovuoro() == koneenVari) 
-		{
-			MinMaxPaluu paluu;
-			if (koneenVari == 0)
-			{
-				paluu = asema.maxi(3);
-			}
-			else
-			{
-				paluu = asema.mini(3);
-			}
-
-			siirto = paluu._parasSiirto;
-
-		}
-		else 
-		{
-			siirto = kayttoliittyma.annaVastustajanSiirto();
-
-		}
-
-        if (asema.paivitaAsema(siirto)) {
-            asema.annaLaillisetSiirrot(siirrot);
-            cout << "Arvo: "<< asema.evaluoi() << endl;
-            kayttoliittyma.piirraLauta(siirrot);
+        // Näyttää kenen siirtovuoro.
+        cout << "Siirtovuoro: ";
+        if (asema.getSiirtovuoro() == 0)
+        {
+            cout << "Valkoinen\n";
         }
-
-		// Näyttää kenen siirtovuoro.
-		if (asema.getSiirtovuoro() == 1)
-		{
-			cout << "Siirtovuoro: Musta.\n";
-		}
-		else if (asema.getSiirtovuoro() == 0)
-		{
-			cout << "Siirtovuoro: Valkoinen. \n";
-		}
-	}
-	
+        else
+        {
+            cout << "Musta\n";
+        }
+        
+        cout << "Arvo: "<< asema.evaluoi() << endl;
+        kayttoliittyma.piirraLauta(siirrot);
+        siirrot.clear();
+        
+        Siirto siirto;
+        bool ok = false;
+        
+        while(!ok)
+        {
+            if (asema.getSiirtovuoro() == koneenVari)
+            {
+                MinMaxPaluu paluu;
+                if (koneenVari == 0)
+                {
+                    paluu = asema.maxi(3);
+                }
+                else
+                {
+                    paluu = asema.mini(3);
+                }
+                
+                siirto = paluu._parasSiirto;
+                cout << "Koneen siirto: " << siirto << endl;
+            }
+            else
+            {
+                siirto = kayttoliittyma.annaVastustajanSiirto();
+            }
+            
+            ok = asema.paivitaAsema(siirto);
+        }
+    }
+    
 	//int lopetus = 100;
 	// Open juttu alla
 	//Peli peli(Kayttoliittyma::getInstance()->

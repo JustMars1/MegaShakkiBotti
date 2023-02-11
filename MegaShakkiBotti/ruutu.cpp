@@ -16,3 +16,9 @@ void Ruutu::setSarake(int sarake)
 {
     _sarake = sarake;
 }
+
+std::ostream& operator<<(std::ostream& os, const Ruutu& ruutu)
+{
+    os << "abcdefgh"[ruutu.getSarake()] << ruutu.getRivi() + 1;
+    return os;
+}

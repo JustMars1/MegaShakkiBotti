@@ -2,7 +2,7 @@
 
 #include <list>
 #include <string>
-#include <map>
+#include <unordered_map>
 
 #include "minmaxpaluu.h"
 #include "siirto.h"
@@ -38,11 +38,11 @@ public:
     // Ohestalyöntiä varten (-1 = sotilaan kaksoisaskelta ei tapahtunut edellisellä siirrolla).
     int kaksoisaskel = -1;
     
-    static std::map<char, Nappula*> charToValkoinenNappula;
-    static std::map<char, Nappula*> charToMustaNappula;
+    static const std::unordered_map<char, Nappula*> valkoinenNappulaMap;
+    static const std::unordered_map<char, Nappula*> mustaNappulaMap;
     
-    static std::map<NappulaKoodi, float> arvoMap;
-    static float maxArvo;
+    static const std::unordered_map<NappulaKoodi, float> arvoMap;
+    static const float maxArvo;
     
     Asema();												// Asettaa alkuaseman.
     bool paivitaAsema(const Siirto& siirto);				// Päivittää aseman annetulla siirrolla.

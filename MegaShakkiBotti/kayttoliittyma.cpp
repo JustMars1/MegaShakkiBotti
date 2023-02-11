@@ -110,14 +110,14 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
     auto tarkistaNappula = [this](char nappulaChar) -> Nappula*
     {
         if (_asema.getSiirtovuoro() == 0) {
-            if (Asema::charToValkoinenNappula.find(nappulaChar) != Asema::charToValkoinenNappula.end())
+            if (Asema::valkoinenNappulaMap.find(nappulaChar) != Asema::valkoinenNappulaMap.end())
             {
-                return Asema::charToValkoinenNappula[nappulaChar];
+                return Asema::valkoinenNappulaMap.at(nappulaChar);
             }
         }
-        else if (Asema::charToMustaNappula.find(nappulaChar) != Asema::charToMustaNappula.end())
+        else if (Asema::mustaNappulaMap.find(nappulaChar) != Asema::mustaNappulaMap.end())
         {
-            return Asema::charToMustaNappula[nappulaChar];
+            return Asema::mustaNappulaMap.at(nappulaChar);
         }
         
         return nullptr;
@@ -193,7 +193,7 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
                         
                         korotus = tarkistaNappula(korotusChar);
                         if (korotus != nullptr && korotus != &Asema::ms && korotus != &Asema::vs) {
-                            siirto.miksikorotetaan = korotus;
+                            siirto.miksiKorotetaan = korotus;
                             break;
                         }
                     }

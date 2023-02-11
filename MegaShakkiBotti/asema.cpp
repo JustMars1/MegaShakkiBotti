@@ -21,7 +21,7 @@ Lahetti Asema::ml = Lahetti("\xe2\x99\x9d", 1, ML);
 Ratsu Asema::mr = Ratsu("\xe2\x99\x9e", 1, MR);
 Sotilas Asema::ms = Sotilas("\xe2\x99\x9f", 1, MS);
 
-std::map<char, Nappula*> Asema::charToValkoinenNappula = {
+const std::unordered_map<char, Nappula*> Asema::valkoinenNappulaMap = {
     {'K', &Asema::vk},
     {'D', &Asema::vd},
     {'T', &Asema::vt},
@@ -30,7 +30,7 @@ std::map<char, Nappula*> Asema::charToValkoinenNappula = {
     {'S', &Asema::vs}
 };
 
-std::map<char, Nappula*> Asema::charToMustaNappula = {
+const std::unordered_map<char, Nappula*> Asema::mustaNappulaMap = {
     {'K', &Asema::mk},
     {'D', &Asema::md},
     {'T', &Asema::mt},
@@ -39,7 +39,7 @@ std::map<char, Nappula*> Asema::charToMustaNappula = {
     {'S', &Asema::ms}
 };
 
-std::map<NappulaKoodi, float> Asema::arvoMap = {
+const std::unordered_map<NappulaKoodi, float> Asema::arvoMap = {
     {VD, 9},
     {VT, 5},
     {VL, 3.25},
@@ -52,10 +52,8 @@ std::map<NappulaKoodi, float> Asema::arvoMap = {
     {MS, -1}
 };
 
-float Asema::maxArvo = Asema::arvoMap[VD] + Asema::arvoMap[VT] * 2 + Asema::arvoMap[VL] * 2 + Asema::arvoMap[VR] * 2 + Asema::arvoMap[VS] * 8;
+const float Asema::maxArvo = Asema::arvoMap.at(VD) + Asema::arvoMap.at(VT) * 2 + Asema::arvoMap.at(VL) * 2 + Asema::arvoMap.at(VR) * 2 + Asema::arvoMap.at(VS) * 8;
 
-// Ensin alustetaan kaikki laudan ruudut nappulla "NULL", koska muuten ruuduissa satunnaista tauhkaa
-// Asetetaan alkuaseman mukaisesti nappulat ruuduille
 Asema::Asema()
 : lauta
 {
@@ -241,9 +239,9 @@ bool Asema::paivitaAsema(const Siirto& siirto)
         kaksoisaskel = -1;
     }
     
-    if (siirto.miksikorotetaan != nullptr)
+    if (siirto.miksiKorotetaan != nullptr)
     {
-        lauta[loppuY][loppuX] = siirto.miksikorotetaan;
+        lauta[loppuY][loppuX] = siirto.miksiKorotetaan;
     }
     else
     {
@@ -310,17 +308,22 @@ float Asema::laskeNappuloidenArvo(int vari)
         {
             Nappula* nappula = lauta[y][x];
             
-            if (nappula == nullptr) {
+            if (nappula == nullptr)
+            {
+                continue;
+            }
+            
+            if (nappula == &Asema::vk || nappula == &Asema::mk)
+            {
                 continue;
             }
             
             float kerroin = _siirtovuoro == 0 ? 1 : -1;
-            float arvo = kerroin * arvoMap[nappula->getKoodi()];
+            float arvo = kerroin * arvoMap.at(nappula->getKoodi());
             
             summa += arvo;
         }
     }
-    
     
     return summa / maxArvo;
 }
@@ -370,15 +373,15 @@ bool Asema::onkoAvausTaiKeskipeli(int vari)
     {
         return false;
     }
-//
-//
-//    if (vari == 0)
-//    {
-//        return valkoisenUpseerit < 4 || mustanUpseerit > 2 || (mustanDaami && mustanUpseerit > 1);
-//    }
-//    else {
-//        return mustanUpseerit < 4;
-//    }
+    //
+    //
+    //    if (vari == 0)
+    //    {
+    //        return valkoisenUpseerit < 4 || mustanUpseerit > 2 || (mustanDaami && mustanUpseerit > 1);
+    //    }
+    //    else {
+    //        return mustanUpseerit < 4;
+    //    }
     
     // Jos upseereita 3 tai vähemmän on loppupeli
     // mutta jos daami laudalla on loppueli vasta kun kuin vain daami jäljellä
@@ -457,10 +460,14 @@ MinMaxPaluu Asema::minimax(int syvyys)
 
 MinMaxPaluu Asema::maxi(int syvyys)
 {
-    if (syvyys == 0) return MinMaxPaluu(evaluoi(), Siirto());
+    if (syvyys == 0)
+    {
+        return MinMaxPaluu(evaluoi(), Siirto());
+    }
+    
     MinMaxPaluu paluu;
     paluu.evaluointiArvo = std::numeric_limits<float>::lowest();
-
+    
     std::list<Siirto> siirrot;
     annaLaillisetSiirrot(siirrot);
     if (siirrot.size() < 1)
@@ -471,17 +478,23 @@ MinMaxPaluu Asema::maxi(int syvyys)
         MinMaxPaluu score = mini(syvyys - 1);
         score._parasSiirto = siirto;
         if (score.evaluointiArvo > paluu.evaluointiArvo)
+        {
             paluu = score;
+        }
     }
     return paluu;
 }
 
 MinMaxPaluu Asema::mini(int syvyys)
 {
-    if (syvyys == 0) return MinMaxPaluu(evaluoi(), Siirto());
+    if (syvyys == 0)
+    {
+        return MinMaxPaluu(evaluoi(), Siirto());
+    }
+    
     MinMaxPaluu paluu;
     paluu.evaluointiArvo = std::numeric_limits<float>::max();
-
+    
     std::list<Siirto> siirrot;
     annaLaillisetSiirrot(siirrot);
     if (siirrot.size() < 1)
@@ -492,7 +505,9 @@ MinMaxPaluu Asema::mini(int syvyys)
         MinMaxPaluu score = maxi(syvyys - 1);
         score._parasSiirto = siirto;
         if (score.evaluointiArvo < paluu.evaluointiArvo)
+        {
             paluu = score;
+        }
     }
     return paluu;
 }
@@ -547,7 +562,6 @@ void Asema::annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari)
         {
             lista.push_back(Siirto(false, true));
         }
-        
     }
     
     if (vari == 1)
@@ -640,7 +654,7 @@ void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista)
                     auto listaFront = lista.begin();
                     std::advance(listaFront, index);
                     
-                    vSiirrot.push_back(*listaFront);                  
+                    vSiirrot.push_back(*listaFront);
                 }
             }
         }
@@ -661,7 +675,7 @@ void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista)
         lista.clear();
         lista = vSiirrot;
     }
-   
+    
     // Apulistojen tyhjennys.
     vSiirrot.clear();
     mSiirrot.clear();
