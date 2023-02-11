@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7AC24376296D636800C589F0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC24375296D636800C589F0 /* main.cpp */; };
-		7AC24396296D641000C589F0 /* pelipuu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC2437F296D641000C589F0 /* pelipuu.cpp */; };
 		7AC24398296D641000C589F0 /* asema.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC24384296D641000C589F0 /* asema.cpp */; };
 		7AC24399296D641000C589F0 /* nappula.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC24385296D641000C589F0 /* nappula.cpp */; };
 		7AC2439A296D641000C589F0 /* peli.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC24388296D641000C589F0 /* peli.cpp */; };
@@ -175,7 +174,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7AD75F942986E6E5001EC37C /* varikoodit.cpp in Sources */,
-				7AC24396296D641000C589F0 /* pelipuu.cpp in Sources */,
 				7AC24398296D641000C589F0 /* asema.cpp in Sources */,
 				7AC2439F296D641000C589F0 /* vastustaja.cpp in Sources */,
 				7AC24399296D641000C589F0 /* nappula.cpp in Sources */,

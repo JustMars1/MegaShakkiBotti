@@ -12,6 +12,8 @@ public:
     
 	void setRivi(int);
 	void setSarake(int);
+    
+    bool ok() const;
 private:
 	int _sarake;
 	int _rivi;

@@ -10,6 +10,7 @@
 #include <string_view>
 #include <iostream>
 #include <limits>
+#include <cctype>
 #include "kayttoliittyma.h"
 
 #include "varikoodit.h"
@@ -92,32 +93,20 @@ void Kayttoliittyma::piirraLauta(const list<Siirto>& siirrot)
  */
 Siirto Kayttoliittyma::annaVastustajanSiirto()
 {
-    auto tarkistaRuutu = [](int sarake, int rivi) -> bool
+    auto tarkistaNappula = [this](char kirjain) -> Nappula*
     {
-        if (sarake > 7 || sarake < 0)
-        {
-            return false;
-        }
+        kirjain = std::tolower(kirjain);
         
-        if (rivi > 7 || rivi < 0)
-        {
-            return false;
-        }
-        
-        return true;
-    };
-    
-    auto tarkistaNappula = [this](char nappulaChar) -> Nappula*
-    {
         if (_asema.getSiirtovuoro() == 0) {
-            if (Asema::valkoinenNappulaMap.find(nappulaChar) != Asema::valkoinenNappulaMap.end())
+            if (Asema::valkoinenNappulaMap.find(kirjain) != Asema::valkoinenNappulaMap.end())
             {
-                return Asema::valkoinenNappulaMap.at(nappulaChar);
+                return Asema::valkoinenNappulaMap.at(kirjain);
             }
         }
-        else if (Asema::mustaNappulaMap.find(nappulaChar) != Asema::mustaNappulaMap.end())
+        
+        if (Asema::mustaNappulaMap.find(kirjain) != Asema::mustaNappulaMap.end())
         {
-            return Asema::mustaNappulaMap.at(nappulaChar);
+            return Asema::mustaNappulaMap.at(kirjain);
         }
         
         return nullptr;
@@ -132,7 +121,7 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
         else
         {
             cout << "Sy\xc3\xb6t\xc3\xa4 siirto muodossa: Nappula, alkuruutu ja loppuruutu.\n";
-            cout << "Esim. Rg1-f3. Nappulan kirjain isolla, loput pienell\xc3\xa4.\n";
+            cout << "Esim. Rg1-f3.\n";
         }
         
         string syote;
@@ -145,6 +134,7 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
         
         bool pitkaLinna = syote == "O-O-O";
         bool lyhytLinna = syote == "O-O";
+        
         if (pitkaLinna || lyhytLinna)
         {
             return Siirto(lyhytLinna, pitkaLinna);
@@ -152,24 +142,23 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
         
         if (syote.length() == 6)
         {
-            char nappulaChar = 'i';
-            int alkuSarake = -1;
-            int alkuRivi = -1;
-            int loppuSarake = -1;
-            int loppuRivi = -1;
+            char nappulaKirjain = 'i';
             
-            nappulaChar = syote[0];
+            Ruutu alku(-1, -1);
+            Ruutu loppu(-1, -1);
             
-            alkuSarake = syote[1] - 'a';
-            alkuRivi = syote[2] - '0' - 1;
-            loppuSarake = syote[4] - 'a';
-            loppuRivi = syote[5] - '0' - 1;
+            nappulaKirjain = syote[0];
             
-            Nappula* nappula = tarkistaNappula(nappulaChar);
-            if (tarkistaRuutu(alkuSarake, alkuRivi) && tarkistaRuutu(loppuSarake, loppuRivi) && nappula != nullptr)
+            alku.setSarake(syote[1] - 'a');
+            alku.setRivi(syote[2] - '0' - 1);
+            loppu.setSarake(syote[4] - 'a');
+            loppu.setRivi(syote[5] - '0' - 1);
+            
+            Nappula* nappula = tarkistaNappula(nappulaKirjain);
+            if (alku.ok() && loppu.ok() && nappula != nullptr && _asema.lauta[alku.getRivi()][alku.getSarake()] == nappula)
             {
-                Siirto siirto(Ruutu(alkuSarake, alkuRivi), Ruutu(loppuSarake, loppuRivi));
-                if ((nappula == &Asema::ms && loppuRivi == 0) || (nappula == &Asema::vs && loppuRivi == 7))
+                Siirto siirto(alku, loppu);
+                if ((nappula == &Asema::ms && loppu.getRivi() == 0) || (nappula == &Asema::vs && loppu.getRivi() == 7))
                 {
                     while (true)
                     {
@@ -183,16 +172,17 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
                             cout << "Sy\xc3\xb6t\xc3\xa4 miksi korotetaan:\nEsim. D, R, T tai L.\n";
                         }
                         
-                        char korotusChar;
-                        cin >> korotusChar;
+                        char korotusKirjain;
+                        cin >> korotusKirjain;
                         
                         if (cin.fail())
                         {
                             continue;
                         }
                         
-                        korotus = tarkistaNappula(korotusChar);
-                        if (korotus != nullptr && korotus != &Asema::ms && korotus != &Asema::vs) {
+                        korotus = tarkistaNappula(korotusKirjain);
+                        if (korotus != nullptr && korotus != &Asema::ms && korotus != &Asema::vs)
+                        {
                             siirto.miksiKorotetaan = korotus;
                             break;
                         }
@@ -207,7 +197,7 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
 
 void Kayttoliittyma::tulostaVirhe(string virhe)
 {
-    cout << tekstivari(punainen) << "! " << virhe <<  " !" << resetoiVarit() << std::endl;
+    cout << tekstivari(punainen) << "! " << virhe <<  " !" << resetoiVarit() << endl;
 }
 
 int Kayttoliittyma::kysyVastustajanVari()

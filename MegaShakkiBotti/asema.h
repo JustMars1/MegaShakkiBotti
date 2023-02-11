@@ -71,7 +71,7 @@ private:
     bool _onkoMustaDTliikkunut;			// Linnoitus ei ole sallittu, jos daamisuvustan torni on liikkunut.
     bool _onkoMustaKTliikkunut;			// Linnoitus ei ole sallittu, jos kuningassivustan torni on liikkunut.
     
-    float laskeNappuloidenArvo(int vari);
+    float laskeNappuloidenArvo();
     bool onkoAvausTaiKeskipeli(int vari);
     float nappuloitaKeskella(int vari);
     float linjat(int vari);
