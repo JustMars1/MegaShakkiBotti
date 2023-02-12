@@ -229,15 +229,23 @@ bool Asema::paivitaAsema(const Siirto& siirto)
         }
         else if (kaksoisaskel != -1)
         {
-            if (_siirtovuoro == 0 && lauta[loppuY][loppuX] == lauta[5][kaksoisaskel])
+            if (_siirtovuoro == 0 && lauta[loppuY][loppuX] == lauta[5][kaksoisaskel] )
             {
-                // Valkosen sotilaan ohestalyönti
-                lauta[loppuY - 1][kaksoisaskel] = NULL;
+                if (lauta[3][kaksoisaskel] != NULL && lauta[3][kaksoisaskel]->getKoodi() == MS)
+                {
+                    // Valkosen sotilaan ohestalyönti
+                    lauta[loppuY - 1][kaksoisaskel] = NULL;
+                }
+                
             }
             else if (_siirtovuoro == 1 && lauta[loppuY][loppuX] == lauta[2][kaksoisaskel])
             {
-                // Mustan sotilaan ohestalyönti
-                lauta[loppuY + 1][kaksoisaskel] = NULL;
+                if (lauta[4][kaksoisaskel] != NULL && lauta[4][kaksoisaskel]->getKoodi() == VS)
+                {
+                    // Mustan sotilaan ohestalyönti
+                    lauta[loppuY + 1][kaksoisaskel] = NULL;
+                }
+                
             }
             
             kaksoisaskel = -1;
