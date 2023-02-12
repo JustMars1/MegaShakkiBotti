@@ -451,11 +451,11 @@ MinMaxPaluu Asema::minimax(int syvyys)
     
     if (_siirtovuoro == 0)
     {
-        return maxi(3);
+        return maxi(syvyys);
     }
     else
     {
-        return mini(3);
+        return mini(syvyys);
     }
 }
 
