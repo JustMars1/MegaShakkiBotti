@@ -52,6 +52,7 @@ int main()
         }
         
         cout << "Arvo: "<< asema.evaluoi() << endl;
+        asema.annaLaillisetSiirrot(siirrot);
         kayttoliittyma.piirraLauta(siirrot);
         siirrot.clear();
         
