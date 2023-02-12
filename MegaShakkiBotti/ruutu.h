@@ -14,6 +14,8 @@ public:
 	void setSarake(int);
     
     bool ok() const;
+    
+    bool operator==(const Ruutu& rhs) const;
 private:
 	int _sarake;
 	int _rivi;

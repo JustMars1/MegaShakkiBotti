@@ -63,7 +63,7 @@ int main()
         {
             if (asema.getSiirtovuoro() == koneenVari)
             {
-                MinMaxPaluu minimax = asema.minimax(4);
+                MinMaxPaluu minimax = asema.minimax(3);
                 
                 siirto = minimax._parasSiirto;
                 cout << "Koneen siirto: " << siirto << endl;

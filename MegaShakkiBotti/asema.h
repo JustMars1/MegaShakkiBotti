@@ -36,7 +36,7 @@ public:
     static Sotilas ms;
     
     // Ohestalyöntiä varten (-1 = sotilaan kaksoisaskelta ei tapahtunut edellisellä siirrolla).
-    int kaksoisaskel = -1;
+    int kaksoisaskel;
     
     static const std::unordered_map<char, Nappula*> valkoinenNappulaMap;
     static const std::unordered_map<char, Nappula*> mustaNappulaMap;
@@ -50,7 +50,7 @@ public:
     MinMaxPaluu maxi(int syvyys);							// Minimax (max:n siirtovuoro).
     MinMaxPaluu mini(int syvyys);							// Minimax (min:n siirtovuoro).
     MinMaxPaluu minimax(int syvyys);						// Minimax-algoritmi.
-    void annaLaillisetSiirrot(std::list<Siirto>& lista);	// Siirtogeneraattori.
+    void annaLaillisetSiirrot(std::list<Siirto>& siirrot);	// Siirtogeneraattori.
     
     int getSiirtovuoro() const;
     void setSiirtovuoro(int vuoro);
@@ -71,13 +71,16 @@ private:
     bool _onkoMustaDTliikkunut;			// Linnoitus ei ole sallittu, jos daamisuvustan torni on liikkunut.
     bool _onkoMustaKTliikkunut;			// Linnoitus ei ole sallittu, jos kuningassivustan torni on liikkunut.
     
+    Ruutu _valkeaKuningasRuutu;
+    Ruutu _mustaKuningasRuutu;
+    
     float laskeNappuloidenArvo();
     bool onkoAvausTaiKeskipeli(int vari);
     float nappuloitaKeskella(int vari);
     float linjat(int vari);
-    bool onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari);
-    void annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari);
+    bool onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const;
+    void annaLinnoitusSiirrot(std::list<Siirto>& siirrot, int vari);
     
     // Karsii siirrot, jotka jättävät oman K:n shakkiin.
-    void huolehdiKuninkaanShakeista(std::list<Siirto>& lista, int vari);
+    void huolehdiKuninkaanShakeista(std::list<Siirto>& siirrot);
 };

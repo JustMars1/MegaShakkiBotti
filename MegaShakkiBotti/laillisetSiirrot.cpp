@@ -806,7 +806,7 @@ bool LaillisetSiirrot::onkoRuutuUhattu(Ruutu* ruutu, Asema* asema, int vastustaj
 	return ruutuOk;
 }
 
-void LaillisetSiirrot::huolehdiKuninkaanShakeista(std::list<Siirto>& lista, Asema* asema, int vari) {
+void LaillisetSiirrot::huolehdiKuninkaanShakeista(std::list<Siirto>& siirrot, Asema* asema, int vari) {
 	// k‰yd‰‰n saatua siirtolistaa l‰pi ja jos siell‰ oleva siirto asettaa kuninkaan shakkiin, niin siirto poistetaan listasta
 	int kuninkaanX;
 	int kuninkaanY;

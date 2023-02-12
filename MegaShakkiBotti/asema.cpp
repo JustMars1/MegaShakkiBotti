@@ -71,7 +71,10 @@ Asema::Asema()
 , _onkoValkeaDTliikkunut{false}
 , _onkoValkeaKTliikkunut{false}
 , _onkoMustaDTliikkunut{false}
-, _onkoMustaKTliikkunut{false} {}
+, _onkoMustaKTliikkunut{false}
+, _valkeaKuningasRuutu(4, 0)
+, _mustaKuningasRuutu(4, 7)
+, kaksoisaskel{-1} {}
 
 bool Asema::paivitaAsema(const Siirto& siirto)
 {
@@ -95,6 +98,7 @@ bool Asema::paivitaAsema(const Siirto& siirto)
                 lauta[0][4] = NULL;
                 lauta[0][7] = NULL;
                 
+                _valkeaKuningasRuutu.setSarake(6);
                 _siirtovuoro = 1;
                 return true;
             }
@@ -108,6 +112,7 @@ bool Asema::paivitaAsema(const Siirto& siirto)
                 lauta[0][0] = NULL;
                 lauta[0][4] = NULL;
                 
+                _valkeaKuningasRuutu.setSarake(2);
                 _siirtovuoro = 1;
                 return true;
             }
@@ -125,6 +130,7 @@ bool Asema::paivitaAsema(const Siirto& siirto)
                 lauta[7][7] = NULL;
                 lauta[7][4] = NULL;
                 
+                _mustaKuningasRuutu.setSarake(6);
                 _siirtovuoro = 0;
                 return true;
             }
@@ -138,6 +144,7 @@ bool Asema::paivitaAsema(const Siirto& siirto)
                 lauta[7][0] = NULL;
                 lauta[7][4] = NULL;
                 
+                _mustaKuningasRuutu.setSarake(2);
                 _siirtovuoro = 0;
                 return true;
             }
@@ -182,10 +189,14 @@ bool Asema::paivitaAsema(const Siirto& siirto)
     if (nappulaPtr == &Asema::vk)
     {
         _onkoValkeaKuningasLiikkunut = true;
+        _valkeaKuningasRuutu.setSarake(loppuX);
+        _valkeaKuningasRuutu.setRivi(loppuY);
     }
     else if (nappulaPtr == &Asema::mk)
     {
         _onkoMustaKuningasLiikkunut = true;
+        _mustaKuningasRuutu.setSarake(loppuX);
+        _mustaKuningasRuutu.setRivi(loppuY);
     }
     else if (nappulaPtr == &Asema::vt)
     {
@@ -471,14 +482,24 @@ MinMaxPaluu Asema::maxi(int syvyys)
     
     std::list<Siirto> siirrot;
     annaLaillisetSiirrot(siirrot);
+    
     if (siirrot.size() < 1)
     {
-        return MinMaxPaluu(0, Siirto());
+        if (onkoRuutuUhattu(_valkeaKuningasRuutu, 1))
+        {
+            return MinMaxPaluu(-1, Siirto());
+        }
+        else
+        {
+            return MinMaxPaluu(0, Siirto());
+        }
     }
-    for (auto& siirto : siirrot) {
-        Asema asema = *this;
-        asema.paivitaAsema(siirto);
-        MinMaxPaluu arvo = asema.mini(syvyys - 1);
+    
+    for (auto& siirto : siirrot)
+    {
+        Asema tmpAsema = *this;
+        tmpAsema.paivitaAsema(siirto);
+        MinMaxPaluu arvo = tmpAsema.mini(syvyys - 1);
         arvo._parasSiirto = siirto;
         if (arvo.evaluointiArvo > maxi.evaluointiArvo)
         {
@@ -500,14 +521,24 @@ MinMaxPaluu Asema::mini(int syvyys)
     
     std::list<Siirto> siirrot;
     annaLaillisetSiirrot(siirrot);
+    
     if (siirrot.size() < 1)
     {
-        return MinMaxPaluu(0, Siirto());
+        if (onkoRuutuUhattu(_mustaKuningasRuutu, 0))
+        {
+            return MinMaxPaluu(1, Siirto());
+        }
+        else
+        {
+            return MinMaxPaluu(0, Siirto());
+        }
     }
-    for (auto& siirto : siirrot) {
-        Asema asema = *this;
-        asema.paivitaAsema(siirto);
-        MinMaxPaluu arvo = asema.maxi(syvyys - 1);
+    
+    for (auto& siirto : siirrot)
+    {
+        Asema tmpAsema = *this;
+        tmpAsema.paivitaAsema(siirto);
+        MinMaxPaluu arvo = tmpAsema.maxi(syvyys - 1);
         arvo._parasSiirto = siirto;
         if (arvo.evaluointiArvo < mini.evaluointiArvo)
         {
@@ -517,32 +548,54 @@ MinMaxPaluu Asema::mini(int syvyys)
     return mini;
 }
 
-bool Asema::onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari)
+bool Asema::onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const
 {
-    // Tarkistetaan siirtojen laillisuus. Eli asettaako siirto kunkinaan uhatuksi.
-    
-    // Valkoinen = 0, musta = 1.
-    
-    int x = ruutu.getSarake();
-    int y = ruutu.getRivi();
-    
-    // Tarkistetaan asettuuko valkoinen kuningas uhatuksi.
-    if (lauta[y][x] == &vk && vastustajanVari == 1)
+    for (int y = 0; y < 8; y++)
     {
-        //std::cout << "\n|| Laiton siirto. Valkoinen kuningas uhattu. ||\n";
-        return true;
-    }
-    // Tarkistetaan asettuuko musta kuningas uhatuksi.
-    else if (lauta[y][x] == &mk && vastustajanVari == 0)
-    {
-        //std::cout << "\n|| Laiton siirto. Musta kuningas uhattu. ||\n";
-        return true;
+        for (int x = 0; x < 8; x++)
+        {
+            Nappula* nappula = lauta[y][x];
+            if (nappula != nullptr && nappula->getVari() == vastustajanVari)
+            {
+                std::list<Siirto> vastustajanSiirrot;
+                nappula->annaSiirrot(vastustajanSiirrot, Ruutu(x, y), *this, vastustajanVari);
+                
+                for (auto& siirto : vastustajanSiirrot)
+                {
+                    // ohestalyöntiä varten, toimii ehkä?
+                    /*
+                    Nappula* uhattuNappula = lauta[ruutu.getSarake()][ruutu.getRivi()];
+                    if ((uhattuNappula == &Asema::vs && nappula == &Asema::ms) || (uhattuNappula == &Asema::ms && nappula == &Asema::vs))
+                    {
+                        if (kaksoisaskel != -1)
+                        {
+                            int loppuY = siirto.getLoppuruutu().getRivi();
+                            int loppuX = siirto.getLoppuruutu().getSarake();
+                            if (_siirtovuoro == 0 && lauta[loppuY][loppuX] == lauta[5][kaksoisaskel] && ruutu == Ruutu(kaksoisaskel, loppuY - 1))
+                            {
+                                return true;
+                            }
+                            else if (_siirtovuoro == 1 && lauta[loppuY][loppuX] == lauta[2][kaksoisaskel] && ruutu == Ruutu(kaksoisaskel, loppuY + 1))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    */
+                    
+                    if (siirto.getLoppuruutu() == ruutu)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
     }
     
     return false;
 }
 
-void Asema::annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari)
+void Asema::annaLinnoitusSiirrot(std::list<Siirto>& siirrot, int vari)
 {
     if (vari == 0) {
         // valkea, lyhyt linna
@@ -553,7 +606,7 @@ void Asema::annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari)
             && lauta[0][5] == NULL
             && lauta[0][6] == NULL)
         {
-            lista.push_back(Siirto(true, false));
+            siirrot.push_back(Siirto(true, false));
         }
         
         // valkea, pitkä linna
@@ -565,7 +618,7 @@ void Asema::annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari)
             && lauta[0][2] == NULL
             && lauta[0][3] == NULL)
         {
-            lista.push_back(Siirto(false, true));
+            siirrot.push_back(Siirto(false, true));
         }
     }
     
@@ -579,7 +632,7 @@ void Asema::annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari)
             && lauta[7][5] == NULL
             && lauta[7][6] == NULL)
         {
-            lista.push_back(Siirto(true, false));
+            siirrot.push_back(Siirto(true, false));
         }
         
         // musta, pitkä linna
@@ -591,98 +644,47 @@ void Asema::annaLinnoitusSiirrot(std::list<Siirto>& lista, int vari)
             && lauta[7][2] == NULL
             && lauta[7][3] == NULL)
         {
-            lista.push_back(Siirto(false, true));
+            siirrot.push_back(Siirto(false, true));
         }
     }
 }
 
-void Asema::huolehdiKuninkaanShakeista(std::list<Siirto>& lista, int vari)
+void Asema::huolehdiKuninkaanShakeista(std::list<Siirto>& siirrot)
 {
-    
+    siirrot.remove_if([this](Siirto& siirto) {
+        Asema tmpAsema = *this;
+        tmpAsema.paivitaAsema(siirto);
+        
+        if (_siirtovuoro == 0)
+        {
+            if (tmpAsema.onkoRuutuUhattu(tmpAsema._valkeaKuningasRuutu, 1))
+            {
+                return true;
+            }
+        }
+        else if (tmpAsema.onkoRuutuUhattu(tmpAsema._mustaKuningasRuutu, 0))
+        {
+            return true;
+        }
+        
+        return false;
+    });
 }
 
-void Asema::annaLaillisetSiirrot(std::list<Siirto>& lista)
+void Asema::annaLaillisetSiirrot(std::list<Siirto>& siirrot)
 {
     for (int y = 0; y < 8; y++)
     {
         for (int x = 0; x < 8; x++)
         {
-            if (lauta[y][x] != NULL && lauta[y][x]->getVari() == getSiirtovuoro())
+            Nappula* nappula = lauta[y][x];
+            if (nappula != nullptr && nappula->getVari() == getSiirtovuoro())
             {
-                Ruutu ruutu(x, y);
-                lauta[y][x]->annaSiirrot(lista, ruutu, *this, lauta[y][x]->getVari());
+                nappula->annaSiirrot(siirrot, Ruutu(x, y), *this, nappula->getVari());
             }
         }
     }
     
-    // Kuninkaiden ruudut.
-    Ruutu vkRuutu(0, 0);
-    Ruutu mkRuutu(0, 0);
-    
-    // Asema missä katsotaan siirtojen laillisuutta.
-    Asema uusiAsema;
-    
-    // Mustan siirrot.
-    std::list<Siirto> mSiirrot;
-    // Valkoisen siirrot.
-    std::list<Siirto> vSiirrot;
-    
-    int index = 0;
-    // Käydään läpi siirtojen lista.
-    for (auto& s : lista)
-    {
-        int xAlku = s.getAlkuruutu().getSarake();
-        int yAlku = s.getAlkuruutu().getRivi();
-        
-        // Valkoisen siirtovuoro, tsekataan mustan siirrot.
-        if (_siirtovuoro == 1)
-        {
-            if (lauta[yAlku][xAlku]->getVari() == 1)
-            {
-                // Jos ruutu ei uhattu, lisätään laillisten siirtojen listaan.
-                if (!onkoRuutuUhattu(Ruutu(xAlku, yAlku), 0))
-                {
-                    auto listaFront = lista.begin();
-                    std::advance(listaFront, index);
-                    
-                    mSiirrot.push_back(*listaFront);
-                }
-            }
-        }
-        // Mustan siirtovuoro, tsekataan valkoisen siirrot.
-        if (_siirtovuoro == 0)
-        {
-            if (lauta[yAlku][xAlku]->getVari() == 0)
-            {
-                // Jos ruutu ei uhattu, lisätään laillisten siirtojen listaan.
-                if (!onkoRuutuUhattu(Ruutu(xAlku, yAlku), 1))
-                {
-                    auto listaFront = lista.begin();
-                    std::advance(listaFront, index);
-                    
-                    vSiirrot.push_back(*listaFront);
-                }
-            }
-        }
-        
-        index++;
-    }
-    
-    annaLinnoitusSiirrot(lista, _siirtovuoro);
-    
-    // Tyhjennetään siirtolista ja lisätään sinne sen puolen siirrot, kenen vuoro on.
-    if (_siirtovuoro == 1)
-    {
-        lista.clear();
-        lista = mSiirrot;
-    }
-    else if (_siirtovuoro == 0)
-    {
-        lista.clear();
-        lista = vSiirrot;
-    }
-    
-    // Apulistojen tyhjennys.
-    vSiirrot.clear();
-    mSiirrot.clear();
+    annaLinnoitusSiirrot(siirrot, _siirtovuoro);
+    huolehdiKuninkaanShakeista(siirrot);
 }
