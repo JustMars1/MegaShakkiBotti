@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A42553E299B993C00A0512A /* ajastin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A42553D299B993C00A0512A /* ajastin.cpp */; };
 		7AC24376296D636800C589F0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC24375296D636800C589F0 /* main.cpp */; };
 		7AC24398296D641000C589F0 /* asema.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC24384296D641000C589F0 /* asema.cpp */; };
 		7AC24399296D641000C589F0 /* nappula.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC24385296D641000C589F0 /* nappula.cpp */; };
@@ -31,6 +32,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7A42553D299B993C00A0512A /* ajastin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ajastin.cpp; sourceTree = "<group>"; };
+		7A778A88299B948100EAA155 /* ajastin.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ajastin.hpp; sourceTree = "<group>"; };
 		7AC24372296D636800C589F0 /* MegaShakkiBotti */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MegaShakkiBotti; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AC24375296D636800C589F0 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		7AC2437F296D641000C589F0 /* pelipuu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pelipuu.cpp; sourceTree = "<group>"; };
@@ -112,6 +115,8 @@
 				7AD75F932986E6E5001EC37C /* varikoodit.h */,
 				7AD75F922986E6E5001EC37C /* varikoodit.cpp */,
 				7AC24375296D636800C589F0 /* main.cpp */,
+				7A778A88299B948100EAA155 /* ajastin.hpp */,
+				7A42553D299B993C00A0512A /* ajastin.cpp */,
 			);
 			path = MegaShakkiBotti;
 			sourceTree = "<group>";
@@ -176,6 +181,7 @@
 				7AD75F942986E6E5001EC37C /* varikoodit.cpp in Sources */,
 				7AC24398296D641000C589F0 /* asema.cpp in Sources */,
 				7AC2439F296D641000C589F0 /* vastustaja.cpp in Sources */,
+				7A42553E299B993C00A0512A /* ajastin.cpp in Sources */,
 				7AC24399296D641000C589F0 /* nappula.cpp in Sources */,
 				7AC2439C296D641000C589F0 /* kayttoliittyma.cpp in Sources */,
 				7AC2439B296D641000C589F0 /* ruutu.cpp in Sources */,

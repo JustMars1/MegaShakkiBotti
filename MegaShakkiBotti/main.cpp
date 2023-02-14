@@ -13,27 +13,11 @@
 #include "kayttoliittyma.h"
 #include "siirto.h"
 #include "asema.h"
+#include "ajastin.hpp"
 
 #include <chrono>
 
 using namespace std;
-
-struct DebugTimer
-{
-    using Clock = std::chrono::steady_clock;
-    
-    Clock::time_point startTime;
-    std::string_view name;
-    
-    DebugTimer(std::string_view name) : startTime(Clock::now()), name{name} { }
-    
-    ~DebugTimer()
-    {
-        auto endTime = Clock::now();
-        std::chrono::duration<double, std::milli> duration = endTime - startTime;
-        std::cout << name << " : " << duration.count() << " ms" << std::endl;
-    }
-};
 
 int main()
 {
@@ -70,7 +54,7 @@ int main()
             cout << "Musta\n";
         }
         
-        cout << "Arvo: "<< asema.evaluoi() << endl;
+        cout << "Arvo: " << asema.evaluoi() << endl;
         asema.annaLaillisetSiirrot(siirrot);
         kayttoliittyma.piirraLauta(siirrot);
         siirrot.clear();
@@ -82,7 +66,7 @@ int main()
         {
             if (asema.getSiirtovuoro() == koneenVari)
             {
-                DebugTimer timer("MiniMax");
+                Ajastin ajastin("MiniMax");
                 MinMaxPaluu minimax = asema.minimax(3);
                 
                 siirto = minimax._parasSiirto;
