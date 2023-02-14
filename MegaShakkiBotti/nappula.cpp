@@ -276,18 +276,18 @@ void Kuningas::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema&
     int y = ruutu.getRivi();
     
     // Suhteellinen sijainti mista ruudusta tahansa.
-    int x_sarake[] = { -1, 0, 1, 1, 1, 0, -1, -1};
-    int y_rivi[] = { 1, 1, 1, 0, -1, -1, -1, 0};
+    int xSarake[] = { -1, 0, 1, 1, 1, 0, -1, -1};
+    int yRivi[] = { 1, 1, 1, 0, -1, -1, -1, 0};
     
     for (int i = 0; i < 8; i++)
     {
         // Valkea kuningas
-        int xv = x + x_sarake[i];
-        int yv = y + y_rivi[i];
+        int xv = x + xSarake[i];
+        int yv = y + yRivi[i];
         
         // Musta kuningas
-        int xm = x - x_sarake[i];
-        int ym = y - y_rivi[i];
+        int xm = x - xSarake[i];
+        int ym = y - yRivi[i];
         
         // Onko valkean kuninkaan siirto laudan ulkopuolella
         if ((xv >= 0 && xv < 8) && (yv >= 0 && yv < 8))

@@ -95,7 +95,7 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
 {
     auto tarkistaNappula = [this](char kirjain) -> Nappula*
     {
-        kirjain = std::tolower(kirjain);
+        kirjain = tolower(kirjain);
         
         if (_asema.getSiirtovuoro() == 0) {
             if (Asema::valkoinenNappulaMap.find(kirjain) != Asema::valkoinenNappulaMap.end())
