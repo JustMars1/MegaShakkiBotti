@@ -30,7 +30,7 @@ int main()
     cout.imbue(locale());
     
     int koneenVari;
-    cout << "Kummalla varilla pelaat? (0 = valkoinen, 1 = musta)\n";
+    cout << "Kummalla v\xc3\xa4rill\xc3\xa4 pelaat? (0 = valkoinen, 1 = musta)\n";
     cin >> koneenVari;
     koneenVari = 1 - koneenVari;
     
@@ -73,8 +73,10 @@ int main()
                 siirto = kayttoliittyma.annaVastustajanSiirto();
             }
             
-            ok = asema.paivitaAsema(siirto);
+            ok = asema.tarkistaSiirto(siirto);
         }
+        
+        asema.paivitaAsema(siirto);
     }
     
     //int lopetus = 100;

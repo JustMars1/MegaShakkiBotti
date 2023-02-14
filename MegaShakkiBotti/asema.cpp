@@ -1,5 +1,7 @@
 #include <iostream>
 #include <limits>
+#include <algorithm>
+
 #include "asema.h"
 #include "minmaxpaluu.h"
 #include "nappula.h"
@@ -76,193 +78,281 @@ Asema::Asema()
 , _mustaKuningasRuutu(4, 7)
 , kaksoisaskel{-1} {}
 
-bool Asema::paivitaAsema(const Siirto& siirto)
+void Asema::paivitaAsema(const Siirto& siirto)
 {
     // Tarkastetaan on siirto lyhyt linna tai pitkä linna
     
-    bool lyhytlinna = siirto.onkoLyhytLinna();
-    bool pitkaLinna = siirto.onkoPitkaLinna();
-    
-    if (lyhytlinna || pitkaLinna)
+    if (siirto.onkoLyhytLinna())
     {
         if (_siirtovuoro == 0)
         {
-            // vuoro on valkoisen
-            if (lyhytlinna && lauta[0][5] == NULL && lauta[0][6] == NULL && !onkoValkeaKTliikkunut() && !onkoValkeaKuningasLiikkunut())
-            {
-                _onkoValkeaKTliikkunut = true;
-                _onkoValkeaKuningasLiikkunut = true;
-                
-                lauta[0][5] = &Asema::vt;
-                lauta[0][6] = &Asema::vk;
-                lauta[0][4] = NULL;
-                lauta[0][7] = NULL;
-                
-                _valkeaKuningasRuutu.setSarake(6);
-                _siirtovuoro = 1;
-                return true;
-            }
-            else if (pitkaLinna && lauta[0][3] == NULL && lauta[0][2] == NULL && lauta[0][1] == NULL && !onkoValkeaDTliikkunut() && !onkoValkeaKuningasLiikkunut())
+            _onkoValkeaKTliikkunut = true;
+            _onkoValkeaKuningasLiikkunut = true;
+            
+            lauta[0][5] = &Asema::vt;
+            lauta[0][6] = &Asema::vk;
+            lauta[0][4] = nullptr;
+            lauta[0][7] = nullptr;
+            
+            _valkeaKuningasRuutu.setSarake(6);
+        }
+        else
+        {
+            _onkoMustaKTliikkunut = true;
+            _onkoMustaKuningasLiikkunut = true;
+            
+            lauta[7][5] = &Asema::mt;
+            lauta[7][6] = &Asema::mk;
+            lauta[7][7] = nullptr;
+            lauta[7][4] = nullptr;
+            
+            _mustaKuningasRuutu.setSarake(6);
+        }
+    }
+    else if (siirto.onkoPitkaLinna())
+    {
+        if (_siirtovuoro == 0)
+        {
+            _onkoValkeaDTliikkunut = true;
+            _onkoValkeaKuningasLiikkunut = true;
+            
+            lauta[0][3] = &Asema::vt;
+            lauta[0][2] = &Asema::vk;
+            lauta[0][0] = nullptr;
+            lauta[0][4] = nullptr;
+            
+            _valkeaKuningasRuutu.setSarake(2);
+        }
+        else
+        {
+            _onkoMustaDTliikkunut = true;
+            _onkoMustaKuningasLiikkunut = true;
+            
+            lauta[7][3] = &Asema::mt;
+            lauta[7][2] = &Asema::mk;
+            lauta[7][0] = nullptr;
+            lauta[7][4] = nullptr;
+            
+            _mustaKuningasRuutu.setSarake(2);
+        }
+    }
+    else
+    {
+        int alkuX = siirto.getAlkuruutu().getSarake();
+        int alkuY = siirto.getAlkuruutu().getRivi();
+        
+        int loppuX = siirto.getLoppuruutu().getSarake();
+        int loppuY = siirto.getLoppuruutu().getRivi();
+        
+        Nappula* nappula = lauta[alkuY][alkuX];
+        
+        if (nappula == &Asema::vk)
+        {
+            _onkoValkeaKuningasLiikkunut = true;
+            _valkeaKuningasRuutu.setSarake(loppuX);
+            _valkeaKuningasRuutu.setRivi(loppuY);
+        }
+        else if (nappula == &Asema::mk)
+        {
+            _onkoMustaKuningasLiikkunut = true;
+            _mustaKuningasRuutu.setSarake(loppuX);
+            _mustaKuningasRuutu.setRivi(loppuY);
+        }
+        else if (nappula == &Asema::vt)
+        {
+            if (alkuX == 0 && !_onkoValkeaDTliikkunut)
             {
                 _onkoValkeaDTliikkunut = true;
-                _onkoValkeaKuningasLiikkunut = true;
-                
-                lauta[0][3] = &Asema::vt;
-                lauta[0][2] = &Asema::vk;
-                lauta[0][0] = NULL;
-                lauta[0][4] = NULL;
-                
-                _valkeaKuningasRuutu.setSarake(2);
-                _siirtovuoro = 1;
-                return true;
+            }
+            else if (alkuX == 7 && !_onkoValkeaKTliikkunut)
+            {
+                _onkoValkeaKTliikkunut = true;
+            }
+        }
+        else if (nappula == &Asema::mt)
+        {
+            if (alkuX == 0 && !_onkoMustaKTliikkunut)
+            {
+                _onkoMustaKTliikkunut = true;
+            }
+            else if (alkuX == 7 && !_onkoMustaDTliikkunut)
+            {
+                _onkoMustaDTliikkunut = true;
+            }
+        }
+        else if (nappula == &Asema::vs)
+        {
+            if (alkuY == 1 && loppuY == 3)
+            {
+                kaksoisaskel = loppuX;
+            }
+            else if (kaksoisaskel != -1 && lauta[loppuY][loppuX] == lauta[5][kaksoisaskel])
+            {
+                // Valkosen sotilaan ohestalyönti
+                lauta[loppuY - 1][kaksoisaskel] = nullptr;
+                kaksoisaskel = -1;
+            }
+        }
+        else if (nappula == &Asema::ms)
+        {
+            if (alkuY == 6 && loppuY == 4)
+            {
+                kaksoisaskel = loppuX;
+            }
+            else if (kaksoisaskel != -1 && lauta[loppuY][loppuX] == lauta[2][kaksoisaskel])
+            {
+                // Mustan sotilaan ohestalyönti
+                lauta[loppuY + 1][kaksoisaskel] = nullptr;
+                kaksoisaskel = -1;
+            }
+        }
+            
+        if (nappula != &Asema::vs && nappula != &Asema::ms)
+        {
+            kaksoisaskel = -1;
+        }
+        
+        if (siirto.miksiKorotetaan != nullptr)
+        {
+            lauta[loppuY][loppuX] = siirto.miksiKorotetaan;
+        }
+        else
+        {
+            lauta[loppuY][loppuX] = nappula;
+        }
+        
+        lauta[alkuY][alkuX] = NULL;
+    }
+    
+    _siirtovuoro = 1 - _siirtovuoro;
+}
+
+bool Asema::tarkistaSiirto(const Siirto& siirto) const
+{
+    if (siirto.onkoLyhytLinna())
+    {
+        if (_siirtovuoro == 0)
+        {
+            if (onkoValkeaKuningasLiikkunut())
+            {
+                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
+                return false;
+            }
+            
+            if (onkoValkeaKTliikkunut())
+            {
+                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
+            }
+            
+            if (lauta[0][5] != nullptr || lauta[0][6] != nullptr)
+            {
+                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, siihen ei ole tilaa.");
+                return false;
             }
         }
         else
         {
-            // on mustan vuoro
-            if (lyhytlinna && lauta[7][5] == NULL && lauta[7][6] == NULL && !onkoMustaKTliikkunut() && !onkoMustaKuningasLiikkunut())
+            if (onkoMustaKuningasLiikkunut())
             {
-                _onkoMustaKTliikkunut = true;
-                _onkoMustaKuningasLiikkunut = true;
-                
-                lauta[7][5] = &Asema::mt;
-                lauta[7][6] = &Asema::mk;
-                lauta[7][7] = NULL;
-                lauta[7][4] = NULL;
-                
-                _mustaKuningasRuutu.setSarake(6);
-                _siirtovuoro = 0;
-                return true;
-            }
-            else if (pitkaLinna && lauta[7][3] == NULL && lauta[7][2] == NULL && lauta[7][1] == NULL && !onkoMustaDTliikkunut() && !onkoMustaKuningasLiikkunut())
-            {
-                _onkoMustaDTliikkunut = true;
-                _onkoMustaKuningasLiikkunut = true;
-                
-                lauta[7][3] = &Asema::mt;
-                lauta[7][2] = &Asema::mk;
-                lauta[7][0] = NULL;
-                lauta[7][4] = NULL;
-                
-                _mustaKuningasRuutu.setSarake(2);
-                _siirtovuoro = 0;
-                return true;
-            }
-        }
-        
-        Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen.");
-        return false;
-    }
-    
-    int alkuX = siirto.getAlkuruutu().getSarake();
-    int alkuY = siirto.getAlkuruutu().getRivi();
-    
-    int loppuX = siirto.getLoppuruutu().getSarake();
-    int loppuY = siirto.getLoppuruutu().getRivi();
-    
-    if (alkuY < 0 || alkuY > 7 || alkuX < 0 || alkuX > 7)
-    {
-        Kayttoliittyma::tulostaVirhe("Siirron alkuruutu laudan ulkopuolella.");
-        return false;
-    }
-    
-    if (loppuY < 0 || loppuY > 7 || loppuX < 0 || loppuX > 7)
-    {
-        Kayttoliittyma::tulostaVirhe("Siirron loppuruutu laudan ulkopuolella.");
-        return false;
-    }
-    
-    Nappula* nappulaPtr = lauta[alkuY][alkuX];
-    
-    if (nappulaPtr == nullptr)
-    {
-        Kayttoliittyma::tulostaVirhe("Siirron alkuruudussa ei ole nappulaa.");
-        return false;
-    }
-    
-    if (nappulaPtr->getVari() != _siirtovuoro)
-    {
-        Kayttoliittyma::tulostaVirhe("Et voi siirtää vastustajan nappulaa.");
-        return false;
-    }
-    
-    if (nappulaPtr == &Asema::vk)
-    {
-        _onkoValkeaKuningasLiikkunut = true;
-        _valkeaKuningasRuutu.setSarake(loppuX);
-        _valkeaKuningasRuutu.setRivi(loppuY);
-    }
-    else if (nappulaPtr == &Asema::mk)
-    {
-        _onkoMustaKuningasLiikkunut = true;
-        _mustaKuningasRuutu.setSarake(loppuX);
-        _mustaKuningasRuutu.setRivi(loppuY);
-    }
-    else if (nappulaPtr == &Asema::vt)
-    {
-        if (alkuX == 0 && !_onkoValkeaDTliikkunut)
-        {
-            _onkoValkeaDTliikkunut = true;
-        }
-        else if (alkuX == 7 && !_onkoValkeaKTliikkunut)
-        {
-            _onkoValkeaKTliikkunut = true;
-        }
-    }
-    else if (nappulaPtr == &Asema::mt)
-    {
-        if (alkuX == 0 && !_onkoMustaKTliikkunut)
-        {
-            _onkoMustaKTliikkunut = true;
-        }
-        else if (alkuX == 7 && !_onkoMustaDTliikkunut)
-        {
-            _onkoMustaDTliikkunut = true;
-        }
-    }
-    else if (nappulaPtr == &Asema::vs || nappulaPtr == &Asema::ms)
-    {
-        // Tarkistetaan, onko ohestalyönti mahdollinen
-        if ((alkuY == 1 && loppuY == 3) || (alkuY == 6 && loppuY == 4))
-        {
-            kaksoisaskel = loppuX;
-        }
-        else if (kaksoisaskel != -1)
-        {
-            if (_siirtovuoro == 0 && lauta[loppuY][loppuX] == lauta[5][kaksoisaskel])
-            {
-                // Valkosen sotilaan ohestalyönti
-                lauta[loppuY - 1][kaksoisaskel] = NULL;
-            }
-            else if (_siirtovuoro == 1 && lauta[loppuY][loppuX] == lauta[2][kaksoisaskel])
-            {
-                // Mustan sotilaan ohestalyönti
-                lauta[loppuY + 1][kaksoisaskel] = NULL;
+                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
+                return false;
             }
             
-            kaksoisaskel = -1;
+            if (onkoMustaKTliikkunut())
+            {
+                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
+            }
+            
+            if (lauta[7][5] != nullptr || lauta[7][6] != nullptr)
+            {
+                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, siihen ei ole tilaa.");
+                return false;
+            }
         }
     }
-    
-    if (nappulaPtr != &Asema::vs && nappulaPtr != &Asema::ms)
+    else if (siirto.onkoPitkaLinna())
     {
-        kaksoisaskel = -1;
-    }
-    
-    if (siirto.miksiKorotetaan != nullptr)
-    {
-        lauta[loppuY][loppuX] = siirto.miksiKorotetaan;
+        if (_siirtovuoro == 0)
+        {
+            if (onkoValkeaKuningasLiikkunut())
+            {
+                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
+                return false;
+            }
+            
+            if (onkoValkeaDTliikkunut())
+            {
+                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
+            }
+            
+            if (lauta[0][3] != nullptr || lauta[0][2] != nullptr || lauta[0][1] != nullptr)
+            {
+                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, siihen ei ole tilaa.");
+                return false;
+            }
+        }
+        else
+        {
+            if (onkoMustaKuningasLiikkunut())
+            {
+                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
+                return false;
+            }
+            
+            if (onkoMustaDTliikkunut())
+            {
+                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
+            }
+            
+            if (lauta[7][3] != nullptr || lauta[7][2] != nullptr || lauta[7][1] != nullptr)
+            {
+                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, siihen ei ole tilaa.");
+                return false;
+            }
+        }
     }
     else
     {
-        lauta[loppuY][loppuX] = nappulaPtr;
+        Ruutu alku = siirto.getAlkuruutu();
+        Ruutu loppu = siirto.getLoppuruutu();
+        
+        if (!alku.ok())
+        {
+            Kayttoliittyma::tulostaVirhe("Siirron alkuruutu on laudan ulkopuolella.");
+        }
+        
+        if (!loppu.ok())
+        {
+            Kayttoliittyma::tulostaVirhe("Siirron loppuruutu on laudan ulkopuolella.");
+        }
+        
+        Nappula* nappula = lauta[alku.getRivi()][alku.getSarake()];
+        
+        if (nappula == nullptr)
+        {
+            Kayttoliittyma::tulostaVirhe("Siirron alkuruudussa ei ole nappulaa.");
+            return false;
+        }
+        
+        if (nappula->getVari() != _siirtovuoro)
+        {
+            Kayttoliittyma::tulostaVirhe("Et voi siirtää vastustajan nappulaa.");
+            return false;
+        }
     }
     
-    lauta[alkuY][alkuX] = NULL;
+    std::list<Siirto> siirrot;
+    annaLaillisetSiirrot(siirrot);
     
-    _siirtovuoro = 1 - _siirtovuoro;
-    
-    return true;
+    if (std::find(siirrot.begin(), siirrot.end(), siirto) != siirrot.end())
+    {
+        return true;
+    }
+    else
+    {
+        Kayttoliittyma::tulostaVirhe("Siirto ei ole laillinen.");
+        return false;
+    }
 }
 
 int Asema::getSiirtovuoro() const { return _siirtovuoro; }
@@ -292,7 +382,7 @@ bool Asema::onkoMustaKTliikkunut() const { return _onkoMustaKTliikkunut; }
  3. Arvosta keskustaa sotilailla ja ratsuilla
  4. Arvosta pitkiä linjoja daami, torni ja lähetti
  */
-float Asema::evaluoi()
+float Asema::evaluoi() const
 {
     float summa = laskeNappuloidenArvo();
     return summa;
@@ -309,7 +399,7 @@ float Asema::evaluoi()
     
 }
 
-float Asema::laskeNappuloidenArvo()
+float Asema::laskeNappuloidenArvo() const
 {
     float summa = 0;
     for (int y = 0; y < 8; y++)
@@ -449,7 +539,7 @@ float Asema::linjat(int vari)
 //	}
 //	return min;
 //}
-MinMaxPaluu Asema::minimax(int syvyys)
+MinMaxPaluu Asema::minimax(int syvyys) const
 {
     // Generoidaan aseman lailliset siirrot.
     
@@ -470,7 +560,7 @@ MinMaxPaluu Asema::minimax(int syvyys)
     }
 }
 
-MinMaxPaluu Asema::maxi(int syvyys)
+MinMaxPaluu Asema::maxi(int syvyys) const
 {
     if (syvyys == 0)
     {
@@ -483,7 +573,7 @@ MinMaxPaluu Asema::maxi(int syvyys)
     std::list<Siirto> siirrot;
     annaLaillisetSiirrot(siirrot);
     
-    if (siirrot.size() < 1)
+    if (siirrot.empty())
     {
         if (onkoRuutuUhattu(_valkeaKuningasRuutu, 1))
         {
@@ -509,7 +599,7 @@ MinMaxPaluu Asema::maxi(int syvyys)
     return maxi;
 }
 
-MinMaxPaluu Asema::mini(int syvyys)
+MinMaxPaluu Asema::mini(int syvyys) const
 {
     if (syvyys == 0)
     {
@@ -522,7 +612,7 @@ MinMaxPaluu Asema::mini(int syvyys)
     std::list<Siirto> siirrot;
     annaLaillisetSiirrot(siirrot);
     
-    if (siirrot.size() < 1)
+    if (siirrot.empty())
     {
         if (onkoRuutuUhattu(_mustaKuningasRuutu, 0))
         {
@@ -564,24 +654,24 @@ bool Asema::onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const
                 {
                     // ohestalyöntiä varten, toimii ehkä?
                     /*
-                    Nappula* uhattuNappula = lauta[ruutu.getSarake()][ruutu.getRivi()];
-                    if ((uhattuNappula == &Asema::vs && nappula == &Asema::ms) || (uhattuNappula == &Asema::ms && nappula == &Asema::vs))
-                    {
-                        if (kaksoisaskel != -1)
-                        {
-                            int loppuY = siirto.getLoppuruutu().getRivi();
-                            int loppuX = siirto.getLoppuruutu().getSarake();
-                            if (_siirtovuoro == 0 && lauta[loppuY][loppuX] == lauta[5][kaksoisaskel] && ruutu == Ruutu(kaksoisaskel, loppuY - 1))
-                            {
-                                return true;
-                            }
-                            else if (_siirtovuoro == 1 && lauta[loppuY][loppuX] == lauta[2][kaksoisaskel] && ruutu == Ruutu(kaksoisaskel, loppuY + 1))
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                    */
+                     Nappula* uhattuNappula = lauta[ruutu.getSarake()][ruutu.getRivi()];
+                     if ((uhattuNappula == &Asema::vs && nappula == &Asema::ms) || (uhattuNappula == &Asema::ms && nappula == &Asema::vs))
+                     {
+                     if (kaksoisaskel != -1)
+                     {
+                     int loppuY = siirto.getLoppuruutu().getRivi();
+                     int loppuX = siirto.getLoppuruutu().getSarake();
+                     if (_siirtovuoro == 0 && lauta[loppuY][loppuX] == lauta[5][kaksoisaskel] && ruutu == Ruutu(kaksoisaskel, loppuY - 1))
+                     {
+                     return true;
+                     }
+                     else if (_siirtovuoro == 1 && lauta[loppuY][loppuX] == lauta[2][kaksoisaskel] && ruutu == Ruutu(kaksoisaskel, loppuY + 1))
+                     {
+                     return true;
+                     }
+                     }
+                     }
+                     */
                     
                     if (siirto.getLoppuruutu() == ruutu)
                     {
@@ -595,7 +685,7 @@ bool Asema::onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const
     return false;
 }
 
-void Asema::annaLinnoitusSiirrot(std::list<Siirto>& siirrot, int vari)
+void Asema::annaLinnoitusSiirrot(std::list<Siirto>& siirrot, int vari) const
 {
     if (vari == 0) {
         // valkea, lyhyt linna
@@ -649,7 +739,7 @@ void Asema::annaLinnoitusSiirrot(std::list<Siirto>& siirrot, int vari)
     }
 }
 
-void Asema::huolehdiKuninkaanShakeista(std::list<Siirto>& siirrot)
+void Asema::huolehdiKuninkaanShakeista(std::list<Siirto>& siirrot) const
 {
     siirrot.remove_if([this](Siirto& siirto) {
         Asema tmpAsema = *this;
@@ -671,7 +761,7 @@ void Asema::huolehdiKuninkaanShakeista(std::list<Siirto>& siirrot)
     });
 }
 
-void Asema::annaLaillisetSiirrot(std::list<Siirto>& siirrot)
+void Asema::annaLaillisetSiirrot(std::list<Siirto>& siirrot) const
 {
     for (int y = 0; y < 8; y++)
     {

@@ -45,12 +45,15 @@ public:
     static const float maxArvo;
     
     Asema();												// Asettaa alkuaseman.
-    bool paivitaAsema(const Siirto& siirto);				// P‰ivitt‰‰ aseman annetulla siirrolla.
-    float evaluoi();										// Aseman numeerinen arviointi.
-    MinMaxPaluu maxi(int syvyys);							// Minimax (max:n siirtovuoro).
-    MinMaxPaluu mini(int syvyys);							// Minimax (min:n siirtovuoro).
-    MinMaxPaluu minimax(int syvyys);						// Minimax-algoritmi.
-    void annaLaillisetSiirrot(std::list<Siirto>& siirrot);	// Siirtogeneraattori.
+    void paivitaAsema(const Siirto& siirto);				// P‰ivitt‰‰ aseman annetulla siirrolla.
+    
+    bool tarkistaSiirto(const Siirto& siirto) const;
+    
+    float evaluoi() const;										        // Aseman numeerinen arviointi.
+    MinMaxPaluu maxi(int syvyys) const;							        // Minimax (max:n siirtovuoro).
+    MinMaxPaluu mini(int syvyys) const;							        // Minimax (min:n siirtovuoro).
+    MinMaxPaluu minimax(int syvyys) const;						        // Minimax-algoritmi.
+    void annaLaillisetSiirrot(std::list<Siirto>& siirrot) const;	// Siirtogeneraattori.
     
     int getSiirtovuoro() const;
     void setSiirtovuoro(int vuoro);
@@ -74,13 +77,13 @@ private:
     Ruutu _valkeaKuningasRuutu;
     Ruutu _mustaKuningasRuutu;
     
-    float laskeNappuloidenArvo();
+    float laskeNappuloidenArvo() const;
     bool onkoAvausTaiKeskipeli(int vari);
     float nappuloitaKeskella(int vari);
     float linjat(int vari);
     bool onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const;
-    void annaLinnoitusSiirrot(std::list<Siirto>& siirrot, int vari);
+    void annaLinnoitusSiirrot(std::list<Siirto>& siirrot, int vari) const;
     
     // Karsii siirrot, jotka j‰tt‰v‰t oman K:n shakkiin.
-    void huolehdiKuninkaanShakeista(std::list<Siirto>& siirrot);
+    void huolehdiKuninkaanShakeista(std::list<Siirto>& siirrot) const;
 };

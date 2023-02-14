@@ -22,6 +22,11 @@ Siirto::Siirto()
 , _loppuRuutu(0, 0)
 , miksiKorotetaan{ nullptr } {}
 
+bool Siirto::operator==(const Siirto& rhs) const
+{
+    return _alkuRuutu == rhs._alkuRuutu && _loppuRuutu == rhs._loppuRuutu && _lyhytLinna == rhs._lyhytLinna && _pitkaLinna == rhs._pitkaLinna;
+}
+
 const Ruutu& Siirto::getAlkuruutu() const { return _alkuRuutu; }
 const Ruutu& Siirto::getLoppuruutu() const { return _loppuRuutu; }
 bool Siirto::onkoLyhytLinna() const { return _lyhytLinna; }
