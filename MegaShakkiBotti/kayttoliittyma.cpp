@@ -17,6 +17,38 @@
 
 using namespace std;
 
+Kayttoliittyma::Kayttoliittyma()
+{
+    int saieMaara = std::thread::hardware_concurrency() - 1;
+    saikeet.reserve(saieMaara);
+
+    for (int i = 0; i < saieMaara; i++)
+    {
+        saikeet.push_back(std::thread());
+    }
+};
+
+void Kayttoliittyma::saieLuuppi()
+{
+    while (true)
+    {
+        while (tehtavat.empty())
+        {
+            std::this_thread::sleep_for(1ms);
+        }
+
+        auto tehtava = tehtavat.front();
+        tehtavat.pop();
+        tehtava();
+
+    }
+}
+
+void Kayttoliittyma::lisaaTehtava(std::function<void()> tehtava)
+{
+    tehtavat.push(tehtava);
+}
+
 Kayttoliittyma& Kayttoliittyma::getInstance()
 {
     static Kayttoliittyma instance;

@@ -558,7 +558,41 @@ MinMaxPaluu Asema::minimax(int syvyys) const
     
     if (_siirtovuoro == 0)
     {
-        return maxi(syvyys);
+        MinMaxPaluu maxiPaluu;
+        maxiPaluu.evaluointiArvo = std::numeric_limits<float>::lowest();
+
+        // Rinnakkaistetaan siirtojen lapikaynti.
+        std::list<Siirto> siirrot;
+        annaLaillisetSiirrot(siirrot);
+        int siirtoMaara = siirrot.size();
+        int saikeidenMaara  = std::thread::hardware_concurrency();
+        int siirtojaPerThread = siirtoMaara / saikeidenMaara; // 12 ydinta 20 siirtoa
+
+        std::vector<MinMaxPaluu> paluuArvot(siirtoMaara);
+        int i = 0;
+        for (auto& siirto : siirrot)
+        {
+            auto maxTaiMini = [this, syvyys](int index, MinMaxPaluu* paluuLista)
+            {
+                paluuLista[index] = maxi(syvyys);
+            };
+            std::function<void()> tehtava = std::bind(maxTaiMini, i, paluuArvot.data());
+
+            Kayttoliittyma::getInstance().lisaaTehtava(tehtava);
+
+            i++;
+        }
+        /* JATKETAAN TASTA */
+
+        //while (Kayttoliittyma::getInstance().teh)
+        //{
+
+        //}
+
+        return maxiPaluu;
+
+
+        //return maxi(syvyys);
     }
     else
     {
