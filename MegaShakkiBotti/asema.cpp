@@ -189,8 +189,11 @@ void Asema::paivitaAsema(const Siirto& siirto)
             else if (kaksoisaskel != -1 && lauta[loppuY][loppuX] == lauta[5][kaksoisaskel])
             {
                 // Valkosen sotilaan ohestalyönti
-                lauta[loppuY - 1][kaksoisaskel] = nullptr;
-                kaksoisaskel = -1;
+                if (lauta[3][kaksoisaskel] != nullptr && lauta[3][kaksoisaskel] == &Asema::ms)
+                {
+                    lauta[loppuY - 1][kaksoisaskel] = nullptr;
+                    kaksoisaskel = -1;
+                }
             }
         }
         else if (nappula == &Asema::ms)
@@ -201,9 +204,12 @@ void Asema::paivitaAsema(const Siirto& siirto)
             }
             else if (kaksoisaskel != -1 && lauta[loppuY][loppuX] == lauta[2][kaksoisaskel])
             {
-                // Mustan sotilaan ohestalyönti
-                lauta[loppuY + 1][kaksoisaskel] = nullptr;
-                kaksoisaskel = -1;
+                if (lauta[4][kaksoisaskel] != nullptr && lauta[4][kaksoisaskel] == &Asema::vs)
+                {
+                    // Mustan sotilaan ohestalyönti
+                    lauta[loppuY + 1][kaksoisaskel] = nullptr;
+                    kaksoisaskel = -1;
+                }
             }
         }
             
