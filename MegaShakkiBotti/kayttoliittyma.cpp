@@ -26,7 +26,7 @@ Kayttoliittyma& Kayttoliittyma::getInstance()
 const Asema& Kayttoliittyma::getAsema() const { return _asema; }
 Asema& Kayttoliittyma::getAsema() { return _asema; }
 
-void Kayttoliittyma::piirraLauta(const list<Siirto>& siirrot)
+void Kayttoliittyma::piirraLauta(bool mustaAlhaalla, const list<Siirto>& siirrot)
 {
     bool siirtoRuudut[8][8] = { false };
     
@@ -37,12 +37,14 @@ void Kayttoliittyma::piirraLauta(const list<Siirto>& siirrot)
         siirtoRuudut[y][x] = true;
     }
     
-    for (int y = 7; y >= 0; y--)
+    for (int rivi = 0; rivi < 8; rivi++)
     {
+        int y = mustaAlhaalla ? rivi : 8 - rivi - 1;
         cout << resetoiVarit() << to_string(y + 1) << " ";
-        
-        for (int x = 0; x < 8; x++)
+        for (int sarake = 0; sarake < 8; sarake++)
         {
+            int x = mustaAlhaalla ? 8 - sarake - 1 : sarake;
+            
             // Joka toinen rivi valkoinen
             if ((x + y) % 2 == 0)
             {
@@ -72,7 +74,7 @@ void Kayttoliittyma::piirraLauta(const list<Siirto>& siirrot)
             string merkki = " ";
             
             // Jos NULL niin printataan tyhjä paikka.
-            if (_asema.lauta[y][x] != NULL)
+            if (_asema.lauta[y][x] != nullptr)
             {
                 merkki = _asema.lauta[y][x]->getMerkki();
             }
@@ -83,7 +85,16 @@ void Kayttoliittyma::piirraLauta(const list<Siirto>& siirrot)
         cout << resetoiVarit() << " |\n";
     }
     
-    cout << resetoiVarit() << "   a  b  c  d  e  f  g  h  \n";
+    cout << resetoiVarit();
+    
+    if (mustaAlhaalla)
+    {
+        cout << "   h  g  f  e  d  c  b  a  \n";
+    }
+    else
+    {
+        cout << "   a  b  c  d  e  f  g  h  \n";
+    }
 }
 
 /*

@@ -71,7 +71,7 @@ int main()
         
         cout << "Laudan arvo: " << asema.evaluoi() << endl;
         asema.annaLaillisetSiirrot(siirrot);
-        kayttoliittyma.piirraLauta(siirrot);
+        kayttoliittyma.piirraLauta(koneenVari == 0, siirrot);
         siirrot.clear();
         
         Siirto siirto;
