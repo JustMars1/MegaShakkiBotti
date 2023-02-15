@@ -8,52 +8,39 @@
 #include "ruutu.h"
 #include "kayttoliittyma.h"
 
-Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK);
-Daami Asema::vd = Daami("\xe2\x99\x95", 0, VD);
-Torni Asema::vt = Torni("\xe2\x99\x96", 0, VT);
-Lahetti Asema::vl = Lahetti("\xe2\x99\x97", 0, VL);
-Ratsu Asema::vr = Ratsu("\xe2\x99\x98", 0, VR);
-Sotilas Asema::vs = Sotilas("\xe2\x99\x99", 0, VS);
+Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK, 0);
+Daami Asema::vd = Daami("\xe2\x99\x95", 0, VD, 9);
+Torni Asema::vt = Torni("\xe2\x99\x96", 0, VT, 5);
+Lahetti Asema::vl = Lahetti("\xe2\x99\x97", 0, VL, 3.25);
+Ratsu Asema::vr = Ratsu("\xe2\x99\x98", 0, VR, 3);
+Sotilas Asema::vs = Sotilas("\xe2\x99\x99", 0, VS, 1);
 
-Kuningas Asema::mk = Kuningas("\xe2\x99\x9a", 1, MK);
-Daami Asema::md = Daami("\xe2\x99\x9b", 1, MD);
-Torni Asema::mt = Torni("\xe2\x99\x9c", 1, MT);
-Lahetti Asema::ml = Lahetti("\xe2\x99\x9d", 1, ML);
-Ratsu Asema::mr = Ratsu("\xe2\x99\x9e", 1, MR);
-Sotilas Asema::ms = Sotilas("\xe2\x99\x9f", 1, MS);
+Kuningas Asema::mk = Kuningas("\xe2\x99\x9a", 1, MK, 0);
+Daami Asema::md = Daami("\xe2\x99\x9b", 1, MD, -9);
+Torni Asema::mt = Torni("\xe2\x99\x9c", 1, MT, -5);
+Lahetti Asema::ml = Lahetti("\xe2\x99\x9d", 1, ML, -3.25);
+Ratsu Asema::mr = Ratsu("\xe2\x99\x9e", 1, MR, -3);
+Sotilas Asema::ms = Sotilas("\xe2\x99\x9f", 1, MS, -1);
 
-const std::unordered_map<char, Nappula*> Asema::valkoinenNappulaMap = {
-    {'k', &Asema::vk},
-    {'d', &Asema::vd},
-    {'t', &Asema::vt},
-    {'l', &Asema::vl},
-    {'r', &Asema::vr},
-    {'s', &Asema::vs}
+const std::unordered_map<char, Nappula*> Asema::valkeaNappulaMap = {
+    {'k', &vk},
+    {'d', &vd},
+    {'t', &vt},
+    {'l', &vl},
+    {'r', &vr},
+    {'s', &vs}
 };
 
 const std::unordered_map<char, Nappula*> Asema::mustaNappulaMap = {
-    {'k', &Asema::mk},
-    {'d', &Asema::md},
-    {'t', &Asema::mt},
-    {'l', &Asema::ml},
-    {'r', &Asema::mr},
-    {'s', &Asema::ms}
+    {'k', &mk},
+    {'d', &md},
+    {'t', &mt},
+    {'l', &ml},
+    {'r', &mr},
+    {'s', &ms}
 };
 
-const std::unordered_map<NappulaKoodi, float> Asema::arvoMap = {
-    {VD, 9},
-    {VT, 5},
-    {VL, 3.25},
-    {VR, 3},
-    {VS, 1},
-    {MD, -9},
-    {MT, -5},
-    {ML, -3.25},
-    {MR, -3},
-    {MS, -1}
-};
-
-const float Asema::maxArvo = Asema::arvoMap.at(VD) + Asema::arvoMap.at(VT) * 2 + Asema::arvoMap.at(VL) * 2 + Asema::arvoMap.at(VR) * 2 + Asema::arvoMap.at(VS) * 8;
+const float Asema::maxArvo = vd.getArvo() + vt.getArvo() * 2 + vl.getArvo() * 2 + vr.getArvo() * 2 + vs.getArvo() * 8;
 
 Asema::Asema()
 : lauta
@@ -212,7 +199,7 @@ void Asema::paivitaAsema(const Siirto& siirto)
                 }
             }
         }
-            
+        
         if (nappula != &Asema::vs && nappula != &Asema::ms)
         {
             kaksoisaskel = -1;
@@ -413,18 +400,12 @@ float Asema::laskeNappuloidenArvo() const
         for (int x = 0; x < 8; x++)
         {
             Nappula* nappula = lauta[y][x];
-            
             if (nappula == nullptr)
             {
                 continue;
             }
             
-            if (nappula == &Asema::vk || nappula == &Asema::mk)
-            {
-                continue;
-            }
-            
-            summa += arvoMap.at(nappula->getKoodi());
+            summa += nappula->getArvo();
         }
     }
     
@@ -523,39 +504,9 @@ float Asema::linjat(int vari)
     //mustat
     
 }
-//
-//int maxi(int depth, asema a) 
-//	if (depth == 0) return evaluate();
-//	int max = -oo;
-//	for (all moves ) {
-//		score = mini(depth - 1, seuraaja);
-//		if (score > max)
-//			max = score;
-//	}
-//	return max;
-//}
 
-//int mini(int depth, asema a) {
-//	if (depth == 0) return -evaluate();
-//	int min = +oo;
-//	for (all moves) {
-//		score = maxi(depth - 1);
-//		if (score < min)
-//			min = score;
-//	}
-//	return min;
-//}
 MinMaxPaluu Asema::minimax(int syvyys) const
 {
-    // Generoidaan aseman lailliset siirrot.
-    
-    // Rekursion kantatapaus 1: peli on loppu
-    
-    // Rekursion kantatapaus 2: katkaisusyvyydessä
-    
-    // Rekursioaskel: kokeillaan jokaista laillista siirtoa s
-    // (alustetaan paluuarvo huonoimmaksi mahdolliseksi).
-    
     if (_siirtovuoro == 0)
     {
         return maxi(syvyys);
@@ -659,25 +610,23 @@ bool Asema::onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const
                 for (auto& siirto : vastustajanSiirrot)
                 {
                     // ohestalyöntiä varten, toimii ehkä?
-                    /*
-                     Nappula* uhattuNappula = lauta[ruutu.getSarake()][ruutu.getRivi()];
-                     if ((uhattuNappula == &Asema::vs && nappula == &Asema::ms) || (uhattuNappula == &Asema::ms && nappula == &Asema::vs))
-                     {
-                     if (kaksoisaskel != -1)
-                     {
-                     int loppuY = siirto.getLoppuruutu().getRivi();
-                     int loppuX = siirto.getLoppuruutu().getSarake();
-                     if (_siirtovuoro == 0 && lauta[loppuY][loppuX] == lauta[5][kaksoisaskel] && ruutu == Ruutu(kaksoisaskel, loppuY - 1))
-                     {
-                     return true;
-                     }
-                     else if (_siirtovuoro == 1 && lauta[loppuY][loppuX] == lauta[2][kaksoisaskel] && ruutu == Ruutu(kaksoisaskel, loppuY + 1))
-                     {
-                     return true;
-                     }
-                     }
-                     }
-                     */
+                    // Nappula* uhattuNappula = lauta[ruutu.getSarake()][ruutu.getRivi()];
+                    // if ((uhattuNappula == &Asema::vs && nappula == &Asema::ms) || (uhattuNappula == &Asema::ms && nappula == &Asema::vs))
+                    // {
+                    //     if (kaksoisaskel != -1)
+                    //     {
+                    //         int loppuY = siirto.getLoppuruutu().getRivi();
+                    //         int loppuX = siirto.getLoppuruutu().getSarake();
+                    //         if (_siirtovuoro == 0 && lauta[loppuY][loppuX] == lauta[5][kaksoisaskel] && ruutu == Ruutu(kaksoisaskel, loppuY - 1))
+                    //         {
+                    //             return true;
+                    //         }
+                    //         else if (_siirtovuoro == 1 && lauta[loppuY][loppuX] == lauta[2][kaksoisaskel] && ruutu == Ruutu(kaksoisaskel, loppuY + 1))
+                    //         {
+                    //             return true;
+                    //         }
+                    //     }
+                    // }
                     
                     if (siirto.getLoppuruutu() == ruutu)
                     {

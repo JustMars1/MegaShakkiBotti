@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <clocale>
+#include <limits>
 
 #include "kayttoliittyma.h"
 #include "siirto.h"
@@ -34,8 +35,23 @@ int main()
     
     int koneenVari;
     cout << "Kummalla v\xc3\xa4rill\xc3\xa4 pelaat? (0 = valkoinen, 1 = musta)\n";
-    cin >> koneenVari;
-    koneenVari = 1 - koneenVari;
+    
+    while(true)
+    {
+        int pelaajanVari;
+        cin >> pelaajanVari;
+        
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(std::numeric_limits<streamsize>::max(), '\n');
+        }
+        else if (pelaajanVari == 0 || pelaajanVari == 1)
+        {
+            koneenVari = 1 - pelaajanVari;
+            break;
+        }
+    }
     
     auto& kayttoliittyma = Kayttoliittyma::getInstance();
     auto& asema = kayttoliittyma.getAsema();
@@ -43,7 +59,6 @@ int main()
     
     while (true)
     {
-        // N‰ytt‰‰ kenen siirtovuoro.
         cout << "Siirtovuoro: ";
         if (asema.getSiirtovuoro() == 0)
         {
@@ -54,7 +69,7 @@ int main()
             cout << "Musta\n";
         }
         
-        cout << "Arvo: " << asema.evaluoi() << endl;
+        cout << "Laudan arvo: " << asema.evaluoi() << endl;
         asema.annaLaillisetSiirrot(siirrot);
         kayttoliittyma.piirraLauta(siirrot);
         siirrot.clear();

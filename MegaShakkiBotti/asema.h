@@ -38,10 +38,9 @@ public:
     // Ohestalyöntiä varten (-1 = sotilaan kaksoisaskelta ei tapahtunut edellisellä siirrolla).
     int kaksoisaskel;
     
-    static const std::unordered_map<char, Nappula*> valkoinenNappulaMap;
+    static const std::unordered_map<char, Nappula*> valkeaNappulaMap;
     static const std::unordered_map<char, Nappula*> mustaNappulaMap;
     
-    static const std::unordered_map<NappulaKoodi, float> arvoMap;
     static const float maxArvo;
     
     Asema();												// Asettaa alkuaseman.

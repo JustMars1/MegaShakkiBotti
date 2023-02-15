@@ -98,9 +98,9 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
         kirjain = tolower(kirjain);
         
         if (_asema.getSiirtovuoro() == 0) {
-            if (Asema::valkoinenNappulaMap.find(kirjain) != Asema::valkoinenNappulaMap.end())
+            if (Asema::valkeaNappulaMap.find(kirjain) != Asema::valkeaNappulaMap.end())
             {
-                return Asema::valkoinenNappulaMap.at(kirjain);
+                return Asema::valkeaNappulaMap.at(kirjain);
             }
         }
         
@@ -117,6 +117,7 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
         if (cin.fail())
         {
             cin.clear();
+            cin.ignore(std::numeric_limits<streamsize>::max(), '\n');
         }
         else
         {
@@ -166,6 +167,7 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
                         if (cin.fail())
                         {
                             cin.clear();
+                            cin.ignore(std::numeric_limits<streamsize>::max(), '\n');
                         }
                         else
                         {
