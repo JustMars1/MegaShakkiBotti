@@ -20,6 +20,10 @@ public:
     
     const Asema& getAsema() const;
     Asema& getAsema();
+    
+    bool varitaRuudut;
 private:
 	Asema _asema;
+    
+    Kayttoliittyma();
 };

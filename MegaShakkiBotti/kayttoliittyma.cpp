@@ -17,6 +17,8 @@
 
 using namespace std;
 
+Kayttoliittyma::Kayttoliittyma() : varitaRuudut{true} {}
+
 Kayttoliittyma& Kayttoliittyma::getInstance()
 {
     static Kayttoliittyma instance;
@@ -82,7 +84,11 @@ void Kayttoliittyma::piirraLauta(bool mustaAlhaalla, const list<Siirto>& siirrot
             cout << " " << merkki << " ";
         }
         
-        cout << resetoiVarit() << " |\n";
+        cout << resetoiVarit();
+#ifdef _WIN32
+        cout << " |\n";
+#endif
+        cout << endl;
     }
     
     cout << resetoiVarit();

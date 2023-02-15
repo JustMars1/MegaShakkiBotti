@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <string_view>
 
 enum Vari : uint8_t
 {
@@ -25,4 +24,4 @@ enum Vari : uint8_t
 std::string tekstivari(Vari vari);
 std::string taustavari(Vari vari);
 
-constexpr std::string_view resetoiVarit() { return "\033[0m"; }
+std::string resetoiVarit();

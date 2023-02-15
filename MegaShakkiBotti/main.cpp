@@ -17,10 +17,11 @@
 #include "ajastin.hpp"
 
 #include <chrono>
+#include <cstring>
 
 using namespace std;
 
-int main()
+int main(int argc, char* argv[])
 {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
@@ -32,6 +33,14 @@ int main()
 #endif
     setlocale(LC_ALL, "fi_FI.UTF-8");
     cout.imbue(locale());
+    
+    for (int i = 0; i < argc; i++)
+    {
+        if (strcmp(argv[i], "nocolor") == 0)
+        {
+            Kayttoliittyma::getInstance().varitaRuudut = false;
+        }
+    }
     
     int koneenVari;
     cout << "Kummalla v\xc3\xa4rill\xc3\xa4 pelaat? (0 = valkoinen, 1 = musta)\n";
