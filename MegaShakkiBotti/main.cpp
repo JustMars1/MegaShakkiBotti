@@ -10,6 +10,7 @@
 #include <string>
 #include <clocale>
 #include <limits>
+#include <vector>
 
 #include "kayttoliittyma.h"
 #include "siirto.h"
@@ -64,7 +65,8 @@ int main(int argc, char* argv[])
     
     auto& kayttoliittyma = Kayttoliittyma::getInstance();
     auto& asema = kayttoliittyma.getAsema();
-    list<Siirto> siirrot;
+    vector<Siirto> siirrot;
+    siirrot.reserve(100);
     
     while (true)
     {
@@ -91,7 +93,7 @@ int main(int argc, char* argv[])
             if (asema.getSiirtovuoro() == koneenVari)
             {
                 Ajastin ajastin("MiniMax");
-                MinMaxPaluu minimax = asema.minimax(3);
+                MinMaxPaluu minimax = asema.minimax(4);
                 
                 siirto = minimax._parasSiirto;
                 cout << "Koneen siirto: " << siirto << endl;

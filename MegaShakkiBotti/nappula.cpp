@@ -7,18 +7,26 @@
 
 using namespace std;
 
-Nappula::Nappula(string merkki, int vari, NappulaKoodi koodi, float arvo)
+Nappula::Nappula(string merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot)
 : _merkki(merkki)
 , _vari{vari}
 , _koodi{koodi}
-, _arvo{arvo} {}
+, _arvo{arvo}
+, _maxSiirrot{maxSiirrot} {}
+
+Daami::Daami(string merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot)
+: Nappula(merkki, vari, koodi, arvo, maxSiirrot)
+, Torni(merkki, vari, koodi, arvo, maxSiirrot)
+, Lahetti(merkki, vari, koodi, arvo, maxSiirrot) {}
 
 NappulaKoodi Nappula::getKoodi() const { return _koodi; }
 int Nappula::getVari() const { return _vari; }
 const string& Nappula::getMerkki() const { return _merkki; }
 float Nappula::getArvo() const { return _arvo; }
 
-void Torni::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
+int Nappula::getMaxSiirrot() const { return _maxSiirrot; }
+
+void Torni::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
 {
     int x = ruutu.getSarake();
     int y = ruutu.getRivi();
@@ -96,24 +104,24 @@ void Torni::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& as
     }
 }
 
-void Ratsu::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
+void Ratsu::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
 {
     int x = ruutu.getSarake();
     int y = ruutu.getRivi();
     
     // suhteellinen sijainti mista ruudusta tahansa
-    int x_sarake[] = { -1, 1, 1, -1, 2, -2, 2, -2 };
-    int y_rivi[] = { 2, 2, -2, -2, 1, 1, -1, -1 };
+    int xSarake[8] = { -1, 1, 1, -1, 2, -2, 2, -2 };
+    int yRivi[8] = { 2, 2, -2, -2, 1, 1, -1, -1 };
     
     for (int i = 0; i < 8; i++)
     {
         // valkea ratsu
-        int xv = x + x_sarake[i];
-        int yv = y + y_rivi[i];
+        int xv = x + xSarake[i];
+        int yv = y + yRivi[i];
         
         // musta ratsu
-        int xm = x - x_sarake[i];
-        int ym = y - y_rivi[i];
+        int xm = x - xSarake[i];
+        int ym = y - yRivi[i];
         
         // onko valkean ratsun siirto laudan ulkopuolella
         if ((xv >= 0 && xv < 8) && (yv >= 0 && yv < 8))
@@ -147,7 +155,7 @@ void Ratsu::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& as
     }
 }
 
-void Lahetti::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
+void Lahetti::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
 {
     int x0 = ruutu.getSarake();
     int y0 = ruutu.getRivi();
@@ -257,18 +265,13 @@ void Lahetti::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& 
     }
 }
 
-Daami::Daami(string merkki, int vari, NappulaKoodi koodi, float arvo)
-: Nappula(merkki, vari, koodi, arvo)
-, Torni(merkki, vari, koodi, arvo)
-, Lahetti(merkki, vari, koodi, arvo) {}
-
-void Daami::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
+void Daami::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
 {
     Torni::annaSiirrot(lista, ruutu, asema, vari);
     Lahetti::annaSiirrot(lista, ruutu, asema, vari);
 }
 
-void Kuningas::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
+void Kuningas::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
 {
     /*perusidea on että kaikki viereiset ruudut ovat sallittuja. kuten tornilla ja lähetillä,
      oman nappulan päälle ei voi mennä ja vastustajan nappulan voi syödä.
@@ -321,7 +324,7 @@ void Kuningas::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema&
     }
 }
 
-void Sotilas::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
+void Sotilas::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
 {
     int x0 = ruutu.getSarake();
     int y0 = ruutu.getRivi();
@@ -418,7 +421,7 @@ void Sotilas::annaSiirrot(list<Siirto>& lista, const Ruutu& ruutu, const Asema& 
     }
 }
 
-void Sotilas::lisaaSotilaanKorotukset(const Siirto& siirto, list<Siirto>& lista, const Asema& asema)
+void Sotilas::lisaaSotilaanKorotukset(const Siirto& siirto, vector<Siirto>& lista, const Asema& asema)
 {
     if (siirto.getLoppuruutu().getRivi() == 7)
     {

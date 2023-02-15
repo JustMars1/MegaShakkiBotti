@@ -52,7 +52,7 @@ public:
     MinMaxPaluu maxi(int syvyys) const;							        // Minimax (max:n siirtovuoro).
     MinMaxPaluu mini(int syvyys) const;							        // Minimax (min:n siirtovuoro).
     MinMaxPaluu minimax(int syvyys) const;						        // Minimax-algoritmi.
-    void annaLaillisetSiirrot(std::list<Siirto>& siirrot) const;	// Siirtogeneraattori.
+    void annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const;	// Siirtogeneraattori.
     
     int getSiirtovuoro() const;
     void setSiirtovuoro(int vuoro);
@@ -81,8 +81,8 @@ private:
     float nappuloitaKeskella(int vari);
     float linjat(int vari);
     bool onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const;
-    void annaLinnoitusSiirrot(std::list<Siirto>& siirrot, int vari) const;
+    void annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const;
     
     // Karsii siirrot, jotka jättävät oman K:n shakkiin.
-    void huolehdiKuninkaanShakeista(std::list<Siirto>& siirrot) const;
+    void huolehdiKuninkaanShakeista(std::vector<Siirto>& siirrot) const;
 };

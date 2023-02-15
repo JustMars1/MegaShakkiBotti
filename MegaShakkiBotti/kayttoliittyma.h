@@ -12,7 +12,7 @@ class Kayttoliittyma
 public:
     static Kayttoliittyma& getInstance();
     
-    void piirraLauta(bool mustaAlhaalla, const std::list<Siirto>& siirrot = {});
+    void piirraLauta(bool mustaAlhaalla, const std::vector<Siirto>& siirrot = {});
     Siirto annaVastustajanSiirto();
     int kysyVastustajanVari();
     

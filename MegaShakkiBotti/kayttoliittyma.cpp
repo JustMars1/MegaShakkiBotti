@@ -28,7 +28,7 @@ Kayttoliittyma& Kayttoliittyma::getInstance()
 const Asema& Kayttoliittyma::getAsema() const { return _asema; }
 Asema& Kayttoliittyma::getAsema() { return _asema; }
 
-void Kayttoliittyma::piirraLauta(bool mustaAlhaalla, const list<Siirto>& siirrot)
+void Kayttoliittyma::piirraLauta(bool mustaAlhaalla, const vector<Siirto>& siirrot)
 {
     bool siirtoRuudut[8][8] = { false };
     

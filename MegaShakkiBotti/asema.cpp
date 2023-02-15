@@ -1,6 +1,7 @@
 #include <iostream>
 #include <limits>
 #include <algorithm>
+#include <vector>
 
 #include "asema.h"
 #include "minmaxpaluu.h"
@@ -8,19 +9,19 @@
 #include "ruutu.h"
 #include "kayttoliittyma.h"
 
-Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK, 0);
-Daami Asema::vd = Daami("\xe2\x99\x95", 0, VD, 9);
-Torni Asema::vt = Torni("\xe2\x99\x96", 0, VT, 5);
-Lahetti Asema::vl = Lahetti("\xe2\x99\x97", 0, VL, 3.25);
-Ratsu Asema::vr = Ratsu("\xe2\x99\x98", 0, VR, 3);
-Sotilas Asema::vs = Sotilas("\xe2\x99\x99", 0, VS, 1);
+Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK, 0.0f, 8);
+Daami Asema::vd = Daami(      "\xe2\x99\x95", 0, VD, 9.0f, 27);
+Torni Asema::vt = Torni(      "\xe2\x99\x96", 0, VT, 5.0f, 14);
+Lahetti Asema::vl = Lahetti(  "\xe2\x99\x97", 0, VL, 3.25f, 13);
+Ratsu Asema::vr = Ratsu(      "\xe2\x99\x98", 0, VR, 3.0f, 8);
+Sotilas Asema::vs = Sotilas(  "\xe2\x99\x99", 0, VS, 1.0f, 4);
 
-Kuningas Asema::mk = Kuningas("\xe2\x99\x9a", 1, MK, 0);
-Daami Asema::md = Daami("\xe2\x99\x9b", 1, MD, -9);
-Torni Asema::mt = Torni("\xe2\x99\x9c", 1, MT, -5);
-Lahetti Asema::ml = Lahetti("\xe2\x99\x9d", 1, ML, -3.25);
-Ratsu Asema::mr = Ratsu("\xe2\x99\x9e", 1, MR, -3);
-Sotilas Asema::ms = Sotilas("\xe2\x99\x9f", 1, MS, -1);
+Kuningas Asema::mk = Kuningas("\xe2\x99\x9a", 1, MK, 0.0f, 8);
+Daami Asema::md = Daami(      "\xe2\x99\x9b", 1, MD, -9.0f, 27);
+Torni Asema::mt = Torni(      "\xe2\x99\x9c", 1, MT, -5.0f, 14);
+Lahetti Asema::ml = Lahetti(  "\xe2\x99\x9d", 1, ML, -3.25f, 13);
+Ratsu Asema::mr = Ratsu(      "\xe2\x99\x9e", 1, MR, -3.0f, 8);
+Sotilas Asema::ms = Sotilas(  "\xe2\x99\x9f", 1, MS, -1.0f, 4);
 
 const std::unordered_map<char, Nappula*> Asema::valkeaNappulaMap = {
     {'k', &vk},
@@ -334,7 +335,8 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
         }
     }
     
-    std::list<Siirto> siirrot;
+    std::vector<Siirto> siirrot;
+    siirrot.reserve(50);
     annaLaillisetSiirrot(siirrot);
     
     if (std::find(siirrot.begin(), siirrot.end(), siirto) != siirrot.end())
@@ -527,7 +529,8 @@ MinMaxPaluu Asema::maxi(int syvyys) const
     MinMaxPaluu maxi;
     maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
     
-    std::list<Siirto> siirrot;
+    std::vector<Siirto> siirrot;
+    siirrot.reserve(50);
     annaLaillisetSiirrot(siirrot);
     
     if (siirrot.empty())
@@ -566,7 +569,8 @@ MinMaxPaluu Asema::mini(int syvyys) const
     MinMaxPaluu mini;
     mini.evaluointiArvo = std::numeric_limits<float>::max();
     
-    std::list<Siirto> siirrot;
+    std::vector<Siirto> siirrot;
+    siirrot.reserve(50);
     annaLaillisetSiirrot(siirrot);
     
     if (siirrot.empty())
@@ -604,30 +608,13 @@ bool Asema::onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const
             Nappula* nappula = lauta[y][x];
             if (nappula != nullptr && nappula->getVari() == vastustajanVari)
             {
-                std::list<Siirto> vastustajanSiirrot;
+                std::vector<Siirto> vastustajanSiirrot;
+                vastustajanSiirrot.reserve(nappula->getMaxSiirrot());
+                
                 nappula->annaSiirrot(vastustajanSiirrot, Ruutu(x, y), *this, vastustajanVari);
                 
                 for (auto& siirto : vastustajanSiirrot)
                 {
-                    // ohestalyöntiä varten, toimii ehkä?
-                    // Nappula* uhattuNappula = lauta[ruutu.getSarake()][ruutu.getRivi()];
-                    // if ((uhattuNappula == &Asema::vs && nappula == &Asema::ms) || (uhattuNappula == &Asema::ms && nappula == &Asema::vs))
-                    // {
-                    //     if (kaksoisaskel != -1)
-                    //     {
-                    //         int loppuY = siirto.getLoppuruutu().getRivi();
-                    //         int loppuX = siirto.getLoppuruutu().getSarake();
-                    //         if (_siirtovuoro == 0 && lauta[loppuY][loppuX] == lauta[5][kaksoisaskel] && ruutu == Ruutu(kaksoisaskel, loppuY - 1))
-                    //         {
-                    //             return true;
-                    //         }
-                    //         else if (_siirtovuoro == 1 && lauta[loppuY][loppuX] == lauta[2][kaksoisaskel] && ruutu == Ruutu(kaksoisaskel, loppuY + 1))
-                    //         {
-                    //             return true;
-                    //         }
-                    //     }
-                    // }
-                    
                     if (siirto.getLoppuruutu() == ruutu)
                     {
                         return true;
@@ -640,7 +627,7 @@ bool Asema::onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const
     return false;
 }
 
-void Asema::annaLinnoitusSiirrot(std::list<Siirto>& siirrot, int vari) const
+void Asema::annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const
 {
     if (vari == 0) {
         // valkea, lyhyt linna
@@ -694,9 +681,12 @@ void Asema::annaLinnoitusSiirrot(std::list<Siirto>& siirrot, int vari) const
     }
 }
 
-void Asema::huolehdiKuninkaanShakeista(std::list<Siirto>& siirrot) const
+void Asema::huolehdiKuninkaanShakeista(std::vector<Siirto>& siirrot) const
 {
-    siirrot.remove_if([this](Siirto& siirto) {
+    std::vector<Siirto> laillisetSiirrot;
+    laillisetSiirrot.reserve(siirrot.size());
+    
+    for (auto& siirto : siirrot) {
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         
@@ -704,19 +694,21 @@ void Asema::huolehdiKuninkaanShakeista(std::list<Siirto>& siirrot) const
         {
             if (tmpAsema.onkoRuutuUhattu(tmpAsema._valkeaKuningasRuutu, 1))
             {
-                return true;
+                continue;
             }
         }
         else if (tmpAsema.onkoRuutuUhattu(tmpAsema._mustaKuningasRuutu, 0))
         {
-            return true;
+            continue;
         }
         
-        return false;
-    });
+        laillisetSiirrot.push_back(siirto);
+    }
+    
+    siirrot = laillisetSiirrot;
 }
 
-void Asema::annaLaillisetSiirrot(std::list<Siirto>& siirrot) const
+void Asema::annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const
 {
     for (int y = 0; y < 8; y++)
     {
