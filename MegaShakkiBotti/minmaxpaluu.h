@@ -10,15 +10,9 @@ public:
 	float evaluointiArvo;
 	Siirto _parasSiirto;
     
-    MinMaxPaluu(float arvo, Siirto siirto)
-    : evaluointiArvo{arvo}
-    , _parasSiirto(siirto) {}
+    MinMaxPaluu(float arvo, Siirto siirto);
 
-    MinMaxPaluu() : evaluointiArvo{0} , _parasSiirto(Siirto()) {}
+    MinMaxPaluu();
 };
 
-std::ostream& operator<<(std::ostream& os, const MinMaxPaluu& minmaxpaluu) 
-{
-    os << minmaxpaluu.evaluointiArvo << minmaxpaluu._parasSiirto;
-    return os;
-}
+std::ostream& operator<<(std::ostream& os, const MinMaxPaluu& minmaxpaluu);

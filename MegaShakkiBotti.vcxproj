@@ -115,6 +115,7 @@
     <ClCompile Include="MegaShakkiBotti\asema.cpp" />
     <ClCompile Include="megashakkibotti\kayttoliittyma.cpp" />
     <ClCompile Include="megashakkibotti\main.cpp" />
+    <ClCompile Include="MegaShakkiBotti\minmaxpaluu.cpp" />
     <ClCompile Include="megashakkibotti\nappula.cpp" />
     <ClCompile Include="megashakkibotti\peli.cpp" />
     <ClCompile Include="megashakkibotti\ruutu.cpp" />

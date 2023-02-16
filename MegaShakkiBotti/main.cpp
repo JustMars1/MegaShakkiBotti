@@ -96,12 +96,12 @@ int main(int argc, char* argv[])
                 MinMaxPaluu minimax;
                 {
                     Ajastin ajastin("MiniMax");
-                    minimax = asema.minimax(4);
+                    minimax = asema.minimax(5);
                     std::cout << minimax;
                 }
                 {
                     Ajastin ajastin("MiniMaxAsync");
-                    minimax = asema.minimaxAsync(4);
+                    minimax = asema.minimaxAsync(5);
                     std::cout << minimax;
                 }
 
