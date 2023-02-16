@@ -1,4 +1,4 @@
-#include "ajastin.hpp"
+#include "ajastin.h"
 
 using namespace std;
 
@@ -10,5 +10,5 @@ Ajastin::~Ajastin()
 {
     auto lopetusAika = Kello::now();
     chrono::duration<double, milli> kesto = lopetusAika - aloitusAika;
-    cout << nimi << " : " << kesto.count() << " ms" << endl;
+    cout << nimi << ": " << kesto.count() << " ms" << endl;
 }

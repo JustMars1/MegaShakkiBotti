@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A2D1C11299E5B4100E57AE1 /* minmaxpaluu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A2D1C10299E5B4100E57AE1 /* minmaxpaluu.cpp */; };
 		7A42553E299B993C00A0512A /* ajastin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A42553D299B993C00A0512A /* ajastin.cpp */; };
 		7AC24376296D636800C589F0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC24375296D636800C589F0 /* main.cpp */; };
 		7AC24398296D641000C589F0 /* asema.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC24384296D641000C589F0 /* asema.cpp */; };
@@ -32,8 +33,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7A2D1C10299E5B4100E57AE1 /* minmaxpaluu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = minmaxpaluu.cpp; sourceTree = "<group>"; };
 		7A42553D299B993C00A0512A /* ajastin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ajastin.cpp; sourceTree = "<group>"; };
-		7A778A88299B948100EAA155 /* ajastin.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ajastin.hpp; sourceTree = "<group>"; };
+		7A778A88299B948100EAA155 /* ajastin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ajastin.h; sourceTree = "<group>"; };
 		7AC24372296D636800C589F0 /* MegaShakkiBotti */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MegaShakkiBotti; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AC24375296D636800C589F0 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		7AC2437F296D641000C589F0 /* pelipuu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pelipuu.cpp; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 		7AC24374296D636800C589F0 /* MegaShakkiBotti */ = {
 			isa = PBXGroup;
 			children = (
+				7A2D1C10299E5B4100E57AE1 /* minmaxpaluu.cpp */,
 				7AC24395296D641000C589F0 /* evaluointi.h */,
 				7AC24380296D641000C589F0 /* evaluointi.cpp */,
 				7AC24382296D641000C589F0 /* laillisetSiirrot.h */,
@@ -115,7 +118,7 @@
 				7AD75F932986E6E5001EC37C /* varikoodit.h */,
 				7AD75F922986E6E5001EC37C /* varikoodit.cpp */,
 				7AC24375296D636800C589F0 /* main.cpp */,
-				7A778A88299B948100EAA155 /* ajastin.hpp */,
+				7A778A88299B948100EAA155 /* ajastin.h */,
 				7A42553D299B993C00A0512A /* ajastin.cpp */,
 			);
 			path = MegaShakkiBotti;
@@ -186,6 +189,7 @@
 				7AC2439C296D641000C589F0 /* kayttoliittyma.cpp in Sources */,
 				7AC2439B296D641000C589F0 /* ruutu.cpp in Sources */,
 				7AC24376296D636800C589F0 /* main.cpp in Sources */,
+				7A2D1C11299E5B4100E57AE1 /* minmaxpaluu.cpp in Sources */,
 				7AC2439A296D641000C589F0 /* peli.cpp in Sources */,
 				7AC2439D296D641000C589F0 /* siirto.cpp in Sources */,
 			);

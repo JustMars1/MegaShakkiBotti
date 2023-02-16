@@ -16,7 +16,7 @@
 #include "kayttoliittyma.h"
 #include "siirto.h"
 #include "asema.h"
-#include "ajastin.hpp"
+#include "ajastin.h"
 
 #include <chrono>
 #include <cstring>
@@ -96,13 +96,11 @@ int main(int argc, char* argv[])
                 MinMaxPaluu minimax;
                 {
                     Ajastin ajastin("MiniMax");
-                    minimax = asema.minimax(5);
-                    std::cout << minimax;
+                    minimax = asema.minimax(4);
                 }
                 {
                     Ajastin ajastin("MiniMaxAsync");
-                    minimax = asema.minimaxAsync(5);
-                    std::cout << minimax;
+                    minimax = asema.minimaxAsync(4);
                 }
 
                 siirto = minimax._parasSiirto;
