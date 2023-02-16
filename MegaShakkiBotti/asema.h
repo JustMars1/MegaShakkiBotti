@@ -52,6 +52,7 @@ public:
     MinMaxPaluu maxi(int syvyys) const;							        // Minimax (max:n siirtovuoro).
     MinMaxPaluu mini(int syvyys) const;							        // Minimax (min:n siirtovuoro).
     MinMaxPaluu minimax(int syvyys) const;						        // Minimax-algoritmi.
+    MinMaxPaluu minimaxAsync(int syvyys) const;						    // Minimax-algoritmi.
     void annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const;	// Siirtogeneraattori.
     
     int getSiirtovuoro() const;

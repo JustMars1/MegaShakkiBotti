@@ -1,6 +1,7 @@
 #include <iostream>
 
 #ifdef _WIN32
+#define NOMINMAX
 #include <Windows.h>
 #include <io.h>
 #include <fcntl.h>
@@ -92,9 +93,18 @@ int main(int argc, char* argv[])
         {
             if (asema.getSiirtovuoro() == koneenVari)
             {
-                Ajastin ajastin("MiniMax");
-                MinMaxPaluu minimax = asema.minimax(4);
-                
+                MinMaxPaluu minimax;
+                {
+                    Ajastin ajastin("MiniMax");
+                    minimax = asema.minimax(4);
+                    std::cout << minimax;
+                }
+                {
+                    Ajastin ajastin("MiniMaxAsync");
+                    minimax = asema.minimaxAsync(4);
+                    std::cout << minimax;
+                }
+
                 siirto = minimax._parasSiirto;
                 cout << "Koneen siirto: " << siirto << endl;
             }

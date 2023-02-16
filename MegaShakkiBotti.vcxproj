@@ -111,6 +111,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="MegaShakkiBotti\ajastin.cpp" />
     <ClCompile Include="MegaShakkiBotti\asema.cpp" />
     <ClCompile Include="megashakkibotti\kayttoliittyma.cpp" />
     <ClCompile Include="megashakkibotti\main.cpp" />
@@ -122,6 +123,7 @@
     <ClCompile Include="megashakkibotti\vastustaja.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MegaShakkiBotti\ajastin.hpp" />
     <ClInclude Include="megashakkibotti\asema.h" />
     <ClInclude Include="megashakkibotti\kayttoliittyma.h" />
     <ClInclude Include="megashakkibotti\minmaxpaluu.h" />

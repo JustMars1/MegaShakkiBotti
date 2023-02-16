@@ -86,7 +86,7 @@ void Kayttoliittyma::piirraLauta(bool mustaAlhaalla, const vector<Siirto>& siirr
         
         cout << resetoiVarit();
 #ifdef _WIN32
-        cout << " |\n";
+        cout << " |";
 #endif
         cout << endl;
     }

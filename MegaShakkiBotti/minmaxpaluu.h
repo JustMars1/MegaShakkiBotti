@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include "siirto.h"
 
 // luokka, jonka avulla saadaan palautettua minmax:ssa sekä siirto-olio että evaluointifunktion arvo
@@ -15,3 +16,9 @@ public:
 
     MinMaxPaluu() : evaluointiArvo{0} , _parasSiirto(Siirto()) {}
 };
+
+std::ostream& operator<<(std::ostream& os, const MinMaxPaluu& minmaxpaluu) 
+{
+    os << minmaxpaluu.evaluointiArvo << minmaxpaluu._parasSiirto;
+    return os;
+}

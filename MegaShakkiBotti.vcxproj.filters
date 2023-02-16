@@ -36,13 +36,13 @@
     <ClCompile Include="megashakkibotti\vastustaja.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="megashakkibotti\pelipuu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MegaShakkiBotti\asema.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MegaShakkiBotti\varikoodit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MegaShakkiBotti\ajastin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -81,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MegaShakkiBotti\varikoodit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MegaShakkiBotti\ajastin.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

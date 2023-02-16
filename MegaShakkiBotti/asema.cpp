@@ -2,6 +2,7 @@
 #include <limits>
 #include <algorithm>
 #include <vector>
+#include <future>
 
 #include "asema.h"
 #include "minmaxpaluu.h"
@@ -518,6 +519,75 @@ MinMaxPaluu Asema::minimax(int syvyys) const
         return mini(syvyys);
     }
 }
+
+MinMaxPaluu Asema::minimaxAsync(int syvyys) const
+{
+    auto miniAsync = [this, syvyys](Siirto& siirto) -> MinMaxPaluu 
+    { 
+        Asema tmpAsema = *this;
+        tmpAsema.paivitaAsema(siirto);
+        MinMaxPaluu arvo = tmpAsema.maxi(syvyys - 1);
+        arvo._parasSiirto = siirto;
+        return arvo;
+    };
+    auto maxiAsync = [this, syvyys](Siirto& siirto) -> MinMaxPaluu 
+    {  
+        Asema tmpAsema = *this;
+        tmpAsema.paivitaAsema(siirto);
+        MinMaxPaluu arvo = tmpAsema.mini(syvyys - 1);
+        arvo._parasSiirto = siirto;
+        return arvo;
+    };
+
+    std::vector<Siirto> siirrot;
+    siirrot.reserve(50);
+    annaLaillisetSiirrot(siirrot);
+    std::vector<std::future<MinMaxPaluu>> tehtavat;
+    tehtavat.reserve(siirrot.size());
+
+    if (_siirtovuoro == 0)
+    {
+        MinMaxPaluu maxi;
+        maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
+
+        for (Siirto& siirto : siirrot)
+        {
+            auto tehtava = std::bind(maxiAsync, siirto);
+            tehtavat.push_back(std::async(std::launch::async, tehtava));
+        }
+        for (auto& tehtava : tehtavat)
+        {
+            MinMaxPaluu arvo = tehtava.get();
+            if (arvo.evaluointiArvo > maxi.evaluointiArvo)
+            {
+                maxi = arvo;
+            }
+        }
+        return maxi;
+    }
+    else
+    {
+        MinMaxPaluu mini;
+        mini.evaluointiArvo = std::numeric_limits<float>::max();
+
+        for (Siirto& siirto : siirrot)
+        {
+            auto tehtava = std::bind(miniAsync, siirto);
+            tehtavat.push_back(std::async(std::launch::async, tehtava));
+        }
+
+        for (auto& tehtava : tehtavat)
+        {
+            MinMaxPaluu arvo = tehtava.get();
+            if (arvo.evaluointiArvo < mini.evaluointiArvo)
+            {
+                mini = arvo;
+            }
+        }
+        return mini;
+    }
+}
+
 
 MinMaxPaluu Asema::maxi(int syvyys) const
 {
