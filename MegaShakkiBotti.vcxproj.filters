@@ -86,7 +86,7 @@
     <ClInclude Include="MegaShakkiBotti\varikoodit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MegaShakkiBotti\ajastin.hpp">
+    <ClInclude Include="MegaShakkiBotti\ajastin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -124,7 +124,7 @@
     <ClCompile Include="megashakkibotti\vastustaja.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MegaShakkiBotti\ajastin.hpp" />
+    <ClInclude Include="MegaShakkiBotti\ajastin.h" />
     <ClInclude Include="megashakkibotti\asema.h" />
     <ClInclude Include="megashakkibotti\kayttoliittyma.h" />
     <ClInclude Include="megashakkibotti\minmaxpaluu.h" />

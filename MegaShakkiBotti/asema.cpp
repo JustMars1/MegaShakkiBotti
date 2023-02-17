@@ -702,9 +702,9 @@ void Asema::annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const
     if (vari == 0) {
         // valkea, lyhyt linna
         if (!onkoValkeaKuningasLiikkunut() && !onkoValkeaKTliikkunut()
-            && onkoRuutuUhattu(Ruutu(4, 0), 1)
-            && onkoRuutuUhattu(Ruutu(6, 0), 1)
-            && onkoRuutuUhattu(Ruutu(5, 0), 1)
+            && !onkoRuutuUhattu(Ruutu(4, 0), 1)
+            && !onkoRuutuUhattu(Ruutu(6, 0), 1)
+            && !onkoRuutuUhattu(Ruutu(5, 0), 1)
             && lauta[0][5] == NULL
             && lauta[0][6] == NULL)
         {
@@ -713,9 +713,9 @@ void Asema::annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const
         
         // valkea, pitkä linna
         if (!onkoValkeaKuningasLiikkunut() && !onkoValkeaDTliikkunut()
-            && onkoRuutuUhattu(Ruutu(4, 0), 1)
-            && onkoRuutuUhattu(Ruutu(3, 0), 1)
-            && onkoRuutuUhattu(Ruutu(2, 0), 1)
+            && !onkoRuutuUhattu(Ruutu(4, 0), 1)
+            && !onkoRuutuUhattu(Ruutu(3, 0), 1)
+            && !onkoRuutuUhattu(Ruutu(2, 0), 1)
             && lauta[0][1] == NULL
             && lauta[0][2] == NULL
             && lauta[0][3] == NULL)
@@ -728,9 +728,9 @@ void Asema::annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const
     {
         // musta, lyhyt linna
         if (!onkoMustaKuningasLiikkunut() && !onkoMustaKTliikkunut()
-            && onkoRuutuUhattu(Ruutu(4, 7), 0)
-            && onkoRuutuUhattu(Ruutu(5, 7), 0)
-            && onkoRuutuUhattu(Ruutu(6, 7), 0)
+            && !onkoRuutuUhattu(Ruutu(4, 7), 0)
+            && !onkoRuutuUhattu(Ruutu(5, 7), 0)
+            && !onkoRuutuUhattu(Ruutu(6, 7), 0)
             && lauta[7][5] == NULL
             && lauta[7][6] == NULL)
         {
@@ -739,9 +739,9 @@ void Asema::annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const
         
         // musta, pitkä linna
         if (!onkoMustaKuningasLiikkunut() && !onkoMustaDTliikkunut()
-            && onkoRuutuUhattu(Ruutu(4, 7), 0)
-            && onkoRuutuUhattu(Ruutu(3, 7), 0)
-            && onkoRuutuUhattu(Ruutu(2, 7), 0)
+            && !onkoRuutuUhattu(Ruutu(4, 7), 0)
+            && !onkoRuutuUhattu(Ruutu(3, 7), 0)
+            && !onkoRuutuUhattu(Ruutu(2, 7), 0)
             && lauta[7][1] == NULL
             && lauta[7][2] == NULL
             && lauta[7][3] == NULL)
