@@ -1,14 +1,15 @@
 #pragma once
 #include <iostream>
+#include <cstdint>
 
 // Shakkilaudan ruutu tietyssä (rivi, sarake) -koordinaatissa.
 class Ruutu
 {
 public:
-	Ruutu(int sarake, int rivi);
+	Ruutu(int8_t sarake, int8_t rivi);
     
-	int getRivi() const;
-	int getSarake() const;
+	int8_t getRivi() const;
+    int8_t getSarake() const;
     
 	void setRivi(int);
 	void setSarake(int);
@@ -17,8 +18,8 @@ public:
     
     bool operator==(const Ruutu& rhs) const;
 private:
-	int _sarake;
-	int _rivi;
+	int8_t _sarake;
+    int8_t _rivi;
 };
 
 std::ostream& operator<<(std::ostream& os, const Ruutu& ruutu);

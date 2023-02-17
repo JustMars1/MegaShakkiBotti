@@ -9,7 +9,7 @@
 class Asema;
 
 // Vakioarvot nappulatyypeille.
-enum NappulaKoodi
+enum NappulaKoodi : int8_t
 {
     VT,VR,VL,VD,VK,VS,
     MT,MR,ML,MD,MK,MS

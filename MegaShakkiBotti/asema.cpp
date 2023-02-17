@@ -127,11 +127,11 @@ void Asema::paivitaAsema(const Siirto& siirto)
     }
     else
     {
-        int alkuX = siirto.getAlkuruutu().getSarake();
-        int alkuY = siirto.getAlkuruutu().getRivi();
+        int8_t alkuX = siirto.getAlkuruutu().getSarake();
+        int8_t alkuY = siirto.getAlkuruutu().getRivi();
         
-        int loppuX = siirto.getLoppuruutu().getSarake();
-        int loppuY = siirto.getLoppuruutu().getRivi();
+        int8_t loppuX = siirto.getLoppuruutu().getSarake();
+        int8_t loppuY = siirto.getLoppuruutu().getRivi();
         
         Nappula* nappula = lauta[alkuY][alkuX];
         
@@ -398,9 +398,9 @@ float Asema::evaluoi() const
 float Asema::laskeNappuloidenArvo() const
 {
     float summa = 0;
-    for (int y = 0; y < 8; y++)
+    for (int8_t y = 0; y < 8; y++)
     {
-        for (int x = 0; x < 8; x++)
+        for (int8_t x = 0; x < 8; x++)
         {
             Nappula* nappula = lauta[y][x];
             if (nappula == nullptr)
@@ -423,9 +423,9 @@ bool Asema::onkoAvausTaiKeskipeli(int vari)
     bool mustanDaami = false;
     bool valkoisenDaami = false;
     
-    for (int y = 0; y < 8; y++)
+    for (int8_t y = 0; y < 8; y++)
     {
-        for (int x = 0; x < 8; x++)
+        for (int8_t x = 0; x < 8; x++)
         {
             Nappula* nappula = lauta[y][x];
             
@@ -780,9 +780,9 @@ void Asema::huolehdiKuninkaanShakeista(std::vector<Siirto>& siirrot) const
 
 void Asema::annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const
 {
-    for (int y = 0; y < 8; y++)
+    for (int8_t y = 0; y < 8; y++)
     {
-        for (int x = 0; x < 8; x++)
+        for (int8_t x = 0; x < 8; x++)
         {
             Nappula* nappula = lauta[y][x];
             if (nappula != nullptr && nappula->getVari() == getSiirtovuoro())

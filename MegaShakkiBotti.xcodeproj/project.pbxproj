@@ -93,7 +93,7 @@
 		7AC24374296D636800C589F0 /* MegaShakkiBotti */ = {
 			isa = PBXGroup;
 			children = (
-				7A2D1C10299E5B4100E57AE1 /* minmaxpaluu.cpp */,
+				7AC24375296D636800C589F0 /* main.cpp */,
 				7AC24395296D641000C589F0 /* evaluointi.h */,
 				7AC24380296D641000C589F0 /* evaluointi.cpp */,
 				7AC24382296D641000C589F0 /* laillisetSiirrot.h */,
@@ -105,6 +105,7 @@
 				7AC24381296D641000C589F0 /* kayttoliittyma.h */,
 				7AC2438B296D641000C589F0 /* kayttoliittyma.cpp */,
 				7AC24387296D641000C589F0 /* minmaxpaluu.h */,
+				7A2D1C10299E5B4100E57AE1 /* minmaxpaluu.cpp */,
 				7AC2438A296D641000C589F0 /* nappula.h */,
 				7AC24385296D641000C589F0 /* nappula.cpp */,
 				7AC24390296D641000C589F0 /* peli.h */,
@@ -117,7 +118,6 @@
 				7AC24393296D641000C589F0 /* vastustaja.cpp */,
 				7AD75F932986E6E5001EC37C /* varikoodit.h */,
 				7AD75F922986E6E5001EC37C /* varikoodit.cpp */,
-				7AC24375296D636800C589F0 /* main.cpp */,
 				7A778A88299B948100EAA155 /* ajastin.h */,
 				7A42553D299B993C00A0512A /* ajastin.cpp */,
 			);

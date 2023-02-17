@@ -11,7 +11,6 @@ public:
 	Siirto _parasSiirto;
     
     MinMaxPaluu(float arvo, Siirto siirto);
-
     MinMaxPaluu();
 };
 
