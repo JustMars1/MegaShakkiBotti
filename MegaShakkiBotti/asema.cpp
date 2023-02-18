@@ -24,7 +24,8 @@ Lahetti Asema::ml = Lahetti(  "\xe2\x99\x9d", 1, ML, -3.25f, 13);
 Ratsu Asema::mr = Ratsu(      "\xe2\x99\x9e", 1, MR, -3.0f, 8);
 Sotilas Asema::ms = Sotilas(  "\xe2\x99\x9f", 1, MS, -1.0f, 4);
 
-const std::unordered_map<char, Nappula*> Asema::valkeaNappulaMap = {
+const std::unordered_map<char, Nappula*> Asema::valkeaNappulaMap =
+{
     {'k', &vk},
     {'d', &vd},
     {'t', &vt},
@@ -33,13 +34,30 @@ const std::unordered_map<char, Nappula*> Asema::valkeaNappulaMap = {
     {'s', &vs}
 };
 
-const std::unordered_map<char, Nappula*> Asema::mustaNappulaMap = {
+const std::unordered_map<char, Nappula*> Asema::mustaNappulaMap =
+{
     {'k', &mk},
     {'d', &md},
     {'t', &mt},
     {'l', &ml},
     {'r', &mr},
     {'s', &ms}
+};
+
+const std::unordered_map<char, Nappula*> Asema::fenNappulaMap =
+{
+    {'r', &mt},
+    {'n', &mr},
+    {'b', &ml},
+    {'q', &md},
+    {'k', &mk},
+    {'p', &ms},
+    {'R', &vt},
+    {'N', &vr},
+    {'B', &vl},
+    {'Q', &vd},
+    {'K', &vk},
+    {'P', &vs}
 };
 
 const float Asema::maxArvo = vd.getArvo() + vt.getArvo() * 2 + vl.getArvo() * 2 + vr.getArvo() * 2 + vs.getArvo() * 8;
@@ -363,6 +381,36 @@ bool Asema::onkoValkeaDTliikkunut() const { return _onkoValkeaDTliikkunut; }
 bool Asema::onkoValkeaKTliikkunut() const { return _onkoValkeaKTliikkunut; }
 bool Asema::onkoMustaDTliikkunut() const { return _onkoMustaDTliikkunut; }
 bool Asema::onkoMustaKTliikkunut() const { return _onkoMustaKTliikkunut; }
+
+void Asema::setValkeaKuningasLiikkunut(bool valkeaKuningasLiikkunut)
+{
+    _onkoValkeaKuningasLiikkunut = valkeaKuningasLiikkunut;
+};
+
+void Asema::setMustaKuningasLiikkunut(bool mustaKuningasLiikkunut)
+{
+    _onkoMustaKuningasLiikkunut = mustaKuningasLiikkunut;
+}
+
+void Asema::setValkeaDTliikkunut(bool valkeaDTliikkunut)
+{
+    _onkoValkeaDTliikkunut = valkeaDTliikkunut;
+}
+
+void Asema::setValkeaKTliikkunut(bool valkeaKTliikkunut)
+{
+    _onkoValkeaKTliikkunut = valkeaKTliikkunut;
+}
+
+void Asema::setMustaDTliikkunut(bool mustaDTliikkunut)
+{
+    _onkoMustaDTliikkunut = mustaDTliikkunut;
+}
+
+void Asema::setMustaKTliikkunut(bool mustaKTliikkunut)
+{
+    _onkoMustaKTliikkunut = mustaKTliikkunut;
+}
 
 /* 1. Laske nappuloiden arvo
  Daami = 9

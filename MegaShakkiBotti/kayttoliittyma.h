@@ -12,9 +12,11 @@ class Kayttoliittyma
 public:
     static Kayttoliittyma& getInstance();
     
-    void piirraLauta(bool mustaAlhaalla, const std::vector<Siirto>& siirrot = {});
-    Siirto annaVastustajanSiirto();
-    int kysyVastustajanVari();
+    void piirraLauta(bool mustaAlhaalla, const std::vector<Siirto>& siirrot = {}) const;
+    Siirto annaVastustajanSiirto() const;
+    int kysyVastustajanVari() const;
+    
+    void lataaAsema();
     
     static void tulostaVirhe(std::string virhe);
     

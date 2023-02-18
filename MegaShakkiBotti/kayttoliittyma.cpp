@@ -28,7 +28,169 @@ Kayttoliittyma& Kayttoliittyma::getInstance()
 const Asema& Kayttoliittyma::getAsema() const { return _asema; }
 Asema& Kayttoliittyma::getAsema() { return _asema; }
 
-void Kayttoliittyma::piirraLauta(bool mustaAlhaalla, const vector<Siirto>& siirrot)
+void Kayttoliittyma::lataaAsema()
+{
+    cout << "Ladataanko asema? (0 = ei, 1 = joo)\n";
+    
+    bool lataa = false;
+    while(true)
+    {
+        int syote;
+        cin >> syote;
+        
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        else if (syote == 0 || syote == 1)
+        {
+            lataa = syote;
+            break;
+        }
+    }
+    
+    if (lataa)
+    {
+        while(true)
+        {
+            cout << "Anna FEN: ";
+            
+            cin.ignore();
+            cin.sync();
+            string fen;
+            getline(cin, fen);
+            
+            if (cin.fail())
+            {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+            else
+            {
+                enum Vaihe
+                {
+                    SIJAINNIT = 0,
+                    VUORO = 1,
+                    LINNOITUS = 2,
+                    OHESTALYONTI = 3
+                };
+                
+                Asema uusiAsema;
+                
+                for (int x = 0; x < 8; x++)
+                {
+                    for (int y = 0; y < 8; y++)
+                    {
+                        uusiAsema.lauta[y][x] = nullptr;
+                    }
+                }
+                
+                uusiAsema.setMustaDTliikkunut(true);
+                uusiAsema.setMustaKTliikkunut(true);
+                uusiAsema.setMustaKuningasLiikkunut(true);
+                uusiAsema.setValkeaDTliikkunut(true);
+                uusiAsema.setValkeaKTliikkunut(true);
+                uusiAsema.setValkeaKuningasLiikkunut(true);
+                
+                int x = 0, y = 0;
+                
+                int vaihe = SIJAINNIT;
+                
+                for (int i = 0; i < fen.size(); i++)
+                {
+                    char kirjain = fen[i];
+                    if (isspace(kirjain))
+                    {
+                        vaihe++;
+                        continue;
+                    }
+                    
+                    switch (vaihe) {
+                        case SIJAINNIT:
+                            if (isdigit(kirjain))
+                            {
+                                x += kirjain - '0';
+                            }
+                            else
+                            {
+                                if (kirjain != '/')
+                                {
+                                    Nappula* nappula = Asema::fenNappulaMap.at(kirjain);
+                                    
+                                    if (nappula == &Asema::vk)
+                                    {
+                                        uusiAsema._valkeaKuningasRuutu = Ruutu(x, 8 - y - 1);
+                                    }
+                                    else if (nappula == &Asema::mk)
+                                    {
+                                        uusiAsema._mustaKuningasRuutu = Ruutu(x, 8 - y - 1);
+                                    }
+                                    uusiAsema.lauta[8 - y - 1][x] = Asema::fenNappulaMap.at(kirjain);
+                                    x++;
+                                }
+                            }
+                            
+                            y += x / 8;
+                            x %= 8;
+                            break;
+                        case VUORO:
+                            if (kirjain == 'w')
+                            {
+                                uusiAsema.setSiirtovuoro(0);
+                            }
+                            else if (kirjain == 'b')
+                            {
+                                uusiAsema.setSiirtovuoro(1);
+                            }
+                            else
+                            {
+                                tulostaVirhe("Virheellinen FEN vuoro");
+                            }
+                            break;
+                        case LINNOITUS:
+                            switch (kirjain) {
+                                case 'K':
+                                    uusiAsema.setValkeaKTliikkunut(false);
+                                    uusiAsema.setValkeaKuningasLiikkunut(false);
+                                    break;
+                                case 'Q':
+                                    uusiAsema.setValkeaDTliikkunut(false);
+                                    uusiAsema.setValkeaKuningasLiikkunut(false);
+                                    break;
+                                case 'k':
+                                    uusiAsema.setMustaKTliikkunut(false);
+                                    uusiAsema.setMustaKuningasLiikkunut(false);
+                                    break;
+                                case 'q':
+                                    uusiAsema.setMustaDTliikkunut(false);
+                                    uusiAsema.setMustaKuningasLiikkunut(false);
+                                    break;
+                            }
+                            break;
+                        case OHESTALYONTI:
+                            constexpr std::string_view aakkoset = "abcdefgh";
+                            
+                            for (char aakkonen : aakkoset)
+                            {
+                                if (kirjain == aakkonen)
+                                {
+                                    uusiAsema.kaksoisaskel = kirjain - 'a';
+                                }
+                            }
+                            
+                            break;
+                    }
+                }
+                
+                _asema = uusiAsema;
+                return;
+            }
+        }
+    }
+}
+
+void Kayttoliittyma::piirraLauta(bool mustaAlhaalla, const vector<Siirto>& siirrot) const
 {
     bool siirtoRuudut[8][8] = { false };
     
@@ -108,7 +270,7 @@ void Kayttoliittyma::piirraLauta(bool mustaAlhaalla, const vector<Siirto>& siirr
  muodollisesti korrekti (ei tarkista aseman laillisuutta)
  Ottaa irti myös nappulan kirjaimen (K/D/L/R/T), tarkistaa että kirjain korrekti
  */
-Siirto Kayttoliittyma::annaVastustajanSiirto()
+Siirto Kayttoliittyma::annaVastustajanSiirto() const
 {
     auto tarkistaNappula = [this](char kirjain) -> Nappula*
     {
@@ -219,7 +381,24 @@ void Kayttoliittyma::tulostaVirhe(string virhe)
     cout << tekstivari(punainen) << "! " << virhe <<  " !" << resetoiVarit() << endl;
 }
 
-int Kayttoliittyma::kysyVastustajanVari()
+int Kayttoliittyma::kysyVastustajanVari() const
 {
-    return 0;
+    int pelaajanVari;
+    cout << "Kummalla v\xc3\xa4rill\xc3\xa4 pelaat? (0 = valkoinen, 1 = musta)\n";
+    
+    while(true)
+    {
+        int pelaajanVari;
+        cin >> pelaajanVari;
+        
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        else if (pelaajanVari == 0 || pelaajanVari == 1)
+        {
+            return pelaajanVari;
+        }
+    }
 }

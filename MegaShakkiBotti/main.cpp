@@ -36,6 +36,8 @@ int main(int argc, char* argv[])
     setlocale(LC_ALL, "fi_FI.UTF-8");
     cout.imbue(locale());
     
+    auto& kayttoliittyma = Kayttoliittyma::getInstance();
+    
     for (int i = 0; i < argc; i++)
     {
         if (strcmp(argv[i], "nocolor") == 0)
@@ -44,27 +46,11 @@ int main(int argc, char* argv[])
         }
     }
     
-    int koneenVari;
-    cout << "Kummalla v\xc3\xa4rill\xc3\xa4 pelaat? (0 = valkoinen, 1 = musta)\n";
+    kayttoliittyma.lataaAsema();
     
-    while(true)
-    {
-        int pelaajanVari;
-        cin >> pelaajanVari;
-        
-        if (cin.fail())
-        {
-            cin.clear();
-            cin.ignore(std::numeric_limits<streamsize>::max(), '\n');
-        }
-        else if (pelaajanVari == 0 || pelaajanVari == 1)
-        {
-            koneenVari = 1 - pelaajanVari;
-            break;
-        }
-    }
+    int pelaajanVari = kayttoliittyma.kysyVastustajanVari();
+    int koneenVari = 1 - pelaajanVari;
     
-    auto& kayttoliittyma = Kayttoliittyma::getInstance();
     auto& asema = kayttoliittyma.getAsema();
     vector<Siirto> siirrot;
     siirrot.reserve(100);
@@ -95,12 +81,8 @@ int main(int argc, char* argv[])
             {
                 MinMaxPaluu minimax;
                 {
-                    Ajastin ajastin("MiniMax");
-                    minimax = asema.minimax(4);
-                }
-                {
                     Ajastin ajastin("MiniMaxAsync");
-                    minimax = asema.minimaxAsync(4);
+                    minimax = asema.minimaxAsync(5);
                 }
 
                 siirto = minimax._parasSiirto;
