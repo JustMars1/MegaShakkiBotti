@@ -34,7 +34,7 @@ bool Siirto::onkoPitkaLinna() const { return _pitkaLinna; }
 
 std::ostream& operator<<(std::ostream& os, const Siirto& siirto)
 {
-    if (siirto.onkoLyhytLinna())
+    if (siirto.onkoPitkaLinna())
     {
         os << "O-O-O";
     }

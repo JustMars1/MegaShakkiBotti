@@ -70,22 +70,13 @@ void Kayttoliittyma::lataaAsema()
             {
                 enum Vaihe
                 {
-                    SIJAINNIT = 0,
-                    VUORO = 1,
-                    LINNOITUS = 2,
-                    OHESTALYONTI = 3
+                    SIJAINTI_VAIHE = 0,
+                    VUORO_VAIHE = 1,
+                    LINNOITUS_VAIHE = 2,
+                    OHESTALYONTI_VAIHE = 3
                 };
                 
-                Asema uusiAsema;
-                
-                for (int x = 0; x < 8; x++)
-                {
-                    for (int y = 0; y < 8; y++)
-                    {
-                        uusiAsema.lauta[y][x] = nullptr;
-                    }
-                }
-                
+                Asema uusiAsema({ nullptr });
                 uusiAsema.setMustaDTliikkunut(true);
                 uusiAsema.setMustaKTliikkunut(true);
                 uusiAsema.setMustaKuningasLiikkunut(true);
@@ -95,7 +86,7 @@ void Kayttoliittyma::lataaAsema()
                 
                 int x = 0, y = 0;
                 
-                int vaihe = SIJAINNIT;
+                int vaihe = SIJAINTI_VAIHE;
                 
                 for (int i = 0; i < fen.size(); i++)
                 {
@@ -107,7 +98,7 @@ void Kayttoliittyma::lataaAsema()
                     }
                     
                     switch (vaihe) {
-                        case SIJAINNIT:
+                        case SIJAINTI_VAIHE:
                             if (isdigit(kirjain))
                             {
                                 x += kirjain - '0';
@@ -120,13 +111,14 @@ void Kayttoliittyma::lataaAsema()
                                     
                                     if (nappula == &Asema::vk)
                                     {
-                                        uusiAsema._valkeaKuningasRuutu = Ruutu(x, 8 - y - 1);
+                                        uusiAsema.setValkeanKuninkaanRuutu(Ruutu(x, 8 - y - 1));
                                     }
                                     else if (nappula == &Asema::mk)
                                     {
-                                        uusiAsema._mustaKuningasRuutu = Ruutu(x, 8 - y - 1);
+                                        uusiAsema.setMustanKuninkaanRuutu(Ruutu(x, 8 - y - 1));
                                     }
-                                    uusiAsema.lauta[8 - y - 1][x] = Asema::fenNappulaMap.at(kirjain);
+                                    
+                                    uusiAsema.lauta[8 - y - 1][x] = nappula;
                                     x++;
                                 }
                             }
@@ -134,7 +126,7 @@ void Kayttoliittyma::lataaAsema()
                             y += x / 8;
                             x %= 8;
                             break;
-                        case VUORO:
+                        case VUORO_VAIHE:
                             if (kirjain == 'w')
                             {
                                 uusiAsema.setSiirtovuoro(0);
@@ -148,7 +140,7 @@ void Kayttoliittyma::lataaAsema()
                                 tulostaVirhe("Virheellinen FEN vuoro");
                             }
                             break;
-                        case LINNOITUS:
+                        case LINNOITUS_VAIHE:
                             switch (kirjain) {
                                 case 'K':
                                     uusiAsema.setValkeaKTliikkunut(false);
@@ -168,14 +160,14 @@ void Kayttoliittyma::lataaAsema()
                                     break;
                             }
                             break;
-                        case OHESTALYONTI:
+                        case OHESTALYONTI_VAIHE:
                             constexpr std::string_view aakkoset = "abcdefgh";
                             
                             for (char aakkonen : aakkoset)
                             {
                                 if (kirjain == aakkonen)
                                 {
-                                    uusiAsema.kaksoisaskel = kirjain - 'a';
+                                    uusiAsema.setKaksoisaskelSarake(kirjain - 'a');
                                 }
                             }
                             
@@ -383,7 +375,6 @@ void Kayttoliittyma::tulostaVirhe(string virhe)
 
 int Kayttoliittyma::kysyVastustajanVari() const
 {
-    int pelaajanVari;
     cout << "Kummalla v\xc3\xa4rill\xc3\xa4 pelaat? (0 = valkoinen, 1 = musta)\n";
     
     while(true)

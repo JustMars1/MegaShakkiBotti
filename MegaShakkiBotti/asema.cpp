@@ -62,18 +62,8 @@ const std::unordered_map<char, Nappula*> Asema::fenNappulaMap =
 
 const float Asema::maxArvo = vd.getArvo() + vt.getArvo() * 2 + vl.getArvo() * 2 + vr.getArvo() * 2 + vs.getArvo() * 8;
 
-Asema::Asema()
-: lauta
-{
-    &vt, &vr, &vl, &vd, &vk, &vl, &vr, &vt,
-    &vs, &vs, &vs, &vs, &vs, &vs, &vs, &vs,
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-    &ms, &ms, &ms, &ms, &ms, &ms, &ms, &ms,
-    &mt, &mr, &ml, &md, &mk, &ml, &mr, &mt
-}
+Asema::Asema(std::array<std::array<Nappula*, 8>, 8> lauta)
+: lauta(lauta)
 , _siirtovuoro{0}
 , _onkoValkeaKuningasLiikkunut{false}
 , _onkoMustaKuningasLiikkunut{false}
@@ -81,9 +71,67 @@ Asema::Asema()
 , _onkoValkeaKTliikkunut{false}
 , _onkoMustaDTliikkunut{false}
 , _onkoMustaKTliikkunut{false}
-, _valkeaKuningasRuutu(4, 0)
-, _mustaKuningasRuutu(4, 7)
-, kaksoisaskel{-1} {}
+, _valkeanKuninkaanRuutu(4, 0)
+, _mustanKuninkaanRuutu(4, 7)
+, _kaksoisaskelSarake{-1} {}
+
+int Asema::getSiirtovuoro() const { return _siirtovuoro; }
+void Asema::setSiirtovuoro(int vuoro)
+{
+    _siirtovuoro = vuoro;
+}
+
+int Asema::getKaksoisaskelSarake() const { return _kaksoisaskelSarake; }
+void Asema::setKaksoisaskelSarake(int sarake)
+{
+    _kaksoisaskelSarake = sarake;
+}
+
+bool Asema::onkoValkeaKuningasLiikkunut() const { return _onkoValkeaKuningasLiikkunut; }
+bool Asema::onkoMustaKuningasLiikkunut() const { return _onkoMustaKuningasLiikkunut; }
+bool Asema::onkoValkeaDTliikkunut() const { return _onkoValkeaDTliikkunut; }
+bool Asema::onkoValkeaKTliikkunut() const { return _onkoValkeaKTliikkunut; }
+bool Asema::onkoMustaDTliikkunut() const { return _onkoMustaDTliikkunut; }
+bool Asema::onkoMustaKTliikkunut() const { return _onkoMustaKTliikkunut; }
+
+void Asema::setValkeaKuningasLiikkunut(bool onkoLiikkunut)
+{
+    _onkoValkeaKuningasLiikkunut = onkoLiikkunut;
+};
+
+void Asema::setMustaKuningasLiikkunut(bool onkoLiikkunut)
+{
+    _onkoMustaKuningasLiikkunut = onkoLiikkunut;
+}
+
+void Asema::setValkeaDTliikkunut(bool onkoLiikkunut)
+{
+    _onkoValkeaDTliikkunut = onkoLiikkunut;
+}
+
+void Asema::setValkeaKTliikkunut(bool onkoLiikkunut)
+{
+    _onkoValkeaKTliikkunut = onkoLiikkunut;
+}
+
+void Asema::setMustaDTliikkunut(bool onkoLiikkunut)
+{
+    _onkoMustaDTliikkunut = onkoLiikkunut;
+}
+
+void Asema::setMustaKTliikkunut(bool onkoLiikkunut)
+{
+    _onkoMustaKTliikkunut = onkoLiikkunut;
+}
+
+void Asema::setValkeanKuninkaanRuutu(const Ruutu& ruutu)
+{
+    _valkeanKuninkaanRuutu = ruutu;
+}
+void Asema::setMustanKuninkaanRuutu(const Ruutu& ruutu)
+{
+    _mustanKuninkaanRuutu = ruutu;
+}
 
 void Asema::paivitaAsema(const Siirto& siirto)
 {
@@ -101,7 +149,7 @@ void Asema::paivitaAsema(const Siirto& siirto)
             lauta[0][4] = nullptr;
             lauta[0][7] = nullptr;
             
-            _valkeaKuningasRuutu.setSarake(6);
+            _valkeanKuninkaanRuutu.setSarake(6);
         }
         else
         {
@@ -113,7 +161,7 @@ void Asema::paivitaAsema(const Siirto& siirto)
             lauta[7][7] = nullptr;
             lauta[7][4] = nullptr;
             
-            _mustaKuningasRuutu.setSarake(6);
+            _mustanKuninkaanRuutu.setSarake(6);
         }
     }
     else if (siirto.onkoPitkaLinna())
@@ -128,7 +176,7 @@ void Asema::paivitaAsema(const Siirto& siirto)
             lauta[0][0] = nullptr;
             lauta[0][4] = nullptr;
             
-            _valkeaKuningasRuutu.setSarake(2);
+            _valkeanKuninkaanRuutu.setSarake(2);
         }
         else
         {
@@ -140,7 +188,7 @@ void Asema::paivitaAsema(const Siirto& siirto)
             lauta[7][0] = nullptr;
             lauta[7][4] = nullptr;
             
-            _mustaKuningasRuutu.setSarake(2);
+            _mustanKuninkaanRuutu.setSarake(2);
         }
     }
     else
@@ -156,14 +204,14 @@ void Asema::paivitaAsema(const Siirto& siirto)
         if (nappula == &Asema::vk)
         {
             _onkoValkeaKuningasLiikkunut = true;
-            _valkeaKuningasRuutu.setSarake(loppuX);
-            _valkeaKuningasRuutu.setRivi(loppuY);
+            _valkeanKuninkaanRuutu.setSarake(loppuX);
+            _valkeanKuninkaanRuutu.setRivi(loppuY);
         }
         else if (nappula == &Asema::mk)
         {
             _onkoMustaKuningasLiikkunut = true;
-            _mustaKuningasRuutu.setSarake(loppuX);
-            _mustaKuningasRuutu.setRivi(loppuY);
+            _mustanKuninkaanRuutu.setSarake(loppuX);
+            _mustanKuninkaanRuutu.setRivi(loppuY);
         }
         else if (nappula == &Asema::vt)
         {
@@ -191,15 +239,15 @@ void Asema::paivitaAsema(const Siirto& siirto)
         {
             if (alkuY == 1 && loppuY == 3)
             {
-                kaksoisaskel = loppuX;
+                _kaksoisaskelSarake = loppuX;
             }
-            else if (kaksoisaskel != -1 && lauta[loppuY][loppuX] == lauta[5][kaksoisaskel])
+            else if (_kaksoisaskelSarake != -1 && lauta[loppuY][loppuX] == lauta[5][_kaksoisaskelSarake])
             {
                 // Valkosen sotilaan ohestalyönti
-                if (lauta[3][kaksoisaskel] != nullptr && lauta[3][kaksoisaskel] == &Asema::ms)
+                if (lauta[3][_kaksoisaskelSarake] != nullptr && lauta[3][_kaksoisaskelSarake] == &Asema::ms)
                 {
-                    lauta[loppuY - 1][kaksoisaskel] = nullptr;
-                    kaksoisaskel = -1;
+                    lauta[loppuY - 1][_kaksoisaskelSarake] = nullptr;
+                    _kaksoisaskelSarake = -1;
                 }
             }
         }
@@ -207,22 +255,22 @@ void Asema::paivitaAsema(const Siirto& siirto)
         {
             if (alkuY == 6 && loppuY == 4)
             {
-                kaksoisaskel = loppuX;
+                _kaksoisaskelSarake = loppuX;
             }
-            else if (kaksoisaskel != -1 && lauta[loppuY][loppuX] == lauta[2][kaksoisaskel])
+            else if (_kaksoisaskelSarake != -1 && lauta[loppuY][loppuX] == lauta[2][_kaksoisaskelSarake])
             {
-                if (lauta[4][kaksoisaskel] != nullptr && lauta[4][kaksoisaskel] == &Asema::vs)
+                if (lauta[4][_kaksoisaskelSarake] != nullptr && lauta[4][_kaksoisaskelSarake] == &Asema::vs)
                 {
                     // Mustan sotilaan ohestalyönti
-                    lauta[loppuY + 1][kaksoisaskel] = nullptr;
-                    kaksoisaskel = -1;
+                    lauta[loppuY + 1][_kaksoisaskelSarake] = nullptr;
+                    _kaksoisaskelSarake = -1;
                 }
             }
         }
         
         if (nappula != &Asema::vs && nappula != &Asema::ms)
         {
-            kaksoisaskel = -1;
+            _kaksoisaskelSarake = -1;
         }
         
         if (siirto.miksiKorotetaan != nullptr)
@@ -367,49 +415,6 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
         Kayttoliittyma::tulostaVirhe("Siirto ei ole laillinen.");
         return false;
     }
-}
-
-int Asema::getSiirtovuoro() const { return _siirtovuoro; }
-void Asema::setSiirtovuoro(int vuoro)
-{
-    _siirtovuoro = vuoro;
-}
-
-bool Asema::onkoValkeaKuningasLiikkunut() const { return _onkoValkeaKuningasLiikkunut; }
-bool Asema::onkoMustaKuningasLiikkunut() const { return _onkoMustaKuningasLiikkunut; }
-bool Asema::onkoValkeaDTliikkunut() const { return _onkoValkeaDTliikkunut; }
-bool Asema::onkoValkeaKTliikkunut() const { return _onkoValkeaKTliikkunut; }
-bool Asema::onkoMustaDTliikkunut() const { return _onkoMustaDTliikkunut; }
-bool Asema::onkoMustaKTliikkunut() const { return _onkoMustaKTliikkunut; }
-
-void Asema::setValkeaKuningasLiikkunut(bool valkeaKuningasLiikkunut)
-{
-    _onkoValkeaKuningasLiikkunut = valkeaKuningasLiikkunut;
-};
-
-void Asema::setMustaKuningasLiikkunut(bool mustaKuningasLiikkunut)
-{
-    _onkoMustaKuningasLiikkunut = mustaKuningasLiikkunut;
-}
-
-void Asema::setValkeaDTliikkunut(bool valkeaDTliikkunut)
-{
-    _onkoValkeaDTliikkunut = valkeaDTliikkunut;
-}
-
-void Asema::setValkeaKTliikkunut(bool valkeaKTliikkunut)
-{
-    _onkoValkeaKTliikkunut = valkeaKTliikkunut;
-}
-
-void Asema::setMustaDTliikkunut(bool mustaDTliikkunut)
-{
-    _onkoMustaDTliikkunut = mustaDTliikkunut;
-}
-
-void Asema::setMustaKTliikkunut(bool mustaKTliikkunut)
-{
-    _onkoMustaKTliikkunut = mustaKTliikkunut;
 }
 
 /* 1. Laske nappuloiden arvo
@@ -653,7 +658,7 @@ MinMaxPaluu Asema::maxi(int syvyys) const
     
     if (siirrot.empty())
     {
-        if (onkoRuutuUhattu(_valkeaKuningasRuutu, 1))
+        if (onkoRuutuUhattu(_valkeanKuninkaanRuutu, 1))
         {
             return MinMaxPaluu(-1, Siirto());
         }
@@ -693,7 +698,7 @@ MinMaxPaluu Asema::mini(int syvyys) const
     
     if (siirrot.empty())
     {
-        if (onkoRuutuUhattu(_mustaKuningasRuutu, 0))
+        if (onkoRuutuUhattu(_mustanKuninkaanRuutu, 0))
         {
             return MinMaxPaluu(1, Siirto());
         }
@@ -810,12 +815,12 @@ void Asema::huolehdiKuninkaanShakeista(std::vector<Siirto>& siirrot) const
         
         if (_siirtovuoro == 0)
         {
-            if (tmpAsema.onkoRuutuUhattu(tmpAsema._valkeaKuningasRuutu, 1))
+            if (tmpAsema.onkoRuutuUhattu(tmpAsema._valkeanKuninkaanRuutu, 1))
             {
                 continue;
             }
         }
-        else if (tmpAsema.onkoRuutuUhattu(tmpAsema._mustaKuningasRuutu, 0))
+        else if (tmpAsema.onkoRuutuUhattu(tmpAsema._mustanKuninkaanRuutu, 0))
         {
             continue;
         }

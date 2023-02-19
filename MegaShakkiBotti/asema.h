@@ -3,6 +3,7 @@
 #include <list>
 #include <string>
 #include <unordered_map>
+#include <array>
 
 #include "minmaxpaluu.h"
 #include "siirto.h"
@@ -13,13 +14,6 @@
 class Asema
 {
 public:
-    // Pelilauta sis‰lt‰‰ osoittimet kunkin ruudun nappula-olioon (nullptr/NULL/0 jos ruutu on tyhj‰).
-    // Public-m‰‰reell‰, koska t‰t‰ k‰ytet‰‰n paljon muualla.
-    Nappula* lauta[8][8];
-    int kaksoisaskel;
-    Ruutu _valkeaKuningasRuutu;
-    Ruutu _mustaKuningasRuutu;
-    
     // Nappula-oliot. Huomaa, ett‰ samaa nappulaa voidaan k‰ytt‰‰ useissa eri ruuduissa.
     // M‰‰ritelty static-m‰‰reell‰, joten nappulat ovat kaikkien lauta-olioiden "yhteisk‰ytˆss‰"
     // (suorituskyvyn vuoksi).
@@ -47,20 +41,26 @@ public:
     
     static const float maxArvo;
     
-    Asema();                                                // Asettaa alkuaseman.
-    void paivitaAsema(const Siirto& siirto);                // P‰ivitt‰‰ aseman annetulla siirrolla.
+    // Pelilauta sis‰lt‰‰ osoittimet kunkin ruudun nappula-olioon (nullptr/NULL/0 jos ruutu on tyhj‰).
+    // Public-m‰‰reell‰, koska t‰t‰ k‰ytet‰‰n paljon muualla.
+    std::array<std::array<Nappula*, 8>, 8> lauta;
     
-    bool tarkistaSiirto(const Siirto& siirto) const;
-    
-    float evaluoi() const;                                                // Aseman numeerinen arviointi.
-    MinMaxPaluu maxi(int syvyys) const;                                    // Minimax (max:n siirtovuoro).
-    MinMaxPaluu mini(int syvyys) const;                                    // Minimax (min:n siirtovuoro).
-    MinMaxPaluu minimax(int syvyys) const;                                // Minimax-algoritmi.
-    MinMaxPaluu minimaxAsync(int syvyys) const;                            // Minimax-algoritmi.
-    void annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const;    // Siirtogeneraattori.
+    Asema(std::array<std::array<Nappula*, 8>, 8> lauta = {
+        &vt, &vr, &vl, &vd, &vk, &vl, &vr, &vt,
+        &vs, &vs, &vs, &vs, &vs, &vs, &vs, &vs,
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        &ms, &ms, &ms, &ms, &ms, &ms, &ms, &ms,
+        &mt, &mr, &ml, &md, &mk, &ml, &mr, &mt
+    });
     
     int getSiirtovuoro() const;
     void setSiirtovuoro(int vuoro);
+    
+    int getKaksoisaskelSarake() const;
+    void setKaksoisaskelSarake(int sarake);
     
     bool onkoValkeaKuningasLiikkunut() const;
     bool onkoMustaKuningasLiikkunut() const;
@@ -69,12 +69,25 @@ public:
     bool onkoMustaDTliikkunut() const;
     bool onkoMustaKTliikkunut() const;
     
-    void setValkeaKuningasLiikkunut(bool valkeaKuningasLiikkunut);
-    void setMustaKuningasLiikkunut(bool mustaKuningasLiikkunut);
-    void setValkeaDTliikkunut(bool valkeaDTliikkunut);
-    void setValkeaKTliikkunut(bool valkeaKTliikkunut);
-    void setMustaDTliikkunut(bool mustaDTliikkunut);
-    void setMustaKTliikkunut(bool mustaKTliikkunut);
+    void setValkeaKuningasLiikkunut(bool onkoLiikkunut);
+    void setMustaKuningasLiikkunut(bool onkoLiikkunut);
+    void setValkeaDTliikkunut(bool onkoLiikkunut);
+    void setValkeaKTliikkunut(bool onkoLiikkunut);
+    void setMustaDTliikkunut(bool onkoLiikkunut);
+    void setMustaKTliikkunut(bool onkoLiikkunut);
+    
+    void setValkeanKuninkaanRuutu(const Ruutu& ruutu);
+    void setMustanKuninkaanRuutu(const Ruutu& ruutu);
+    
+    void paivitaAsema(const Siirto& siirto);                // P‰ivitt‰‰ aseman annetulla siirrolla.
+    bool tarkistaSiirto(const Siirto& siirto) const;
+    
+    float evaluoi() const;                                                // Aseman numeerinen arviointi.
+    MinMaxPaluu maxi(int syvyys) const;                                    // Minimax (max:n siirtovuoro).
+    MinMaxPaluu mini(int syvyys) const;                                    // Minimax (min:n siirtovuoro).
+    MinMaxPaluu minimax(int syvyys) const;                                // Minimax-algoritmi.
+    MinMaxPaluu minimaxAsync(int syvyys) const;                            // Minimax-algoritmi.
+    void annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const;    // Siirtogeneraattori.
 private:
     // Lis‰informaatio pelitilanteesta.
     int _siirtovuoro;                    // 0 = valkea, 1 = musta.
@@ -84,6 +97,11 @@ private:
     bool _onkoValkeaKTliikkunut;        // Linnoitus ei ole sallittu, jos kuningassivustan torni on liikkunut.
     bool _onkoMustaDTliikkunut;            // Linnoitus ei ole sallittu, jos daamisuvustan torni on liikkunut.
     bool _onkoMustaKTliikkunut;            // Linnoitus ei ole sallittu, jos kuningassivustan torni on liikkunut.
+    
+    Ruutu _valkeanKuninkaanRuutu;
+    Ruutu _mustanKuninkaanRuutu;
+    
+    int _kaksoisaskelSarake;
     
     float laskeNappuloidenArvo() const;
     bool onkoAvausTaiKeskipeli(int vari);
