@@ -8,6 +8,6 @@ MinMaxPaluu::MinMaxPaluu() : evaluointiArvo{ 0 }, _parasSiirto(Siirto()) {}
 
 std::ostream& operator<<(std::ostream& os, const MinMaxPaluu& minmaxpaluu)
 {
-    os << minmaxpaluu.evaluointiArvo << minmaxpaluu._parasSiirto;
+    os << minmaxpaluu.evaluointiArvo << " " << minmaxpaluu._parasSiirto;
     return os;
 }

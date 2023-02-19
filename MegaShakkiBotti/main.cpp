@@ -81,8 +81,15 @@ int main(int argc, char* argv[])
             {
                 MinMaxPaluu minimax;
                 {
-                    Ajastin ajastin("MiniMaxAsync");
-                    minimax = asema.minimaxAsync(5);
+                    Ajastin ajastin("MiniMax");
+                    minimax = asema.minimax(4);
+                    cout << minimax << endl;
+                }
+
+                {
+                    Ajastin ajastin("MiniMaxAlphabeta");
+                    minimax = asema.alphabetaMinimaxAsync(4);
+                    cout << minimax << endl;
                 }
 
                 siirto = minimax._parasSiirto;
