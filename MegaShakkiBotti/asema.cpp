@@ -580,34 +580,34 @@ MinMaxPaluu Asema::minimax(int syvyys) const
 
 MinMaxPaluu Asema::minimaxAsync(int syvyys) const
 {
-    auto miniAsync = [this, syvyys](Siirto& siirto) -> MinMaxPaluu 
-    { 
+    auto miniAsync = [this, syvyys](Siirto& siirto) -> MinMaxPaluu
+    {
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.maxi(syvyys - 1);
         arvo._parasSiirto = siirto;
         return arvo;
     };
-    auto maxiAsync = [this, syvyys](Siirto& siirto) -> MinMaxPaluu 
-    {  
+    auto maxiAsync = [this, syvyys](Siirto& siirto) -> MinMaxPaluu
+    {
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.mini(syvyys - 1);
         arvo._parasSiirto = siirto;
         return arvo;
     };
-
+    
     std::vector<Siirto> siirrot;
     siirrot.reserve(50);
     annaLaillisetSiirrot(siirrot);
     std::vector<std::future<MinMaxPaluu>> tehtavat;
     tehtavat.reserve(siirrot.size());
-
+    
     if (_siirtovuoro == 0)
     {
         MinMaxPaluu maxi;
         maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
-
+        
         for (Siirto& siirto : siirrot)
         {
             auto tehtava = std::bind(maxiAsync, siirto);
@@ -627,13 +627,13 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
     {
         MinMaxPaluu mini;
         mini.evaluointiArvo = std::numeric_limits<float>::max();
-
+        
         for (Siirto& siirto : siirrot)
         {
             auto tehtava = std::bind(miniAsync, siirto);
             tehtavat.push_back(std::async(std::launch::async, tehtava));
         }
-
+        
         for (auto& tehtava : tehtavat)
         {
             MinMaxPaluu arvo = tehtava.get();
@@ -733,14 +733,14 @@ MinMaxPaluu Asema::alphabetaMaxi(int syvyys, float alpha, float beta) const
     {
         return MinMaxPaluu(evaluoi(), Siirto());
     }
-
+    
     MinMaxPaluu maxi;
     maxi.evaluointiArvo = alpha;
-
+    
     std::vector<Siirto> siirrot;
     siirrot.reserve(50);
     annaLaillisetSiirrot(siirrot);
-
+    
     if (siirrot.empty())
     {
         if (onkoRuutuUhattu(_valkeanKuninkaanRuutu, 1))
@@ -752,7 +752,7 @@ MinMaxPaluu Asema::alphabetaMaxi(int syvyys, float alpha, float beta) const
             return MinMaxPaluu(0, Siirto());
         }
     }
-
+    
     for (auto& siirto : siirrot)
     {
         Asema tmpAsema = *this;
@@ -767,7 +767,7 @@ MinMaxPaluu Asema::alphabetaMaxi(int syvyys, float alpha, float beta) const
         {
             maxi = arvo;
         }
-            
+        
     }
     return maxi;
 }
@@ -778,14 +778,14 @@ MinMaxPaluu Asema::alphabetaMini(int syvyys, float alpha, float beta) const
     {
         return MinMaxPaluu(evaluoi(), Siirto());
     }
-
+    
     MinMaxPaluu mini;
     mini.evaluointiArvo = beta;
-
+    
     std::vector<Siirto> siirrot;
     siirrot.reserve(50);
     annaLaillisetSiirrot(siirrot);
-
+    
     if (siirrot.empty())
     {
         if (onkoRuutuUhattu(_mustanKuninkaanRuutu, 0))
@@ -797,19 +797,19 @@ MinMaxPaluu Asema::alphabetaMini(int syvyys, float alpha, float beta) const
             return MinMaxPaluu(0, Siirto());
         }
     }
-
+    
     for (auto& siirto : siirrot)
     {
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.alphabetaMaxi(syvyys - 1, alpha, mini.evaluointiArvo);
         arvo._parasSiirto = siirto;
-
+        
         if (arvo.evaluointiArvo <= alpha)
         {
             return MinMaxPaluu(alpha, siirto);
         }
-
+        
         if (arvo.evaluointiArvo < mini.evaluointiArvo)
         {
             mini = arvo;
@@ -850,18 +850,18 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
         arvo._parasSiirto = siirto;
         return arvo;
     };
-
+    
     std::vector<Siirto> siirrot;
     siirrot.reserve(50);
     annaLaillisetSiirrot(siirrot);
     std::vector<std::future<MinMaxPaluu>> tehtavat;
     tehtavat.reserve(siirrot.size());
-
+    
     if (_siirtovuoro == 0)
     {
         MinMaxPaluu maxi;
         maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
-
+        
         for (Siirto& siirto : siirrot)
         {
             auto tehtava = std::bind(maxiAsync, siirto);
@@ -881,13 +881,13 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
     {
         MinMaxPaluu mini;
         mini.evaluointiArvo = std::numeric_limits<float>::max();
-
+        
         for (Siirto& siirto : siirrot)
         {
             auto tehtava = std::bind(miniAsync, siirto);
             tehtavat.push_back(std::async(std::launch::async, tehtava));
         }
-
+        
         for (auto& tehtava : tehtavat)
         {
             MinMaxPaluu arvo = tehtava.get();
@@ -906,13 +906,13 @@ MinMaxPaluu Asema::yhteinenAlphabetaMini(int syvyys) const
     {
         return MinMaxPaluu(evaluoi(), Siirto());
     }
-
+    
     Siirto miniSiirto;
     
     std::vector<Siirto> siirrot;
     siirrot.reserve(50);
     annaLaillisetSiirrot(siirrot);
-
+    
     if (siirrot.empty())
     {
         if (onkoRuutuUhattu(_mustanKuninkaanRuutu, 0))
@@ -924,20 +924,20 @@ MinMaxPaluu Asema::yhteinenAlphabetaMini(int syvyys) const
             return MinMaxPaluu(0, Siirto());
         }
     }
-
+    
     for (auto& siirto : siirrot)
     {
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.yhteinenAlphabetaMaxi(syvyys - 1);
         arvo._parasSiirto = siirto;
-
+        
         if (arvo.evaluointiArvo <= yhteinenAlpha)
         {
             return MinMaxPaluu(yhteinenAlpha, siirto);
-
+            
         }
-
+        
         if (arvo.evaluointiArvo < yhteinenBeta)
         {
             std::lock_guard vartija(lukko);
@@ -957,13 +957,13 @@ MinMaxPaluu Asema::yhteinenAlphabetaMaxi(int syvyys) const
     {
         return MinMaxPaluu(evaluoi(), Siirto());
     }
-
+    
     Siirto maxiSiirto;
-
+    
     std::vector<Siirto> siirrot;
     siirrot.reserve(50);
     annaLaillisetSiirrot(siirrot);
-
+    
     if (siirrot.empty())
     {
         if (onkoRuutuUhattu(_valkeanKuninkaanRuutu, 1))
@@ -975,14 +975,14 @@ MinMaxPaluu Asema::yhteinenAlphabetaMaxi(int syvyys) const
             return MinMaxPaluu(0, Siirto());
         }
     }
-
+    
     for (auto& siirto : siirrot)
     {
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.yhteinenAlphabetaMini(syvyys - 1);
         arvo._parasSiirto = siirto;
-
+        
         if (arvo.evaluointiArvo >= yhteinenBeta)
         {
             return MinMaxPaluu(yhteinenBeta, siirto);
@@ -1018,18 +1018,18 @@ MinMaxPaluu Asema::yhteinenAlphabetaMinimaxAsync(int syvyys) const
         arvo._parasSiirto = siirto;
         return arvo;
     };
-
+    
     std::vector<Siirto> siirrot;
     siirrot.reserve(50);
     annaLaillisetSiirrot(siirrot);
     std::vector<std::future<MinMaxPaluu>> tehtavat;
     tehtavat.reserve(siirrot.size());
-
+    
     if (_siirtovuoro == 0)
     {
         MinMaxPaluu maxi;
         maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
-
+        
         for (Siirto& siirto : siirrot)
         {
             auto tehtava = std::bind(maxiAsync, siirto);
@@ -1049,13 +1049,13 @@ MinMaxPaluu Asema::yhteinenAlphabetaMinimaxAsync(int syvyys) const
     {
         MinMaxPaluu mini;
         mini.evaluointiArvo = std::numeric_limits<float>::max();
-
+        
         for (Siirto& siirto : siirrot)
         {
             auto tehtava = std::bind(miniAsync, siirto);
             tehtavat.push_back(std::async(std::launch::async, tehtava));
         }
-
+        
         for (auto& tehtava : tehtavat)
         {
             MinMaxPaluu arvo = tehtava.get();
