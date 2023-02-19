@@ -831,6 +831,9 @@ MinMaxPaluu Asema::alphabetaMinimax(int syvyys) const
 
 MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
 {
+    yhteinenBeta = std::numeric_limits<float>::max();
+    yhteinenAlpha = std::numeric_limits<float>::lowest();
+    
     auto miniAsync = [this, syvyys](Siirto& siirto) -> MinMaxPaluu
     {
         Asema tmpAsema = *this;
