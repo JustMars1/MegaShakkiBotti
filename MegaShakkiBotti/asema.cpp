@@ -226,13 +226,13 @@ void Asema::paivitaAsema(const Siirto& siirto)
         }
         else if (nappula == &Asema::mt)
         {
-            if (alkuX == 0 && !_onkoMustaKTliikkunut)
-            {
-                _onkoMustaKTliikkunut = true;
-            }
-            else if (alkuX == 7 && !_onkoMustaDTliikkunut)
+            if (alkuX == 0 && !_onkoMustaDTliikkunut)
             {
                 _onkoMustaDTliikkunut = true;
+            }
+            else if (alkuX == 7 && !_onkoMustaKTliikkunut)
+            {
+                _onkoMustaKTliikkunut = true;
             }
         }
         else if (nappula == &Asema::vs)
