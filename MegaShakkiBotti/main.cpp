@@ -80,16 +80,31 @@ int main(int argc, char* argv[])
             if (asema.getSiirtovuoro() == koneenVari)
             {
                 MinMaxPaluu minimax;
+                int syvyys = 4;
+                
                 {
-                    Ajastin ajastin("MiniMax");
-                    minimax = asema.minimax(4);
-                    cout << minimax << endl;
+                    Ajastin ajastin("yhteinenAlphabetaMinimaxAsync");
+                    minimax = asema.yhteinenAlphabetaMinimaxAsync(syvyys);
                 }
 
                 {
-                    Ajastin ajastin("MiniMaxAlphabeta");
-                    minimax = asema.alphabetaMinimaxAsync(4);
-                    cout << minimax << endl;
+                    Ajastin ajastin("alphabetaMinimaxAsync");
+                    minimax = asema.alphabetaMinimaxAsync(syvyys);
+                }
+
+                {
+                    Ajastin ajastin("alphabetaMinimax");
+                    minimax = asema.alphabetaMinimax(syvyys);
+                }
+
+                {
+                    Ajastin ajastin("MiniMaxAsync");
+                    minimax = asema.minimaxAsync(syvyys);
+                }
+
+                {
+                    Ajastin ajastin("MiniMax");
+                    minimax = asema.minimax(syvyys);
                 }
 
                 siirto = minimax._parasSiirto;

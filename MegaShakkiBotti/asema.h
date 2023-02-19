@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <array>
+#include <mutex>
 
 #include "minmaxpaluu.h"
 #include "siirto.h"
@@ -40,6 +41,10 @@ public:
     static const std::unordered_map<char, Nappula*> fenNappulaMap;
     
     static const float maxArvo;
+
+    static std::atomic<float> yhteinenBeta;
+    static std::atomic<float> yhteinenAlpha;
+    static std::mutex lukko;
     
     // Pelilauta sis‰lt‰‰ osoittimet kunkin ruudun nappula-olioon (nullptr/NULL/0 jos ruutu on tyhj‰).
     // Public-m‰‰reell‰, koska t‰t‰ k‰ytet‰‰n paljon muualla.
@@ -79,18 +84,24 @@ public:
     void setValkeanKuninkaanRuutu(const Ruutu& ruutu);
     void setMustanKuninkaanRuutu(const Ruutu& ruutu);
     
-    void paivitaAsema(const Siirto& siirto);                // P‰ivitt‰‰ aseman annetulla siirrolla.
+    void paivitaAsema(const Siirto& siirto);                
     bool tarkistaSiirto(const Siirto& siirto) const;
     
-    float evaluoi() const;                                                // Aseman numeerinen arviointi.
-    MinMaxPaluu maxi(int syvyys) const;                                    // Minimax (max:n siirtovuoro).
-    MinMaxPaluu mini(int syvyys) const;                                    // Minimax (min:n siirtovuoro).
-    MinMaxPaluu minimax(int syvyys) const;                                // Minimax-algoritmi.
-    MinMaxPaluu minimaxAsync(int syvyys) const;                            // Minimax-algoritmi.
+    float evaluoi() const;                                                
+    MinMaxPaluu maxi(int syvyys) const;                                   
+    MinMaxPaluu mini(int syvyys) const;                                   
+    MinMaxPaluu minimax(int syvyys) const;                                
+    MinMaxPaluu minimaxAsync(int syvyys) const;                            
+
     MinMaxPaluu alphabetaMaxi(int syvyys, float alpha, float beta) const;
     MinMaxPaluu alphabetaMini(int syvyys, float alpha, float beta) const;
     MinMaxPaluu alphabetaMinimax(int syvyys) const;
     MinMaxPaluu alphabetaMinimaxAsync(int syvyys) const;
+
+    MinMaxPaluu yhteinenAlphabetaMini(int syvyys) const;
+    MinMaxPaluu yhteinenAlphabetaMaxi(int syvyys) const;
+    MinMaxPaluu yhteinenAlphabetaMinimaxAsync(int syvyys) const;
+
     void annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const;    // Siirtogeneraattori.
 private:
     // Lis‰informaatio pelitilanteesta.
