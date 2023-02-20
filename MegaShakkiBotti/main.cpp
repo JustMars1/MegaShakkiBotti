@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
     {
         if (strcmp(argv[i], "nocolor") == 0)
         {
-            Kayttoliittyma::getInstance().varitaRuudut = false;
+            Kayttoliittyma::getInstance().setVaritaRuudut(false);
         }
     }
     
@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
                     minimax = asema.minimax(syvyys);
                 }
                 
-                siirto = minimax._parasSiirto;
+                siirto = minimax.parasSiirto;
                 cout << "Koneen siirto: " << siirto << endl;
             }
             else

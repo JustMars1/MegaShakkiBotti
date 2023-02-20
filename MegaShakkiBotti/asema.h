@@ -80,20 +80,20 @@ public:
     void setValkeanKuninkaanRuutu(const Ruutu& ruutu);
     void setMustanKuninkaanRuutu(const Ruutu& ruutu);
     
-    void paivitaAsema(const Siirto& siirto);                
+    void paivitaAsema(const Siirto& siirto);
     bool tarkistaSiirto(const Siirto& siirto) const;
     
-    float evaluoi() const;                                                
-    MinMaxPaluu maxi(int syvyys) const;                                   
-    MinMaxPaluu mini(int syvyys) const;                                   
-    MinMaxPaluu minimax(int syvyys) const;                                
-    MinMaxPaluu minimaxAsync(int syvyys) const;                            
-
+    float evaluoi() const;
+    MinMaxPaluu maxi(int syvyys) const;
+    MinMaxPaluu mini(int syvyys) const;
+    MinMaxPaluu minimax(int syvyys) const;
+    MinMaxPaluu minimaxAsync(int syvyys) const;
+    
     MinMaxPaluu alphabetaMaxi(int syvyys, float alpha, float beta) const;
     MinMaxPaluu alphabetaMini(int syvyys, float alpha, float beta) const;
     MinMaxPaluu alphabetaMinimax(int syvyys) const;
     MinMaxPaluu alphabetaMinimaxAsync(int syvyys) const;
-
+    
     void annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const;    // Siirtogeneraattori.
 private:
     // Lisäinformaatio pelitilanteesta.

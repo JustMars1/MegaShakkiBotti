@@ -7,8 +7,8 @@
 class MinMaxPaluu
 {
 public:
-	float evaluointiArvo;
-	Siirto _parasSiirto;
+    float evaluointiArvo;
+    Siirto parasSiirto;
     
     MinMaxPaluu(float arvo, Siirto siirto);
     MinMaxPaluu();

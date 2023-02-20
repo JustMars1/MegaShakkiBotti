@@ -581,7 +581,7 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.maxi(syvyys - 1);
-        arvo._parasSiirto = siirto;
+        arvo.parasSiirto = siirto;
         return arvo;
     };
     
@@ -590,7 +590,7 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.mini(syvyys - 1);
-        arvo._parasSiirto = siirto;
+        arvo.parasSiirto = siirto;
         return arvo;
     };
     
@@ -675,7 +675,7 @@ MinMaxPaluu Asema::maxi(int syvyys) const
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.mini(syvyys - 1);
-        arvo._parasSiirto = siirto;
+        arvo.parasSiirto = siirto;
         if (arvo.evaluointiArvo > maxi.evaluointiArvo)
         {
             maxi = arvo;
@@ -715,7 +715,7 @@ MinMaxPaluu Asema::mini(int syvyys) const
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.maxi(syvyys - 1);
-        arvo._parasSiirto = siirto;
+        arvo.parasSiirto = siirto;
         if (arvo.evaluointiArvo < mini.evaluointiArvo)
         {
             mini = arvo;
@@ -743,7 +743,7 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.alphabetaMaxi(syvyys - 1, std::numeric_limits<float>::lowest(), std::numeric_limits<float>::max());
-        arvo._parasSiirto = siirto;
+        arvo.parasSiirto = siirto;
         return arvo;
     };
     
@@ -752,7 +752,7 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.alphabetaMini(syvyys - 1, std::numeric_limits<float>::lowest(), std::numeric_limits<float>::max());
-        arvo._parasSiirto = siirto;
+        arvo.parasSiirto = siirto;
         return arvo;
     };
     
@@ -836,7 +836,7 @@ MinMaxPaluu Asema::alphabetaMaxi(int syvyys, float alpha, float beta) const
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.alphabetaMini(syvyys - 1, maxi.evaluointiArvo, beta);
-        arvo._parasSiirto = siirto;
+        arvo.parasSiirto = siirto;
         if (arvo.evaluointiArvo >= beta)
         {
             return MinMaxPaluu(beta, siirto);
@@ -881,7 +881,7 @@ MinMaxPaluu Asema::alphabetaMini(int syvyys, float alpha, float beta) const
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.alphabetaMaxi(syvyys - 1, alpha, mini.evaluointiArvo);
-        arvo._parasSiirto = siirto;
+        arvo.parasSiirto = siirto;
         
         if (arvo.evaluointiArvo <= alpha)
         {

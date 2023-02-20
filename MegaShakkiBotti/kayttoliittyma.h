@@ -1,7 +1,6 @@
 #pragma once
 #include "asema.h"
 #include "nappula.h"
-#include "peli.h"
 #include "siirto.h"
 
 // Shakkiohjelman käyttöliittymä, joka osaa visualisoida nykyisen aseman
@@ -23,9 +22,12 @@ public:
     const Asema& getAsema() const;
     Asema& getAsema();
     
-    bool varitaRuudut;
+    bool getVaritaRuudut() const;
+    void setVaritaRuudut(bool varita);
+    
 private:
-	Asema _asema;
+    bool _varitaRuudut;
+    Asema _asema;
     
     Kayttoliittyma();
 };

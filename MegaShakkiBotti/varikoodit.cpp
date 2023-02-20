@@ -3,7 +3,7 @@
 
 std::string tekstivari(Vari vari)
 {
-    if (Kayttoliittyma::getInstance().varitaRuudut)
+    if (Kayttoliittyma::getInstance().getVaritaRuudut())
     {
         return std::string("\033[") + std::to_string(vari) + "m";
     }
@@ -14,7 +14,7 @@ std::string tekstivari(Vari vari)
 }
 std::string taustavari(Vari vari)
 {
-    if (Kayttoliittyma::getInstance().varitaRuudut)
+    if (Kayttoliittyma::getInstance().getVaritaRuudut())
     {
         return std::string("\033[") + std::to_string(vari + 10) + "m";
     }
@@ -26,5 +26,5 @@ std::string taustavari(Vari vari)
 
 std::string resetoiVarit()
 {
-    return Kayttoliittyma::getInstance().varitaRuudut ? "\033[0m" : "";
+    return Kayttoliittyma::getInstance().getVaritaRuudut() ? "\033[0m" : "";
 }

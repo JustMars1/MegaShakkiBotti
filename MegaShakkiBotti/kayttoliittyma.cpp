@@ -17,7 +17,7 @@
 
 using namespace std;
 
-Kayttoliittyma::Kayttoliittyma() : varitaRuudut{true} {}
+Kayttoliittyma::Kayttoliittyma() : _varitaRuudut{true} {}
 
 Kayttoliittyma& Kayttoliittyma::getInstance()
 {
@@ -27,6 +27,12 @@ Kayttoliittyma& Kayttoliittyma::getInstance()
 
 const Asema& Kayttoliittyma::getAsema() const { return _asema; }
 Asema& Kayttoliittyma::getAsema() { return _asema; }
+
+bool Kayttoliittyma::getVaritaRuudut() const { return _varitaRuudut; }
+void Kayttoliittyma::setVaritaRuudut(bool varita)
+{
+    _varitaRuudut = varita;
+}
 
 void Kayttoliittyma::lataaAsema()
 {
