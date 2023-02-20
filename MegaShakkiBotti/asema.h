@@ -41,10 +41,6 @@ public:
     static const std::unordered_map<char, Nappula*> fenNappulaMap;
     
     static const float maxArvo;
-
-    static std::atomic<float> yhteinenBeta;
-    static std::atomic<float> yhteinenAlpha;
-    static std::mutex lukko;
     
     // Pelilauta sis‰lt‰‰ osoittimet kunkin ruudun nappula-olioon (nullptr/NULL/0 jos ruutu on tyhj‰).
     // Public-m‰‰reell‰, koska t‰t‰ k‰ytet‰‰n paljon muualla.
@@ -97,10 +93,6 @@ public:
     MinMaxPaluu alphabetaMini(int syvyys, float alpha, float beta) const;
     MinMaxPaluu alphabetaMinimax(int syvyys) const;
     MinMaxPaluu alphabetaMinimaxAsync(int syvyys) const;
-
-    MinMaxPaluu yhteinenAlphabetaMini(int syvyys) const;
-    MinMaxPaluu yhteinenAlphabetaMaxi(int syvyys) const;
-    MinMaxPaluu yhteinenAlphabetaMinimaxAsync(int syvyys) const;
 
     void annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const;    // Siirtogeneraattori.
 private:

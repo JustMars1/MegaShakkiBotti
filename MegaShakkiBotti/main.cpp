@@ -82,11 +82,6 @@ int main(int argc, char* argv[])
                 MinMaxPaluu minimax;
                 int syvyys = 4;
                 
-                //                {
-                //                    Ajastin ajastin("yhteinenAlphabetaMinimaxAsync");
-                //                    minimax = asema.yhteinenAlphabetaMinimaxAsync(syvyys);
-                //                }
-                
                 {
                     Ajastin ajastin("alphabetaMinimaxAsync");
                     minimax = asema.alphabetaMinimaxAsync(syvyys);

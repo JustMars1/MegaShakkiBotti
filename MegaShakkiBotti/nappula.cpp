@@ -34,7 +34,7 @@ void Torni::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& 
     // Oikea
     for (int i = x + 1; i < 8; i++)
     {
-        if (asema.lauta[y][i] == NULL)
+        if (asema.lauta[y][i] == nullptr)
         {
             lista.push_back(Siirto(ruutu, Ruutu(i, y)));
         }
@@ -52,7 +52,7 @@ void Torni::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& 
     // Vasen
     for (int i = x - 1; i >= 0; i--)
     {
-        if (asema.lauta[y][i] == NULL)
+        if (asema.lauta[y][i] == nullptr)
         {
             lista.push_back(Siirto(ruutu, Ruutu(i, y)));
         }
@@ -70,7 +70,7 @@ void Torni::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& 
     // Ylös
     for (int i = y + 1; i < 8; i++)
     {
-        if (asema.lauta[i][x] == NULL)
+        if (asema.lauta[i][x] == nullptr)
         {
             lista.push_back(Siirto(ruutu, Ruutu(x, i)));
         }
@@ -88,7 +88,7 @@ void Torni::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& 
     // Alas
     for (int i = y - 1; i >= 0; i--)
     {
-        if (asema.lauta[i][x] == NULL)
+        if (asema.lauta[i][x] == nullptr)
         {
             lista.push_back(Siirto(ruutu, Ruutu(x, i)));
         }
@@ -127,12 +127,12 @@ void Ratsu::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& 
         if ((xv >= 0 && xv < 8) && (yv >= 0 && yv < 8))
         {
             // tarkistetaan, voiko ruutuun liikkua
-            if (asema.lauta[yv][xv] == NULL)
+            if (asema.lauta[yv][xv] == nullptr)
             {
                 lista.push_back(Siirto(ruutu, Ruutu(xv, yv)));
             }
             
-            else if (asema.lauta[yv][xv] != NULL && asema.lauta[yv][xv]->getVari() != vari)
+            else if (asema.lauta[yv][xv] != nullptr && asema.lauta[yv][xv]->getVari() != vari)
             {
                 lista.push_back(Siirto(ruutu, Ruutu(xv, yv)));
             }
@@ -142,12 +142,12 @@ void Ratsu::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& 
         if ((xm >= 0 && xm < 8) && (ym >= 0 && ym < 8))
         {
             //tarkistetaan, voiko ruutuun liikkua
-            if (asema.lauta[ym][xm] == NULL)
+            if (asema.lauta[ym][xm] == nullptr)
             {
                 lista.push_back(Siirto(ruutu, Ruutu(xm, ym)));
             }
             
-            else if (asema.lauta[ym][xm] != NULL && asema.lauta[ym][xm]->getVari() != vari)
+            else if (asema.lauta[ym][xm] != nullptr && asema.lauta[ym][xm]->getVari() != vari)
             {
                 lista.push_back(Siirto(ruutu, Ruutu(xm, ym)));
             }
@@ -171,7 +171,7 @@ void Lahetti::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema
             break;
         }
         
-        if (asema.lauta[y][x] == NULL)
+        if (asema.lauta[y][x] == nullptr)
         {
             lista.push_back(Siirto(ruutu, Ruutu(x, y)));
         }
@@ -197,7 +197,7 @@ void Lahetti::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema
             break;
         }
         
-        if (asema.lauta[y][x] == NULL)
+        if (asema.lauta[y][x] == nullptr)
         {
             lista.push_back(Siirto(ruutu, Ruutu(x, y)));
         }
@@ -223,7 +223,7 @@ void Lahetti::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema
             break;
         }
         
-        if (asema.lauta[y][x] == NULL)
+        if (asema.lauta[y][x] == nullptr)
         {
             lista.push_back(Siirto(ruutu, Ruutu(x, y)));
         }
@@ -249,7 +249,7 @@ void Lahetti::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema
             break;
         }
         
-        if (asema.lauta[y][x] == NULL)
+        if (asema.lauta[y][x] == nullptr)
         {
             lista.push_back(Siirto(ruutu, Ruutu(x, y)));
         }
@@ -298,11 +298,11 @@ void Kuningas::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asem
         if ((xv >= 0 && xv < 8) && (yv >= 0 && yv < 8))
         {
             // Tarkistetaan, voiko ruutuun liikkua
-            if (asema.lauta[yv][xv] == NULL)
+            if (asema.lauta[yv][xv] == nullptr)
             {
                 lista.push_back(Siirto(ruutu, Ruutu(xv, yv)));
             }
-            else if (asema.lauta[yv][xv] != NULL && asema.lauta[yv][xv]->getVari() != vari)
+            else if (asema.lauta[yv][xv] != nullptr && asema.lauta[yv][xv]->getVari() != vari)
             {
                 lista.push_back(Siirto(ruutu, Ruutu(xv, yv)));
             }
@@ -312,11 +312,11 @@ void Kuningas::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asem
         if ((xm >= 0 && xm < 8) && (ym >= 0 && ym < 8))
         {
             // Tarkistetaan, voiko ruutuun liikkua
-            if (asema.lauta[ym][xm] == NULL)
+            if (asema.lauta[ym][xm] == nullptr)
             {
                 lista.push_back(Siirto(ruutu, Ruutu(xm, ym)));
             }
-            else if (asema.lauta[ym][xm] != NULL && asema.lauta[ym][xm]->getVari() != vari)
+            else if (asema.lauta[ym][xm] != nullptr && asema.lauta[ym][xm]->getVari() != vari)
             {
                 lista.push_back(Siirto(ruutu, Ruutu(xm, ym)));
             }
@@ -350,7 +350,7 @@ void Sotilas::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema
             break;
         }
         
-        if (asema.lauta[y][x0] != NULL)
+        if (asema.lauta[y][x0] != nullptr)
         {
             break;
         }
@@ -372,7 +372,7 @@ void Sotilas::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema
         
         if (y >= 0 && y < 8 && x >= 0 && x < 8)
         {
-            if (asema.lauta[y][x] != NULL && asema.lauta[y][x]->getVari() != vari)
+            if (asema.lauta[y][x] != nullptr && asema.lauta[y][x]->getVari() != vari)
             {
                 Siirto siirto(ruutu, Ruutu(x, y));
                 if (y == 7 || y == 0)
@@ -393,7 +393,7 @@ void Sotilas::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema
         
         if (y >= 0 && y < 8 && x >= 0 && x < 8)
         {
-            if (asema.lauta[y][x] != NULL && asema.lauta[y][x]->getVari() != vari)
+            if (asema.lauta[y][x] != nullptr && asema.lauta[y][x]->getVari() != vari)
             {
                 lista.push_back(Siirto(ruutu, Ruutu(x, y)));
             }
