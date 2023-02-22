@@ -242,14 +242,14 @@ void Asema::paivitaAsema(const Siirto& siirto)
             {
                 _kaksoisaskelSarake = loppuX;
             }
-            else if (_kaksoisaskelSarake != -1 && lauta[loppuY][loppuX] == lauta[5][_kaksoisaskelSarake])
+            else
             {
-                // Valkosen sotilaan ohestalyönti
-                if (lauta[3][_kaksoisaskelSarake] != nullptr && lauta[3][_kaksoisaskelSarake] == &Asema::ms)
+                if (_kaksoisaskelSarake != -1 && loppuY == 5 && loppuX == _kaksoisaskelSarake)
                 {
+                    // Valkosen sotilaan ohestalyönti
                     lauta[loppuY - 1][_kaksoisaskelSarake] = nullptr;
-                    _kaksoisaskelSarake = -1;
                 }
+                _kaksoisaskelSarake = -1;
             }
         }
         else if (nappula == &Asema::ms)
@@ -258,14 +258,14 @@ void Asema::paivitaAsema(const Siirto& siirto)
             {
                 _kaksoisaskelSarake = loppuX;
             }
-            else if (_kaksoisaskelSarake != -1 && lauta[loppuY][loppuX] == lauta[2][_kaksoisaskelSarake])
+            else
             {
-                if (lauta[4][_kaksoisaskelSarake] != nullptr && lauta[4][_kaksoisaskelSarake] == &Asema::vs)
+                if (_kaksoisaskelSarake != -1 && loppuY == 2 && loppuX == _kaksoisaskelSarake)
                 {
                     // Mustan sotilaan ohestalyönti
                     lauta[loppuY + 1][_kaksoisaskelSarake] = nullptr;
-                    _kaksoisaskelSarake = -1;
                 }
+                _kaksoisaskelSarake = -1;
             }
         }
         
@@ -283,7 +283,7 @@ void Asema::paivitaAsema(const Siirto& siirto)
             lauta[loppuY][loppuX] = nappula;
         }
         
-        lauta[alkuY][alkuX] = NULL;
+        lauta[alkuY][alkuX] = nullptr;
     }
     
     _siirtovuoro = 1 - _siirtovuoro;
@@ -678,7 +678,7 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
         
         MinMaxPaluu maxi;
         maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
-
+        
         for (auto& tehtava : tehtavat)
         {
             MinMaxPaluu arvo = tehtava.get();

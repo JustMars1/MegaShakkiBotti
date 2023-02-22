@@ -386,22 +386,19 @@ void Sotilas::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema
     
     //Ohestalyönnin siirrot
     
-    if (asema.getKaksoisaskelSarake() != -1)
+    int x = asema.getKaksoisaskelSarake();
+    if (x != -1 && (x == x0 - 1 || x == x0 + 1))
     {
-        if (vari == 0 && y0 == 4)
+        if (vari == 0)
         {
-            if (asema.lauta[4][asema.getKaksoisaskelSarake()] && asema.lauta[4][asema.getKaksoisaskelSarake()]->getKoodi() == MS)
+            if (y0 == 4 && asema.lauta[4][x] == &Asema::ms)
             {
-                lista.push_back(Siirto(ruutu, Ruutu(asema.getKaksoisaskelSarake(), 5)));
+                lista.push_back(Siirto(ruutu, Ruutu(x, 5)));
             }
         }
-        
-        if (vari == 1 && y0 == 3)
+        else if (y0 == 3 && asema.lauta[3][x] == &Asema::vs)
         {
-            if (asema.lauta[3][asema.getKaksoisaskelSarake()] && asema.lauta[3][asema.getKaksoisaskelSarake()]->getKoodi() == VS)
-            {
-                lista.push_back(Siirto(ruutu, Ruutu(asema.getKaksoisaskelSarake(), 2)));
-            }
+            lista.push_back(Siirto(ruutu, Ruutu(x, 2)));
         }
     }
 }
