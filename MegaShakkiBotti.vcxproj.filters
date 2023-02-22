@@ -24,16 +24,10 @@
     <ClCompile Include="megashakkibotti\nappula.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="megashakkibotti\peli.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="megashakkibotti\ruutu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="megashakkibotti\siirto.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="megashakkibotti\vastustaja.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MegaShakkiBotti\asema.cpp">
@@ -62,25 +56,13 @@
     <ClInclude Include="megashakkibotti\nappula.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="megashakkibotti\peli.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="megashakkibotti\ruutu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="megashakkibotti\siirto.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="megashakkibotti\vastustaja.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="megashakkibotti\evaluointi.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="megashakkibotti\laillisetSiirrot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="megashakkibotti\pelipuu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MegaShakkiBotti\varikoodit.h">
