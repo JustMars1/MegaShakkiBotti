@@ -87,23 +87,42 @@ int main(int argc, char* argv[])
                     minimax = asema.alphabetaMinimaxAsync(syvyys);
                 }
                 
+                cout << minimax << endl;
+                
                 {
                     Ajastin ajastin("alphabetaMinimax");
                     minimax = asema.alphabetaMinimax(syvyys);
                 }
+                
+                cout << minimax << endl;
                 
                 {
                     Ajastin ajastin("minimaxAsync");
                     minimax = asema.minimaxAsync(syvyys);
                 }
                 
+                cout << minimax << endl;
+                
                 {
                     Ajastin ajastin("minimax");
                     minimax = asema.minimax(syvyys);
                 }
                 
+                cout << minimax << endl;
+                
                 siirto = minimax.parasSiirto;
-                cout << "Koneen siirto: " << siirto << endl;
+                
+                cout << "Koneen siirto: ";
+                
+                if (!siirto.onkoLyhytLinna() && !siirto.onkoPitkaLinna())
+                {
+                    int y = siirto.getAlkuruutu().getRivi();
+                    int x = siirto.getAlkuruutu().getSarake();
+                    char kirjain = toupper(asema.lauta[y][x]->getKirjainSuomi());
+                    cout << kirjain;
+                }
+                
+                cout << siirto << endl;
             }
             else
             {

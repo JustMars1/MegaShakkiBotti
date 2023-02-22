@@ -9,7 +9,7 @@
 class Asema;
 
 // Vakioarvot nappulatyypeille.
-enum NappulaKoodi : int8_t
+enum NappulaKoodi
 {
     VT,VR,VL,VD,VK,VS,
     MT,MR,ML,MD,MK,MS
@@ -19,7 +19,7 @@ enum NappulaKoodi : int8_t
 class Nappula
 {
 public:
-    Nappula(std::string merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot);
+    Nappula(std::string merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, char kirjainSuomi, char kirjainEnglanti);
     
     virtual void annaSiirrot(std::vector<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) = 0;
     
@@ -28,6 +28,9 @@ public:
     const std::string& getMerkki() const;
     float getArvo() const;
     
+    char getKirjainSuomi() const;
+    char getKirjainEnglanti() const;
+    
     int getMaxSiirrot() const;
 protected:
     const std::string        _merkki; // nappulaa vastaava unicode-merkki
@@ -35,6 +38,8 @@ protected:
     const NappulaKoodi       _koodi;  // VT, VR, MT tms.
     const float              _arvo;
     const int                _maxSiirrot;
+    const char               _kirjainSuomi;
+    const char               _kirjainEnglanti;
 };
 
 // Torni-aliluokka. Virtuaalinen perint‰ tarkoittaa, ett‰ kantaluokka perit‰‰n moniperinn‰ss‰ vain kerran
@@ -59,7 +64,7 @@ public:
 class Daami : public Lahetti, public Torni
 {
 public:
-    Daami(std::string merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot);
+    Daami(std::string merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, char kirjainSuomi, char kirjainEnglanti);
     void annaSiirrot(std::vector<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) override;
 };
 

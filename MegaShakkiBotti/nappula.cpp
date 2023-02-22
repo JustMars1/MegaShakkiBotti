@@ -7,22 +7,27 @@
 
 using namespace std;
 
-Nappula::Nappula(string merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot)
+Nappula::Nappula(string merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, char kirjainSuomi, char kirjainEnglanti)
 : _merkki(merkki)
 , _vari{vari}
 , _koodi{koodi}
 , _arvo{arvo}
-, _maxSiirrot{maxSiirrot} {}
+, _maxSiirrot{maxSiirrot}
+, _kirjainSuomi{kirjainSuomi}
+, _kirjainEnglanti{kirjainEnglanti} {}
 
-Daami::Daami(string merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot)
-: Nappula(merkki, vari, koodi, arvo, maxSiirrot)
-, Torni(merkki, vari, koodi, arvo, maxSiirrot)
-, Lahetti(merkki, vari, koodi, arvo, maxSiirrot) {}
+Daami::Daami(string merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, char kirjainSuomi, char kirjainEnglanti)
+: Nappula(merkki, vari, koodi, arvo, maxSiirrot, kirjainSuomi, kirjainEnglanti)
+, Torni(merkki, vari, koodi, arvo, maxSiirrot, kirjainSuomi, kirjainEnglanti)
+, Lahetti(merkki, vari, koodi, arvo, maxSiirrot, kirjainSuomi, kirjainEnglanti) {}
 
 NappulaKoodi Nappula::getKoodi() const { return _koodi; }
 int Nappula::getVari() const { return _vari; }
 const string& Nappula::getMerkki() const { return _merkki; }
 float Nappula::getArvo() const { return _arvo; }
+
+char Nappula::getKirjainSuomi() const { return _kirjainSuomi; }
+char Nappula::getKirjainEnglanti() const { return _kirjainEnglanti; }
 
 int Nappula::getMaxSiirrot() const { return _maxSiirrot; }
 
@@ -106,50 +111,29 @@ void Torni::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& 
 
 void Ratsu::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari)
 {
-    int x = ruutu.getSarake();
-    int y = ruutu.getRivi();
+    int x0 = ruutu.getSarake();
+    int y0 = ruutu.getRivi();
     
     // suhteellinen sijainti mista ruudusta tahansa
-    int xSarake[8] = { -1, 1, 1, -1, 2, -2, 2, -2 };
-    int yRivi[8] = { 2, 2, -2, -2, 1, 1, -1, -1 };
+    int xSarake[8] = { -1, 1,  1, -1, 2, -2,  2, -2 };
+    int yRivi[8] =   {  2, 2, -2, -2, 1,  1, -1, -1 };
     
     for (int i = 0; i < 8; i++)
     {
-        // valkea ratsu
-        int xv = x + xSarake[i];
-        int yv = y + yRivi[i];
-        
-        // musta ratsu
-        int xm = x - xSarake[i];
-        int ym = y - yRivi[i];
+        int x = x0 + xSarake[i];
+        int y = y0 + yRivi[i];
         
         // onko valkean ratsun siirto laudan ulkopuolella
-        if ((xv >= 0 && xv < 8) && (yv >= 0 && yv < 8))
+        if ((x >= 0 && x < 8) && (y >= 0 && y < 8))
         {
             // tarkistetaan, voiko ruutuun liikkua
-            if (asema.lauta[yv][xv] == nullptr)
+            if (asema.lauta[y][x] == nullptr)
             {
-                lista.push_back(Siirto(ruutu, Ruutu(xv, yv)));
+                lista.push_back(Siirto(ruutu, Ruutu(x, y)));
             }
-            
-            else if (asema.lauta[yv][xv] != nullptr && asema.lauta[yv][xv]->getVari() != vari)
+            else if (asema.lauta[y][x] != nullptr && asema.lauta[y][x]->getVari() != vari)
             {
-                lista.push_back(Siirto(ruutu, Ruutu(xv, yv)));
-            }
-        }
-        
-        // onko mustan ratsun siirto laudan ulkopuolella
-        if ((xm >= 0 && xm < 8) && (ym >= 0 && ym < 8))
-        {
-            //tarkistetaan, voiko ruutuun liikkua
-            if (asema.lauta[ym][xm] == nullptr)
-            {
-                lista.push_back(Siirto(ruutu, Ruutu(xm, ym)));
-            }
-            
-            else if (asema.lauta[ym][xm] != nullptr && asema.lauta[ym][xm]->getVari() != vari)
-            {
-                lista.push_back(Siirto(ruutu, Ruutu(xm, ym)));
+                lista.push_back(Siirto(ruutu, Ruutu(x, y)));
             }
         }
     }

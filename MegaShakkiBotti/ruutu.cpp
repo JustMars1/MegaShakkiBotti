@@ -1,11 +1,11 @@
 #include "ruutu.h"
 
-Ruutu::Ruutu(int8_t sarake, int8_t rivi)
+Ruutu::Ruutu(int sarake, int rivi)
 : _sarake{sarake}
 , _rivi{rivi} {}
 
-int8_t Ruutu::getRivi() const { return _rivi; }
-int8_t Ruutu::getSarake() const { return _sarake; }
+int Ruutu::getRivi() const { return _rivi; }
+int Ruutu::getSarake() const { return _sarake; }
 
 void Ruutu::setRivi(int rivi)
 {
@@ -29,6 +29,6 @@ bool Ruutu::ok() const
 
 std::ostream& operator<<(std::ostream& os, const Ruutu& ruutu)
 {
-    os << "abcdefgh"[ruutu.getSarake()] << static_cast<int>(ruutu.getRivi()) + 1;
+    os << "abcdefgh"[ruutu.getSarake()] << ruutu.getRivi() + 1;
     return os;
 }

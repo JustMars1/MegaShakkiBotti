@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-enum Vari : uint8_t
+enum Vari
 {
     musta = 30,
     punainen = 31,

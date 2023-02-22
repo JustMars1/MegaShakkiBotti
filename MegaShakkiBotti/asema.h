@@ -94,6 +94,8 @@ public:
     MinMaxPaluu alphabetaMinimax(int syvyys) const;
     MinMaxPaluu alphabetaMinimaxAsync(int syvyys) const;
     
+    std::vector<size_t> jaaSiirrotSaikeidenKesken(size_t siirtoMaara) const;
+    
     void annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const;    // Siirtogeneraattori.
 private:
     // Lisäinformaatio pelitilanteesta.

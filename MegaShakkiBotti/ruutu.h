@@ -6,10 +6,10 @@
 class Ruutu
 {
 public:
-    Ruutu(int8_t sarake, int8_t rivi);
+    Ruutu(int sarake, int rivi);
     
-    int8_t getRivi() const;
-    int8_t getSarake() const;
+    int getRivi() const;
+    int getSarake() const;
     
     void setRivi(int);
     void setSarake(int);
@@ -18,8 +18,8 @@ public:
     
     bool operator==(const Ruutu& rhs) const;
 private:
-    int8_t _sarake;
-    int8_t _rivi;
+    int _sarake;
+    int _rivi;
 };
 
 std::ostream& operator<<(std::ostream& os, const Ruutu& ruutu);

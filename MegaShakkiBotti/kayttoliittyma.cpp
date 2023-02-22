@@ -268,7 +268,7 @@ void Kayttoliittyma::piirraLauta(bool mustaAlhaalla, const vector<Siirto>& siirr
  muodollisesti korrekti (ei tarkista aseman laillisuutta)
  Ottaa irti myös nappulan kirjaimen (K/D/L/R/T), tarkistaa että kirjain korrekti
  */
-Siirto Kayttoliittyma::annaVastustajanSiirto() const
+Siirto Kayttoliittyma::annaVastustajanSiirto()
 {
     auto tarkistaNappula = [this](char kirjain) -> Nappula*
     {
@@ -318,7 +318,7 @@ Siirto Kayttoliittyma::annaVastustajanSiirto() const
             return Siirto(lyhytLinna, pitkaLinna);
         }
         
-        if (syote.length() == 6)
+        if (!tarkistaKomento(syote) && syote.length() == 6)
         {
             char nappulaKirjain = 'i';
             
@@ -379,7 +379,7 @@ void Kayttoliittyma::tulostaVirhe(string virhe)
     cout << tekstivari(punainen) << "! " << virhe <<  " !" << resetoiVarit() << endl;
 }
 
-int Kayttoliittyma::kysyVastustajanVari() const
+int Kayttoliittyma::kysyVastustajanVari()
 {
     cout << "Kummalla v\xc3\xa4rill\xc3\xa4 pelaat? (0 = valkoinen, 1 = musta)\n";
     
@@ -398,4 +398,35 @@ int Kayttoliittyma::kysyVastustajanVari() const
             return pelaajanVari;
         }
     }
+}
+
+bool Kayttoliittyma::tarkistaKomento(std::string komento)
+{
+    for (char& kirjain : komento)
+    {
+        kirjain = tolower(kirjain);
+    }
+    
+    if (komento == "siirrot")
+    {
+        std::vector<Siirto> siirrot;
+        _asema.annaLaillisetSiirrot(siirrot);
+        
+        for (Siirto& siirto : siirrot)
+        {
+            if (!siirto.onkoLyhytLinna() && !siirto.onkoPitkaLinna())
+            {
+                int y = siirto.getAlkuruutu().getRivi();
+                int x = siirto.getAlkuruutu().getSarake();
+                char kirjain = toupper(_asema.lauta[y][x]->getKirjainSuomi());
+                cout << kirjain;
+            }
+            
+            cout << siirto << endl;
+        }
+        
+        return true;
+    }
+    
+    return false;
 }

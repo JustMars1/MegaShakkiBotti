@@ -11,19 +11,19 @@
 #include "ruutu.h"
 #include "kayttoliittyma.h"
 
-Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK, 0.0f, 8);
-Daami Asema::vd = Daami(      "\xe2\x99\x95", 0, VD, 9.0f, 27);
-Torni Asema::vt = Torni(      "\xe2\x99\x96", 0, VT, 5.0f, 14);
-Lahetti Asema::vl = Lahetti(  "\xe2\x99\x97", 0, VL, 3.25f, 13);
-Ratsu Asema::vr = Ratsu(      "\xe2\x99\x98", 0, VR, 3.0f, 8);
-Sotilas Asema::vs = Sotilas(  "\xe2\x99\x99", 0, VS, 1.0f, 4);
+Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK, 0.0f,   8, 'k', 'K');
+Daami Asema::vd = Daami(      "\xe2\x99\x95", 0, VD, 9.0f,  27, 'd', 'Q');
+Torni Asema::vt = Torni(      "\xe2\x99\x96", 0, VT, 5.0f,  14, 't', 'R');
+Lahetti Asema::vl = Lahetti(  "\xe2\x99\x97", 0, VL, 3.25f, 13, 'l', 'B');
+Ratsu Asema::vr = Ratsu(      "\xe2\x99\x98", 0, VR, 3.0f,   8, 'r', 'N');
+Sotilas Asema::vs = Sotilas(  "\xe2\x99\x99", 0, VS, 1.0f,   4, 's', 'P');
 
-Kuningas Asema::mk = Kuningas("\xe2\x99\x9a", 1, MK, 0.0f, 8);
-Daami Asema::md = Daami(      "\xe2\x99\x9b", 1, MD, -9.0f, 27);
-Torni Asema::mt = Torni(      "\xe2\x99\x9c", 1, MT, -5.0f, 14);
-Lahetti Asema::ml = Lahetti(  "\xe2\x99\x9d", 1, ML, -3.25f, 13);
-Ratsu Asema::mr = Ratsu(      "\xe2\x99\x9e", 1, MR, -3.0f, 8);
-Sotilas Asema::ms = Sotilas(  "\xe2\x99\x9f", 1, MS, -1.0f, 4);
+Kuningas Asema::mk = Kuningas("\xe2\x99\x9a", 1, MK, 0.0f,    8, 'k', 'k');
+Daami Asema::md = Daami(      "\xe2\x99\x9b", 1, MD, -9.0f,  27, 'd', 'q');
+Torni Asema::mt = Torni(      "\xe2\x99\x9c", 1, MT, -5.0f,  14, 't', 'r');
+Lahetti Asema::ml = Lahetti(  "\xe2\x99\x9d", 1, ML, -3.25f, 13, 'l', 'b');
+Ratsu Asema::mr = Ratsu(      "\xe2\x99\x9e", 1, MR, -3.0f,   8, 'r', 'n');
+Sotilas Asema::ms = Sotilas(  "\xe2\x99\x9f", 1, MS, -1.0f,   4, 's', 'p');
 
 const std::unordered_map<char, Nappula*> Asema::valkeaNappulaMap =
 {
@@ -194,11 +194,11 @@ void Asema::paivitaAsema(const Siirto& siirto)
     }
     else
     {
-        int8_t alkuX = siirto.getAlkuruutu().getSarake();
-        int8_t alkuY = siirto.getAlkuruutu().getRivi();
+        int alkuX = siirto.getAlkuruutu().getSarake();
+        int alkuY = siirto.getAlkuruutu().getRivi();
         
-        int8_t loppuX = siirto.getLoppuruutu().getSarake();
-        int8_t loppuY = siirto.getLoppuruutu().getRivi();
+        int loppuX = siirto.getLoppuruutu().getSarake();
+        int loppuY = siirto.getLoppuruutu().getRivi();
         
         Nappula* nappula = lauta[alkuY][alkuX];
         
@@ -452,9 +452,9 @@ float Asema::evaluoi() const
 float Asema::laskeNappuloidenArvo() const
 {
     float summa = 0;
-    for (int8_t y = 0; y < 8; y++)
+    for (int y = 0; y < 8; y++)
     {
-        for (int8_t x = 0; x < 8; x++)
+        for (int x = 0; x < 8; x++)
         {
             Nappula* nappula = lauta[y][x];
             if (nappula == nullptr)
@@ -477,9 +477,9 @@ bool Asema::onkoAvausTaiKeskipeli(int vari)
     bool mustanDaami = false;
     bool valkoisenDaami = false;
     
-    for (int8_t y = 0; y < 8; y++)
+    for (int y = 0; y < 8; y++)
     {
-        for (int8_t x = 0; x < 8; x++)
+        for (int x = 0; x < 8; x++)
         {
             Nappula* nappula = lauta[y][x];
             
@@ -562,6 +562,46 @@ float Asema::linjat(int vari)
     
 }
 
+std::vector<size_t> Asema::jaaSiirrotSaikeidenKesken(size_t siirtoMaara) const
+{
+    uint32_t saieMaara = std::max(1u, std::thread::hardware_concurrency());
+    
+    std::vector<size_t> siirtoaPerSaie;
+    siirtoaPerSaie.reserve(siirtoMaara);
+    
+    if (siirtoMaara < saieMaara)
+    {
+        for (size_t i = 0; i < siirtoMaara; i++)
+        {
+            siirtoaPerSaie.push_back(1);
+        }
+    }
+    else if (siirtoMaara % saieMaara == 0)
+    {
+        for (size_t i = 0; i < saieMaara; i++)
+        {
+            siirtoaPerSaie.push_back(siirtoMaara / saieMaara);
+        }
+    }
+    else
+    {
+        size_t pieniMaara = siirtoMaara / saieMaara;
+        size_t suuriMaara = saieMaara - (siirtoMaara % saieMaara);
+        
+        for (size_t i = 0; i < suuriMaara; i++)
+        {
+            siirtoaPerSaie.push_back(pieniMaara);
+        }
+        
+        for (size_t i = suuriMaara; i < saieMaara; i++)
+        {
+            siirtoaPerSaie.push_back(pieniMaara + 1);
+        }
+    }
+    
+    return siirtoaPerSaie;
+}
+
 MinMaxPaluu Asema::minimax(int syvyys) const
 {
     if (_siirtovuoro == 0)
@@ -576,40 +616,69 @@ MinMaxPaluu Asema::minimax(int syvyys) const
 
 MinMaxPaluu Asema::minimaxAsync(int syvyys) const
 {
-    auto miniAsync = [this, syvyys](Siirto& siirto) -> MinMaxPaluu
-    {
-        Asema tmpAsema = *this;
-        tmpAsema.paivitaAsema(siirto);
-        MinMaxPaluu arvo = tmpAsema.maxi(syvyys - 1);
-        arvo.parasSiirto = siirto;
-        return arvo;
-    };
-    
-    auto maxiAsync = [this, syvyys](Siirto& siirto) -> MinMaxPaluu
-    {
-        Asema tmpAsema = *this;
-        tmpAsema.paivitaAsema(siirto);
-        MinMaxPaluu arvo = tmpAsema.mini(syvyys - 1);
-        arvo.parasSiirto = siirto;
-        return arvo;
-    };
+    using Iteraattori = std::vector<Siirto>::iterator;
     
     std::vector<Siirto> siirrot;
     siirrot.reserve(50);
     annaLaillisetSiirrot(siirrot);
+    
+    if (siirrot.empty())
+    {
+        if (_siirtovuoro == 0 && onkoRuutuUhattu(_valkeanKuninkaanRuutu, 1))
+        {
+            return MinMaxPaluu(-1, Siirto());
+        }
+        else if (_siirtovuoro == 1 && onkoRuutuUhattu(_mustanKuninkaanRuutu, 0))
+        {
+            return MinMaxPaluu(1, Siirto());
+        }
+        else
+        {
+            return MinMaxPaluu(0, Siirto());
+        }
+    }
+    
+    size_t siirtoMaara = siirrot.size();
+    
+    std::vector<size_t> siirtoaPerSaie = jaaSiirrotSaikeidenKesken(siirtoMaara);
     std::vector<std::future<MinMaxPaluu>> tehtavat;
-    tehtavat.reserve(siirrot.size());
+    tehtavat.reserve(siirtoMaara);
     
     if (_siirtovuoro == 0)
     {
+        auto maxiAsync = [this, syvyys](Iteraattori alku, Iteraattori loppu) -> MinMaxPaluu
+        {
+            MinMaxPaluu maxi;
+            maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
+            
+            for (auto iter = alku; iter != loppu; ++iter)
+            {
+                Siirto& siirto = *iter;
+                Asema tmpAsema = *this;
+                tmpAsema.paivitaAsema(siirto);
+                MinMaxPaluu arvo = tmpAsema.mini(syvyys - 1);
+                arvo.parasSiirto = siirto;
+                
+                if (arvo.evaluointiArvo > maxi.evaluointiArvo)
+                {
+                    maxi = arvo;
+                }
+            }
+            
+            return maxi;
+        };
+        
+        Iteraattori iter = siirrot.begin();
+        for (size_t i = 0; i < siirtoaPerSaie.size(); i++)
+        {
+            auto tehtava = std::bind(maxiAsync, iter, iter + siirtoaPerSaie[i]);
+            tehtavat.push_back(std::async(std::launch::async, tehtava));
+            iter += siirtoaPerSaie[i];
+        }
+        
         MinMaxPaluu maxi;
         maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
-        
-        for (Siirto& siirto : siirrot)
-        {
-            auto tehtava = std::bind(maxiAsync, siirto);
-            tehtavat.push_back(std::async(std::launch::async, tehtava));
-        }
+
         for (auto& tehtava : tehtavat)
         {
             MinMaxPaluu arvo = tehtava.get();
@@ -618,18 +687,43 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
                 maxi = arvo;
             }
         }
+        
         return maxi;
     }
     else
     {
+        auto miniAsync = [this, syvyys](Iteraattori alku, Iteraattori loppu) -> MinMaxPaluu
+        {
+            MinMaxPaluu mini;
+            mini.evaluointiArvo = std::numeric_limits<float>::max();
+            
+            for (auto iter = alku; iter != loppu; ++iter)
+            {
+                Siirto& siirto = *iter;
+                Asema tmpAsema = *this;
+                tmpAsema.paivitaAsema(siirto);
+                MinMaxPaluu arvo = tmpAsema.maxi(syvyys - 1);
+                arvo.parasSiirto = siirto;
+                
+                if (arvo.evaluointiArvo < mini.evaluointiArvo)
+                {
+                    mini = arvo;
+                }
+            }
+            
+            return mini;
+        };
+        
+        Iteraattori iter = siirrot.begin();
+        for (size_t i = 0; i < siirtoaPerSaie.size(); i++)
+        {
+            auto tehtava = std::bind(miniAsync, iter, iter + siirtoaPerSaie[i]);
+            tehtavat.push_back(std::async(std::launch::async, tehtava));
+            iter += siirtoaPerSaie[i];
+        }
+        
         MinMaxPaluu mini;
         mini.evaluointiArvo = std::numeric_limits<float>::max();
-        
-        for (Siirto& siirto : siirrot)
-        {
-            auto tehtava = std::bind(miniAsync, siirto);
-            tehtavat.push_back(std::async(std::launch::async, tehtava));
-        }
         
         for (auto& tehtava : tehtavat)
         {
@@ -639,6 +733,7 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
                 mini = arvo;
             }
         }
+        
         return mini;
     }
 }
@@ -738,40 +833,77 @@ MinMaxPaluu Asema::alphabetaMinimax(int syvyys) const
 
 MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
 {
-    auto miniAsync = [this, syvyys](Siirto& siirto) -> MinMaxPaluu
-    {
-        Asema tmpAsema = *this;
-        tmpAsema.paivitaAsema(siirto);
-        MinMaxPaluu arvo = tmpAsema.alphabetaMaxi(syvyys - 1, std::numeric_limits<float>::lowest(), std::numeric_limits<float>::max());
-        arvo.parasSiirto = siirto;
-        return arvo;
-    };
-    
-    auto maxiAsync = [this, syvyys](Siirto& siirto) -> MinMaxPaluu
-    {
-        Asema tmpAsema = *this;
-        tmpAsema.paivitaAsema(siirto);
-        MinMaxPaluu arvo = tmpAsema.alphabetaMini(syvyys - 1, std::numeric_limits<float>::lowest(), std::numeric_limits<float>::max());
-        arvo.parasSiirto = siirto;
-        return arvo;
-    };
+    using Iteraattori = std::vector<Siirto>::iterator;
     
     std::vector<Siirto> siirrot;
     siirrot.reserve(50);
     annaLaillisetSiirrot(siirrot);
+    
+    if (siirrot.empty())
+    {
+        if (_siirtovuoro == 0 && onkoRuutuUhattu(_valkeanKuninkaanRuutu, 1))
+        {
+            return MinMaxPaluu(-1, Siirto());
+        }
+        else if (_siirtovuoro == 1 && onkoRuutuUhattu(_mustanKuninkaanRuutu, 0))
+        {
+            return MinMaxPaluu(1, Siirto());
+        }
+        else
+        {
+            return MinMaxPaluu(0, Siirto());
+        }
+    }
+    
+    size_t siirtoMaara = siirrot.size();
+    
+    std::vector<size_t> siirtoaPerSaie = jaaSiirrotSaikeidenKesken(siirtoMaara);
+    
     std::vector<std::future<MinMaxPaluu>> tehtavat;
-    tehtavat.reserve(siirrot.size());
+    tehtavat.reserve(siirtoMaara);
     
     if (_siirtovuoro == 0)
     {
+        auto maxiAsync = [this, syvyys](Iteraattori alku, Iteraattori loppu) -> MinMaxPaluu
+        {
+            MinMaxPaluu maxi;
+            maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
+            
+            float beta = std::numeric_limits<float>::max();
+            
+            for (auto iter = alku; iter != loppu; ++iter)
+            {
+                Siirto& siirto = *iter;
+                Asema tmpAsema = *this;
+                tmpAsema.paivitaAsema(siirto);
+                MinMaxPaluu arvo = tmpAsema.alphabetaMini(syvyys - 1, maxi.evaluointiArvo, beta);
+                arvo.parasSiirto = siirto;
+                
+                if (arvo.evaluointiArvo >= beta)
+                {
+                    return MinMaxPaluu(beta, siirto);
+                }
+                
+                if (arvo.evaluointiArvo > maxi.evaluointiArvo)
+                {
+                    maxi = arvo;
+                }
+            }
+            
+            return maxi;
+        };
+        
+        auto iter = siirrot.begin();
+        for (size_t i = 0; i < siirtoaPerSaie.size(); i++)
+        {
+            auto tehtava = std::bind(maxiAsync, iter, iter + siirtoaPerSaie[i]);
+            tehtavat.push_back(std::async(std::launch::async, tehtava));
+            iter += siirtoaPerSaie[i];
+        }
+        
         MinMaxPaluu maxi;
         maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
         
-        for (Siirto& siirto : siirrot)
-        {
-            auto tehtava = std::bind(maxiAsync, siirto);
-            tehtavat.push_back(std::async(std::launch::async, tehtava));
-        }
         for (auto& tehtava : tehtavat)
         {
             MinMaxPaluu arvo = tehtava.get();
@@ -780,18 +912,50 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
                 maxi = arvo;
             }
         }
+        
         return maxi;
     }
     else
     {
+        auto miniAsync = [this, syvyys](Iteraattori alku, Iteraattori loppu) -> MinMaxPaluu
+        {
+            MinMaxPaluu mini;
+            mini.evaluointiArvo = std::numeric_limits<float>::max();
+            
+            float alpha = std::numeric_limits<float>::lowest();
+            
+            for (auto iter = alku; iter != loppu; ++iter)
+            {
+                Siirto& siirto = *iter;
+                Asema tmpAsema = *this;
+                tmpAsema.paivitaAsema(siirto);
+                MinMaxPaluu arvo = tmpAsema.alphabetaMaxi(syvyys - 1, alpha, mini.evaluointiArvo);
+                arvo.parasSiirto = siirto;
+                
+                if (arvo.evaluointiArvo <= alpha)
+                {
+                    return MinMaxPaluu(alpha, siirto);
+                }
+                
+                if (arvo.evaluointiArvo < mini.evaluointiArvo)
+                {
+                    mini = arvo;
+                }
+            }
+            
+            return mini;
+        };
+        
+        auto iter = siirrot.begin();
+        for (size_t i = 0; i < siirtoaPerSaie.size(); i++)
+        {
+            auto tehtava = std::bind(miniAsync, iter, iter + siirtoaPerSaie[i]);
+            tehtavat.push_back(std::async(std::launch::async, tehtava));
+            iter += siirtoaPerSaie[i];
+        }
+        
         MinMaxPaluu mini;
         mini.evaluointiArvo = std::numeric_limits<float>::max();
-        
-        for (Siirto& siirto : siirrot)
-        {
-            auto tehtava = std::bind(miniAsync, siirto);
-            tehtavat.push_back(std::async(std::launch::async, tehtava));
-        }
         
         for (auto& tehtava : tehtavat)
         {
@@ -801,6 +965,7 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
                 mini = arvo;
             }
         }
+        
         return mini;
     }
 }
@@ -837,16 +1002,18 @@ MinMaxPaluu Asema::alphabetaMaxi(int syvyys, float alpha, float beta) const
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.alphabetaMini(syvyys - 1, maxi.evaluointiArvo, beta);
         arvo.parasSiirto = siirto;
+        
         if (arvo.evaluointiArvo >= beta)
         {
             return MinMaxPaluu(beta, siirto);
         }
+        
         if (arvo.evaluointiArvo > maxi.evaluointiArvo)
         {
             maxi = arvo;
         }
-        
     }
+    
     return maxi;
 }
 
@@ -893,6 +1060,7 @@ MinMaxPaluu Asema::alphabetaMini(int syvyys, float alpha, float beta) const
             mini = arvo;
         }
     }
+    
     return mini;
 }
 
@@ -1007,9 +1175,9 @@ void Asema::huolehdiKuninkaanShakeista(std::vector<Siirto>& siirrot) const
 
 void Asema::annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const
 {
-    for (int8_t y = 0; y < 8; y++)
+    for (int y = 0; y < 8; y++)
     {
-        for (int8_t x = 0; x < 8; x++)
+        for (int x = 0; x < 8; x++)
         {
             Nappula* nappula = lauta[y][x];
             if (nappula != nullptr && nappula->getVari() == getSiirtovuoro())

@@ -12,8 +12,10 @@ public:
     static Kayttoliittyma& getInstance();
     
     void piirraLauta(bool mustaAlhaalla, const std::vector<Siirto>& siirrot = {}) const;
-    Siirto annaVastustajanSiirto() const;
-    int kysyVastustajanVari() const;
+    Siirto annaVastustajanSiirto();
+    int kysyVastustajanVari();
+    
+    bool tarkistaKomento(std::string komento);
     
     void lataaAsema();
     
@@ -24,7 +26,6 @@ public:
     
     bool getVaritaRuudut() const;
     void setVaritaRuudut(bool varita);
-    
 private:
     bool _varitaRuudut;
     Asema _asema;
