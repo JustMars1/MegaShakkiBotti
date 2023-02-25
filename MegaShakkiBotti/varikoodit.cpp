@@ -5,7 +5,7 @@ std::string tekstivari(Vari vari)
 {
     if (Kayttoliittyma::getInstance().getVaritaRuudut())
     {
-        return std::string("\033[") + std::to_string(vari) + "m";
+        return std::string("\033[38;5;") + std::to_string(vari) + "m";
     }
     else
     {
@@ -16,7 +16,7 @@ std::string taustavari(Vari vari)
 {
     if (Kayttoliittyma::getInstance().getVaritaRuudut())
     {
-        return std::string("\033[") + std::to_string(vari + 10) + "m";
+        return std::string("\033[48;5;") + std::to_string(vari) + "m";
     }
     else
     {
