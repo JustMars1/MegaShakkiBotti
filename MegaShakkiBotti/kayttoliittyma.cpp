@@ -293,7 +293,7 @@ void Kayttoliittyma::piirra(const Peli& peli) const
                     }
                     case SIIRTO_RUUTU:
                     {
-                        cout << taustavari(kirkkaan_sininen);
+                        cout << taustavari(tumman_harmaa);
                         break;
                     }
                     case VIIMEISIN_SIIRTO_RUUTU:
