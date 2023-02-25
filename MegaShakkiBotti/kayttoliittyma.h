@@ -1,7 +1,6 @@
 #pragma once
-#include "asema.h"
-#include "nappula.h"
-#include "siirto.h"
+#include <optional>
+#include "peli.h"
 
 // Shakkiohjelman käyttöliittymä, joka osaa visualisoida nykyisen aseman
 // ja lukea käyttäjän syöttämät siirrot. Singleton.
@@ -11,24 +10,25 @@ class Kayttoliittyma
 public:
     static Kayttoliittyma& getInstance();
     
-    void piirraLauta(bool mustaAlhaalla, const std::vector<Siirto>& siirrot = {}) const;
-    Siirto annaVastustajanSiirto();
-    int kysyVastustajanVari();
+    Peli kysyPeli() const;
+    void kysyPelimuoto(Peli& peli) const;
+    std::optional<Peli> kysyFEN() const;
     
-    bool tarkistaKomento(std::string komento);
+    Siirto kysyVastustajanSiirto();
     
-    void lataaAsema();
+    void piirra(const Peli& peli) const;
+    bool tarkistaKomento(std::string komento, const Peli& peli) const;
     
-    static void tulostaVirhe(std::string virhe);
-    
-    const Asema& getAsema() const;
-    Asema& getAsema();
+    void tulostaVirhe(std::string virhe) const;
     
     bool getVaritaRuudut() const;
     void setVaritaRuudut(bool varita);
+    
+    bool getOhjelmaKaynnissa() const;
+    void suljeOhjelma();
 private:
     bool _varitaRuudut;
-    Asema _asema;
+    bool _ohjelmaKaynnissa;
     
     Kayttoliittyma();
 };

@@ -11,12 +11,12 @@
 #include "ruutu.h"
 #include "kayttoliittyma.h"
 
-Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK, 0.0f,   8, 'k', 'K');
-Daami Asema::vd = Daami(      "\xe2\x99\x95", 0, VD, 9.0f,  27, 'd', 'Q');
-Torni Asema::vt = Torni(      "\xe2\x99\x96", 0, VT, 5.0f,  14, 't', 'R');
-Lahetti Asema::vl = Lahetti(  "\xe2\x99\x97", 0, VL, 3.25f, 13, 'l', 'B');
-Ratsu Asema::vr = Ratsu(      "\xe2\x99\x98", 0, VR, 3.0f,   8, 'r', 'N');
-Sotilas Asema::vs = Sotilas(  "\xe2\x99\x99", 0, VS, 1.0f,   4, 's', 'P');
+Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK, 0.0f,   8, 'K', 'K');
+Daami Asema::vd = Daami(      "\xe2\x99\x95", 0, VD, 9.0f,  27, 'D', 'Q');
+Torni Asema::vt = Torni(      "\xe2\x99\x96", 0, VT, 5.0f,  14, 'T', 'R');
+Lahetti Asema::vl = Lahetti(  "\xe2\x99\x97", 0, VL, 3.25f, 13, 'L', 'B');
+Ratsu Asema::vr = Ratsu(      "\xe2\x99\x98", 0, VR, 3.0f,   8, 'R', 'N');
+Sotilas Asema::vs = Sotilas(  "\xe2\x99\x99", 0, VS, 1.0f,   4, 'S', 'P');
 
 Kuningas Asema::mk = Kuningas("\xe2\x99\x9a", 1, MK, 0.0f,    8, 'k', 'k');
 Daami Asema::md = Daami(      "\xe2\x99\x9b", 1, MD, -9.0f,  27, 'd', 'q');
@@ -25,40 +25,10 @@ Lahetti Asema::ml = Lahetti(  "\xe2\x99\x9d", 1, ML, -3.25f, 13, 'l', 'b');
 Ratsu Asema::mr = Ratsu(      "\xe2\x99\x9e", 1, MR, -3.0f,   8, 'r', 'n');
 Sotilas Asema::ms = Sotilas(  "\xe2\x99\x9f", 1, MS, -1.0f,   4, 's', 'p');
 
-const std::unordered_map<char, Nappula*> Asema::valkeaNappulaMap =
+std::array<Nappula*, NappulaKoodiMaara> Asema::nappulat =
 {
-    {'k', &vk},
-    {'d', &vd},
-    {'t', &vt},
-    {'l', &vl},
-    {'r', &vr},
-    {'s', &vs}
-};
-
-const std::unordered_map<char, Nappula*> Asema::mustaNappulaMap =
-{
-    {'k', &mk},
-    {'d', &md},
-    {'t', &mt},
-    {'l', &ml},
-    {'r', &mr},
-    {'s', &ms}
-};
-
-const std::unordered_map<char, Nappula*> Asema::fenNappulaMap =
-{
-    {'r', &mt},
-    {'n', &mr},
-    {'b', &ml},
-    {'q', &md},
-    {'k', &mk},
-    {'p', &ms},
-    {'R', &vt},
-    {'N', &vr},
-    {'B', &vl},
-    {'Q', &vd},
-    {'K', &vk},
-    {'P', &vs}
+    &vt, &vr, &vl, &vd, &vk, &vs,
+    &mt, &mr, &ml, &md, &mk, &ms
 };
 
 const float Asema::maxArvo = vd.getArvo() + vt.getArvo() * 2 + vl.getArvo() * 2 + vr.getArvo() * 2 + vs.getArvo() * 8;
@@ -291,24 +261,25 @@ void Asema::paivitaAsema(const Siirto& siirto)
 
 bool Asema::tarkistaSiirto(const Siirto& siirto) const
 {
+    auto& kayttoliittyma = Kayttoliittyma::getInstance();
     if (siirto.onkoLyhytLinna())
     {
         if (_siirtovuoro == 0)
         {
             if (onkoValkeaKuningasLiikkunut())
             {
-                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
+                kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
                 return false;
             }
             
             if (onkoValkeaKTliikkunut())
             {
-                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
+                kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
             }
             
             if (lauta[0][5] != nullptr || lauta[0][6] != nullptr)
             {
-                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, siihen ei ole tilaa.");
+                kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, siihen ei ole tilaa.");
                 return false;
             }
         }
@@ -316,18 +287,18 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
         {
             if (onkoMustaKuningasLiikkunut())
             {
-                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
+                kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
                 return false;
             }
             
             if (onkoMustaKTliikkunut())
             {
-                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
+                kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
             }
             
             if (lauta[7][5] != nullptr || lauta[7][6] != nullptr)
             {
-                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, siihen ei ole tilaa.");
+                kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, siihen ei ole tilaa.");
                 return false;
             }
         }
@@ -338,18 +309,18 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
         {
             if (onkoValkeaKuningasLiikkunut())
             {
-                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
+                kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
                 return false;
             }
             
             if (onkoValkeaDTliikkunut())
             {
-                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
+                kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
             }
             
             if (lauta[0][3] != nullptr || lauta[0][2] != nullptr || lauta[0][1] != nullptr)
             {
-                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, siihen ei ole tilaa.");
+                kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, siihen ei ole tilaa.");
                 return false;
             }
         }
@@ -357,18 +328,18 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
         {
             if (onkoMustaKuningasLiikkunut())
             {
-                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
+                kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
                 return false;
             }
             
             if (onkoMustaDTliikkunut())
             {
-                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
+                kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
             }
             
             if (lauta[7][3] != nullptr || lauta[7][2] != nullptr || lauta[7][1] != nullptr)
             {
-                Kayttoliittyma::tulostaVirhe("Tornitus ei ole mahdollinen, siihen ei ole tilaa.");
+                kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, siihen ei ole tilaa.");
                 return false;
             }
         }
@@ -380,25 +351,25 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
         
         if (!alku.ok())
         {
-            Kayttoliittyma::tulostaVirhe("Siirron alkuruutu on laudan ulkopuolella.");
+            kayttoliittyma.tulostaVirhe("Siirron alkuruutu on laudan ulkopuolella.");
         }
         
         if (!loppu.ok())
         {
-            Kayttoliittyma::tulostaVirhe("Siirron loppuruutu on laudan ulkopuolella.");
+            kayttoliittyma.tulostaVirhe("Siirron loppuruutu on laudan ulkopuolella.");
         }
         
         Nappula* nappula = lauta[alku.getRivi()][alku.getSarake()];
         
         if (nappula == nullptr)
         {
-            Kayttoliittyma::tulostaVirhe("Siirron alkuruudussa ei ole nappulaa.");
+            kayttoliittyma.tulostaVirhe("Siirron alkuruudussa ei ole nappulaa.");
             return false;
         }
         
         if (nappula->getVari() != _siirtovuoro)
         {
-            Kayttoliittyma::tulostaVirhe("Et voi siirtää vastustajan nappulaa.");
+            kayttoliittyma.tulostaVirhe("Et voi siirtää vastustajan nappulaa.");
             return false;
         }
     }
@@ -413,7 +384,7 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
     }
     else
     {
-        Kayttoliittyma::tulostaVirhe("Siirto ei ole laillinen.");
+        kayttoliittyma.tulostaVirhe("Siirto ei ole laillinen.");
         return false;
     }
 }
@@ -1189,4 +1160,11 @@ void Asema::annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const
     
     annaLinnoitusSiirrot(siirrot, _siirtovuoro);
     huolehdiKuninkaanShakeista(siirrot);
+}
+
+std::vector<Siirto> Asema::annaLaillisetSiirrot() const
+{
+    std::vector<Siirto> siirrot;
+    annaLaillisetSiirrot(siirrot);
+    return siirrot;
 }

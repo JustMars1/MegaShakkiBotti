@@ -17,7 +17,9 @@
 
 using namespace std;
 
-Kayttoliittyma::Kayttoliittyma() : _varitaRuudut{true} {}
+Kayttoliittyma::Kayttoliittyma()
+: _ohjelmaKaynnissa{true}
+, _varitaRuudut{true} {}
 
 Kayttoliittyma& Kayttoliittyma::getInstance()
 {
@@ -25,178 +27,228 @@ Kayttoliittyma& Kayttoliittyma::getInstance()
     return instance;
 }
 
-const Asema& Kayttoliittyma::getAsema() const { return _asema; }
-Asema& Kayttoliittyma::getAsema() { return _asema; }
-
 bool Kayttoliittyma::getVaritaRuudut() const { return _varitaRuudut; }
 void Kayttoliittyma::setVaritaRuudut(bool varita)
 {
     _varitaRuudut = varita;
 }
 
-void Kayttoliittyma::lataaAsema()
+bool Kayttoliittyma::getOhjelmaKaynnissa() const
 {
-    cout << "Ladataanko asema? (0 = ei, 1 = joo)\n";
-    
-    bool lataa = false;
-    while(true)
+    return _ohjelmaKaynnissa;
+}
+
+void Kayttoliittyma::suljeOhjelma()
+{
+    _ohjelmaKaynnissa = false;
+}
+
+Peli Kayttoliittyma::kysyPeli() const
+{
+    optional<Peli> peli = nullopt;
+    while(!peli.has_value())
     {
-        int syote;
-        cin >> syote;
+        cout << "0 = uusi peli\n1 = lataa peli\nValitse ladataanko peli: ";
         
-        if (cin.fail())
-        {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
-        else if (syote == 0 || syote == 1)
-        {
-            lataa = syote;
-            break;
-        }
-    }
-    
-    if (lataa)
-    {
+        bool lataaPeli = false;
         while(true)
         {
-            cout << "Anna FEN: ";
-            
-            cin.ignore();
-            cin.sync();
-            string fen;
-            getline(cin, fen);
+            int syote;
+            cin >> syote;
             
             if (cin.fail())
             {
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
             }
+            else if (syote == 0 || syote == 1)
+            {
+                lataaPeli = syote;
+                break;
+            }
+        }
+        
+        if (lataaPeli)
+        {
+            peli = kysyFEN();
+        }
+        else
+        {
+            peli = Peli();
+        }
+    }
+    
+    return peli.value();
+}
+
+void Kayttoliittyma::kysyPelimuoto(Peli& peli) const
+{
+    cout << "0 = pelaaja vs kone\n1 = kone vs kone\n2 = pelaaja vs pelaaja\nValitse pelimuoto: ";
+    
+    enum Pelimuoto
+    {
+        PELAAJA_VS_KONE = 0,
+        KONE_VS_KONE = 1,
+        PELAAJA_VS_PELAAJA = 2
+    };
+    
+    int pelimuoto;
+    while(true)
+    {
+        cin >> pelimuoto;
+        
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        else if (pelimuoto == 0 || pelimuoto == 1 || pelimuoto == 2)
+        {
+            break;
+        }
+    }
+    
+    switch (pelimuoto)
+    {
+        case PELAAJA_VS_KONE:
+        {
+            cout << "\n0 = valkoinen\n1 = musta\nValitse kummalla v\xc3\xa4rill\xc3\xa4 pelaat: ";
+            
+            int pelaajanVari = -1;
+            while(true)
+            {
+                cin >> pelaajanVari;
+                
+                if (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                }
+                else if (pelaajanVari == 0 || pelaajanVari == 1)
+                {
+                    break;
+                }
+            }
+            
+            cout << "\n[1, " << numeric_limits<int>::max() << "] = hakusyvyys\nValitse koneen hakusyvyys: ";
+            int syvyys = -1;
+            while(true)
+            {
+                cin >> syvyys;
+                
+                if (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                }
+                else if (syvyys > 0)
+                {
+                    break;
+                }
+            }
+            
+            
+            if (pelaajanVari == 0)
+            {
+                peli.valkoinen = Pelaaja(false, 0);
+                peli.musta = Pelaaja(true, syvyys);
+            }
             else
             {
-                enum Vaihe
-                {
-                    SIJAINTI_VAIHE = 0,
-                    VUORO_VAIHE = 1,
-                    LINNOITUS_VAIHE = 2,
-                    OHESTALYONTI_VAIHE = 3
-                };
-                
-                Asema uusiAsema({ nullptr });
-                uusiAsema.setMustaDTliikkunut(true);
-                uusiAsema.setMustaKTliikkunut(true);
-                uusiAsema.setMustaKuningasLiikkunut(true);
-                uusiAsema.setValkeaDTliikkunut(true);
-                uusiAsema.setValkeaKTliikkunut(true);
-                uusiAsema.setValkeaKuningasLiikkunut(true);
-                
-                int x = 0, y = 0;
-                
-                int vaihe = SIJAINTI_VAIHE;
-                
-                for (int i = 0; i < fen.size(); i++)
-                {
-                    char kirjain = fen[i];
-                    if (isspace(kirjain))
-                    {
-                        vaihe++;
-                        continue;
-                    }
-                    
-                    switch (vaihe) {
-                        case SIJAINTI_VAIHE:
-                            if (isdigit(kirjain))
-                            {
-                                x += kirjain - '0';
-                            }
-                            else
-                            {
-                                if (kirjain != '/')
-                                {
-                                    Nappula* nappula = Asema::fenNappulaMap.at(kirjain);
-                                    
-                                    if (nappula == &Asema::vk)
-                                    {
-                                        uusiAsema.setValkeanKuninkaanRuutu(Ruutu(x, 8 - y - 1));
-                                    }
-                                    else if (nappula == &Asema::mk)
-                                    {
-                                        uusiAsema.setMustanKuninkaanRuutu(Ruutu(x, 8 - y - 1));
-                                    }
-                                    
-                                    uusiAsema.lauta[8 - y - 1][x] = nappula;
-                                    x++;
-                                }
-                            }
-                            
-                            y += x / 8;
-                            x %= 8;
-                            break;
-                        case VUORO_VAIHE:
-                            if (kirjain == 'w')
-                            {
-                                uusiAsema.setSiirtovuoro(0);
-                            }
-                            else if (kirjain == 'b')
-                            {
-                                uusiAsema.setSiirtovuoro(1);
-                            }
-                            else
-                            {
-                                tulostaVirhe("Virheellinen FEN vuoro");
-                            }
-                            break;
-                        case LINNOITUS_VAIHE:
-                            switch (kirjain) {
-                                case 'K':
-                                    uusiAsema.setValkeaKTliikkunut(false);
-                                    uusiAsema.setValkeaKuningasLiikkunut(false);
-                                    break;
-                                case 'Q':
-                                    uusiAsema.setValkeaDTliikkunut(false);
-                                    uusiAsema.setValkeaKuningasLiikkunut(false);
-                                    break;
-                                case 'k':
-                                    uusiAsema.setMustaKTliikkunut(false);
-                                    uusiAsema.setMustaKuningasLiikkunut(false);
-                                    break;
-                                case 'q':
-                                    uusiAsema.setMustaDTliikkunut(false);
-                                    uusiAsema.setMustaKuningasLiikkunut(false);
-                                    break;
-                            }
-                            break;
-                        case OHESTALYONTI_VAIHE:
-                            constexpr std::string_view aakkoset = "abcdefgh";
-                            
-                            for (char aakkonen : aakkoset)
-                            {
-                                if (kirjain == aakkonen)
-                                {
-                                    uusiAsema.setKaksoisaskelSarake(kirjain - 'a');
-                                }
-                            }
-                            
-                            break;
-                    }
-                }
-                
-                _asema = uusiAsema;
-                return;
+                peli.valkoinen = Pelaaja(true, syvyys);
+                peli.musta = Pelaaja(false, 0);
             }
+            
+            break;
+        }
+        case KONE_VS_KONE:
+        {
+            cout << "\n[1, " << numeric_limits<int>::max() << "] = valkoisen hakusyvyys\nValitse valkoisen hakusyvyys: ";
+            int valkoisenSyvyys = -1;
+            while(true)
+            {
+                cin >> valkoisenSyvyys;
+                
+                if (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                }
+                else if (valkoisenSyvyys > 0)
+                {
+                    break;
+                }
+            }
+            
+            cout << "\n[1, " << numeric_limits<int>::max() << "] = mustan hakusyvyys\nValitse mustan hakusyvyys: ";
+            int mustanSyvyys = -1;
+            while(true)
+            {
+                cin >> mustanSyvyys;
+                
+                if (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                }
+                else if (mustanSyvyys > 0)
+                {
+                    break;
+                }
+            }
+            
+            peli.valkoinen = Pelaaja(true, valkoisenSyvyys);
+            peli.musta = Pelaaja(true, mustanSyvyys);
+            break;
+        }
+        case PELAAJA_VS_PELAAJA:
+        {
+            peli.valkoinen = Pelaaja(false, 0);
+            peli.musta = Pelaaja(false, 0);
+            break;
         }
     }
 }
 
-void Kayttoliittyma::piirraLauta(bool mustaAlhaalla, const vector<Siirto>& siirrot) const
+void Kayttoliittyma::piirra(const Peli& peli) const
 {
-    bool siirtoRuudut[8][8] = { false };
+    enum RuutuTyyppi
+    {
+        TAVALLINEN_RUUTU,
+        SIIRTO_RUUTU,
+        VIIMEISIN_SIIRTO_RUUTU
+    };
+    
+    vector<Siirto> siirrot = peli.asema.annaLaillisetSiirrot();
+    RuutuTyyppi ruutujenTyypit[8][8] = { TAVALLINEN_RUUTU };
     
     for (auto& siirto : siirrot)
     {
         int x = siirto.getLoppuruutu().getSarake();
         int y = siirto.getLoppuruutu().getRivi();
-        siirtoRuudut[y][x] = true;
+        ruutujenTyypit[y][x] = SIIRTO_RUUTU;
+    }
+    
+    if (peli.viimeisinSiirto.has_value())
+    {
+        int x = peli.viimeisinSiirto.value().getAlkuruutu().getSarake();
+        int y = peli.viimeisinSiirto.value().getAlkuruutu().getRivi();
+        ruutujenTyypit[y][x] = VIIMEISIN_SIIRTO_RUUTU;
+        
+        x = peli.viimeisinSiirto.value().getLoppuruutu().getSarake();
+        y = peli.viimeisinSiirto.value().getLoppuruutu().getRivi();
+        ruutujenTyypit[y][x] = VIIMEISIN_SIIRTO_RUUTU;
+    }
+    
+    bool mustaAlhaalla = false;
+    
+    if (!peli.musta.onkoKone && peli.valkoinen.onkoKone)
+    {
+        mustaAlhaalla = true;
+    }
+    else if (!peli.musta.onkoKone && !peli.musta.onkoKone)
+    {
+        mustaAlhaalla = peli.asema.getSiirtovuoro() == 1;
     }
     
     for (int rivi = 0; rivi < 8; rivi++)
@@ -208,37 +260,55 @@ void Kayttoliittyma::piirraLauta(bool mustaAlhaalla, const vector<Siirto>& siirr
             int x = mustaAlhaalla ? 8 - sarake - 1 : sarake;
             
             // Joka toinen rivi valkoinen
+            
             if ((x + y) % 2 == 0)
             {
                 cout << tekstivari(musta);
-                if (siirtoRuudut[y][x])
-                {
-                    cout << taustavari(punainen);
-                }
-                else
-                {
-                    cout << taustavari(turkoosi);
+                switch (ruutujenTyypit[y][x]) {
+                    case TAVALLINEN_RUUTU:
+                    {
+                        cout << taustavari(turkoosi);
+                        break;
+                    }
+                    case SIIRTO_RUUTU:
+                    {
+                        cout << taustavari(sininen);
+                        break;
+                    }
+                    case VIIMEISIN_SIIRTO_RUUTU:
+                    {
+                        cout << taustavari(purppura);
+                        break;
+                    }
                 }
             }
             else
             {
                 cout << tekstivari(musta);
-                if (siirtoRuudut[y][x])
-                {
-                    cout << taustavari(kirkkaan_punainen);
-                }
-                else
-                {
-                    cout << taustavari(valkoinen);
+                switch (ruutujenTyypit[y][x]) {
+                    case TAVALLINEN_RUUTU:
+                    {
+                        cout << taustavari(valkoinen);
+                        break;
+                    }
+                    case SIIRTO_RUUTU:
+                    {
+                        cout << taustavari(kirkkaan_sininen);
+                        break;
+                    }
+                    case VIIMEISIN_SIIRTO_RUUTU:
+                    {
+                        cout << taustavari(kirkkaan_purppura);
+                        break;
+                    }
                 }
             }
             
             string merkki = " ";
             
-            // Jos NULL niin printataan tyhjä paikka.
-            if (_asema.lauta[y][x] != nullptr)
+            if (peli.asema.lauta[y][x] != nullptr)
             {
-                merkki = _asema.lauta[y][x]->getMerkki();
+                merkki = peli.asema.lauta[y][x]->getMerkki();
             }
             
             cout << " " << merkki << " ";
@@ -268,33 +338,31 @@ void Kayttoliittyma::piirraLauta(bool mustaAlhaalla, const vector<Siirto>& siirr
  muodollisesti korrekti (ei tarkista aseman laillisuutta)
  Ottaa irti myös nappulan kirjaimen (K/D/L/R/T), tarkistaa että kirjain korrekti
  */
-Siirto Kayttoliittyma::annaVastustajanSiirto()
+Siirto Kayttoliittyma::kysyVastustajanSiirto()
 {
     auto tarkistaNappula = [this](char kirjain) -> Nappula*
     {
         kirjain = tolower(kirjain);
         
-        if (_asema.getSiirtovuoro() == 0) {
-            if (Asema::valkeaNappulaMap.find(kirjain) != Asema::valkeaNappulaMap.end())
-            {
-                return Asema::valkeaNappulaMap.at(kirjain);
-            }
-        }
-        
-        if (Asema::mustaNappulaMap.find(kirjain) != Asema::mustaNappulaMap.end())
+        for (auto nappula : Asema::nappulat)
         {
-            return Asema::mustaNappulaMap.at(kirjain);
+            char nappulaKirjain = nappula->getKirjainSuomi();
+            if (tolower(nappulaKirjain) != kirjain)
+            {
+                return nappula;
+            }
         }
         
         return nullptr;
     };
+    
     
     while(true)
     {
         if (cin.fail())
         {
             cin.clear();
-            cin.ignore(std::numeric_limits<streamsize>::max(), '\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
         else
         {
@@ -318,7 +386,7 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
             return Siirto(lyhytLinna, pitkaLinna);
         }
         
-        if (!tarkistaKomento(syote) && syote.length() == 6)
+        if (syote.length() == 6)
         {
             char nappulaKirjain = 'i';
             
@@ -333,7 +401,7 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
             loppu.setRivi(syote[5] - '0' - 1);
             
             Nappula* nappula = tarkistaNappula(nappulaKirjain);
-            if (alku.ok() && loppu.ok() && nappula != nullptr && _asema.lauta[alku.getRivi()][alku.getSarake()] == nappula)
+            if (alku.ok() && loppu.ok() && nappula != nullptr)
             {
                 Siirto siirto(alku, loppu);
                 if ((nappula == &Asema::ms && loppu.getRivi() == 0) || (nappula == &Asema::vs && loppu.getRivi() == 7))
@@ -344,7 +412,7 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
                         if (cin.fail())
                         {
                             cin.clear();
-                            cin.ignore(std::numeric_limits<streamsize>::max(), '\n');
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
                         }
                         else
                         {
@@ -374,33 +442,12 @@ Siirto Kayttoliittyma::annaVastustajanSiirto()
     }
 }
 
-void Kayttoliittyma::tulostaVirhe(string virhe)
+void Kayttoliittyma::tulostaVirhe(string virhe) const
 {
     cout << tekstivari(punainen) << "! " << virhe <<  " !" << resetoiVarit() << endl;
 }
 
-int Kayttoliittyma::kysyVastustajanVari()
-{
-    cout << "Kummalla v\xc3\xa4rill\xc3\xa4 pelaat? (0 = valkoinen, 1 = musta)\n";
-    
-    while(true)
-    {
-        int pelaajanVari;
-        cin >> pelaajanVari;
-        
-        if (cin.fail())
-        {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
-        else if (pelaajanVari == 0 || pelaajanVari == 1)
-        {
-            return pelaajanVari;
-        }
-    }
-}
-
-bool Kayttoliittyma::tarkistaKomento(std::string komento)
+bool Kayttoliittyma::tarkistaKomento(string komento, const Peli& peli) const
 {
     for (char& kirjain : komento)
     {
@@ -409,8 +456,7 @@ bool Kayttoliittyma::tarkistaKomento(std::string komento)
     
     if (komento == "siirrot")
     {
-        std::vector<Siirto> siirrot;
-        _asema.annaLaillisetSiirrot(siirrot);
+        vector<Siirto> siirrot = peli.asema.annaLaillisetSiirrot();
         
         for (Siirto& siirto : siirrot)
         {
@@ -418,7 +464,7 @@ bool Kayttoliittyma::tarkistaKomento(std::string komento)
             {
                 int y = siirto.getAlkuruutu().getRivi();
                 int x = siirto.getAlkuruutu().getSarake();
-                char kirjain = toupper(_asema.lauta[y][x]->getKirjainSuomi());
+                char kirjain = toupper(peli.asema.lauta[y][x]->getKirjainSuomi());
                 cout << kirjain;
             }
             
@@ -429,4 +475,188 @@ bool Kayttoliittyma::tarkistaKomento(std::string komento)
     }
     
     return false;
+}
+
+optional<Peli> Kayttoliittyma::kysyFEN() const
+{
+    cout << "Anna FEN: ";
+    
+    Peli peli;
+    peli.asema = Asema({nullptr});
+    peli.asema.setMustaDTliikkunut(true);
+    peli.asema.setMustaKTliikkunut(true);
+    peli.asema.setMustaKuningasLiikkunut(true);
+    peli.asema.setValkeaDTliikkunut(true);
+    peli.asema.setValkeaKTliikkunut(true);
+    peli.asema.setValkeaKuningasLiikkunut(true);
+    
+    // Lauta
+    
+    string lauta;
+    cin >> lauta;
+    
+    int x = 0, y = 0;
+    
+    for (char kirjain : lauta)
+    {
+        if (isdigit(kirjain))
+        {
+            x += kirjain - '0';
+        }
+        else if (kirjain != '/')
+        {
+            auto nappulaItr = find_if(Asema::nappulat.begin(), Asema::nappulat.end(), [kirjain](auto nappula) {
+                return nappula->getKirjainEnglanti() == kirjain;
+            });
+            
+            if (nappulaItr == Asema::nappulat.end())
+            {
+                tulostaVirhe("Virheellinen FEN (lauta)");
+                return nullopt;
+            }
+            
+            int rivi = 8 - y - 1;
+            
+            if (*nappulaItr == &Asema::vk)
+            {
+                peli.asema.setValkeanKuninkaanRuutu(Ruutu(x, rivi));
+            }
+            else if (*nappulaItr == &Asema::mk)
+            {
+                peli.asema.setMustanKuninkaanRuutu(Ruutu(x, rivi));
+            }
+            
+            peli.asema.lauta[rivi][x] = *nappulaItr;
+            x++;
+        }
+        
+        y += x / 8;
+        x %= 8;
+    }
+    
+    // Vuoro
+    
+    char vuoro = 'e';
+    cin >> vuoro;
+    
+    if (vuoro == 'w')
+    {
+        peli.asema.setSiirtovuoro(0);
+    }
+    else if (vuoro == 'b')
+    {
+        peli.asema.setSiirtovuoro(1);
+    }
+    else
+    {
+        tulostaVirhe("Virheellinen FEN (vuoro)");
+        return nullopt;
+    }
+    
+    // Linnoitus
+    
+    string linnoitus;
+    cin >> linnoitus;
+    
+    if (linnoitus != "-")
+    {
+        for (char kirjain : linnoitus)
+        {
+            switch (kirjain) {
+                case 'K':
+                {
+                    peli.asema.setValkeaKTliikkunut(false);
+                    peli.asema.setValkeaKuningasLiikkunut(false);
+                    break;
+                }
+                case 'Q':
+                {
+                    peli.asema.setValkeaDTliikkunut(false);
+                    peli.asema.setValkeaKuningasLiikkunut(false);
+                    break;
+                }
+                case 'k':
+                {
+                    peli.asema.setMustaKTliikkunut(false);
+                    peli.asema.setMustaKuningasLiikkunut(false);
+                    break;
+                }
+                case 'q':
+                {
+                    peli.asema.setMustaDTliikkunut(false);
+                    peli.asema.setMustaKuningasLiikkunut(false);
+                    break;
+                }
+                default:
+                {
+                    tulostaVirhe("Virheellinen FEN (linnoitus)");
+                    return nullopt;
+                }
+            }
+        }
+    }
+    
+    // Ohestalyonti
+    
+    string ohestalyonti;
+    cin >> ohestalyonti;
+    
+    if (ohestalyonti != "-")
+    {
+        if (ohestalyonti.length() == 2)
+        {
+            int sarake = ohestalyonti[0] - 'a';
+            if (sarake >= 0 && sarake < 7)
+            {
+                peli.asema.setKaksoisaskelSarake(sarake);
+            }
+            else
+            {
+                tulostaVirhe("Virheellinen FEN (ohestalyonti, sarake)");
+                return nullopt;
+            }
+            
+            int rivi = ohestalyonti[1] - '0';
+            
+            if (rivi < 0 || rivi > 7)
+            {
+                tulostaVirhe("Virheellinen FEN (ohestalyonti, rivi)");
+                return nullopt;
+            }
+        }
+    }
+    
+    // Siirtolaskuri
+    
+    int siirtolaskuri = -1;
+    cin >> siirtolaskuri;
+    
+    if (cin.fail())
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    
+    if (siirtolaskuri < 0)
+    {
+        tulostaVirhe("Virheellinen FEN (siirtolaskuri)");
+        return nullopt;
+    }
+    
+    int vuorolaskuri = -1;
+    cin >> vuorolaskuri;
+    
+    if (cin.fail())
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    
+    if (vuorolaskuri < 0)
+    {
+        tulostaVirhe("Virheellinen FEN (vuorolaskuri)");
+        return nullopt;
+    }
+    
+    return peli;
 }

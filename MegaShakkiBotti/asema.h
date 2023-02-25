@@ -35,10 +35,7 @@ public:
     
     // Ohestalyöntiä varten (-1 = sotilaan kaksoisaskelta ei tapahtunut edellisellä siirrolla).
     
-    static const std::unordered_map<char, Nappula*> valkeaNappulaMap;
-    static const std::unordered_map<char, Nappula*> mustaNappulaMap;
-    
-    static const std::unordered_map<char, Nappula*> fenNappulaMap;
+    static std::array<Nappula*, NappulaKoodiMaara> nappulat;
     
     static const float maxArvo;
     
@@ -96,7 +93,8 @@ public:
     
     std::vector<size_t> jaaSiirrotSaikeidenKesken(size_t siirtoMaara) const;
     
-    void annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const;    // Siirtogeneraattori.
+    void annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const;
+    std::vector<Siirto> annaLaillisetSiirrot() const;
 private:
     // Lisäinformaatio pelitilanteesta.
     int _siirtovuoro;                    // 0 = valkea, 1 = musta.

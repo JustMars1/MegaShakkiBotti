@@ -33,9 +33,6 @@ int main(int argc, char* argv[])
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOut, dwMode);
 #endif
-    setlocale(LC_ALL, "fi_FI.UTF-8");
-    cout.imbue(locale());
-    
     auto& kayttoliittyma = Kayttoliittyma::getInstance();
     
     for (int i = 0; i < argc; i++)
@@ -46,93 +43,92 @@ int main(int argc, char* argv[])
         }
     }
     
-    kayttoliittyma.lataaAsema();
-    
-    int pelaajanVari = kayttoliittyma.kysyVastustajanVari();
-    int koneenVari = 1 - pelaajanVari;
-    
-    auto& asema = kayttoliittyma.getAsema();
-    vector<Siirto> siirrot;
-    siirrot.reserve(100);
-    
-    while (true)
+    while(kayttoliittyma.getOhjelmaKaynnissa())
     {
-        cout << "Siirtovuoro: ";
-        if (asema.getSiirtovuoro() == 0)
-        {
-            cout << "Valkoinen\n";
-        }
-        else
-        {
-            cout << "Musta\n";
-        }
+        Peli peli = kayttoliittyma.kysyPeli();
+        cout << endl;
+        kayttoliittyma.kysyPelimuoto(peli);
+        cout << endl;
         
-        cout << "Laudan arvo: " << asema.evaluoi() << endl;
-        asema.annaLaillisetSiirrot(siirrot);
-        kayttoliittyma.piirraLauta(koneenVari == 0, siirrot);
-        siirrot.clear();
-        
-        Siirto siirto;
-        bool ok = false;
-        
-        while(!ok)
+        while (kayttoliittyma.getOhjelmaKaynnissa())
         {
-            if (asema.getSiirtovuoro() == koneenVari)
+            cout << "Siirtovuoro: ";
+            if (peli.asema.getSiirtovuoro() == 0)
             {
-                MinMaxPaluu minimax;
-                int syvyys = 6;
-                
-                {
-                    Ajastin ajastin("alphabetaMinimaxAsync");
-                    minimax = asema.alphabetaMinimaxAsync(syvyys);
-                }
-//                
-//                cout << minimax << endl;
-//                
-//                {
-//                    Ajastin ajastin("alphabetaMinimax");
-//                    minimax = asema.alphabetaMinimax(syvyys);
-//                }
-//                
-//                cout << minimax << endl;
-//                
-//                {
-//                    Ajastin ajastin("minimaxAsync");
-//                    minimax = asema.minimaxAsync(syvyys);
-//                }
-//                
-//                cout << minimax << endl;
-//                
-//                {
-//                    Ajastin ajastin("minimax");
-//                    minimax = asema.minimax(syvyys);
-//                }
-//                
-//                cout << minimax << endl;
-                
-                siirto = minimax.parasSiirto;
-                
-                cout << "Koneen siirto: ";
-                
-                if (!siirto.onkoLyhytLinna() && !siirto.onkoPitkaLinna())
-                {
-                    int y = siirto.getAlkuruutu().getRivi();
-                    int x = siirto.getAlkuruutu().getSarake();
-                    char kirjain = toupper(asema.lauta[y][x]->getKirjainSuomi());
-                    cout << kirjain;
-                }
-                
-                cout << siirto << endl;
+                cout << "Valkoinen\n";
             }
             else
             {
-                siirto = kayttoliittyma.annaVastustajanSiirto();
+                cout << "Musta\n";
             }
             
-            ok = asema.tarkistaSiirto(siirto);
+            cout << "Laudan arvo: " << peli.asema.evaluoi() << endl;
+            kayttoliittyma.piirra(peli);
+            
+            Siirto siirto;
+            bool ok = false;
+            
+            while(!ok)
+            {
+                Pelaaja& pelaaja = peli.asema.getSiirtovuoro() == 0 ? peli.valkoinen : peli.musta;
+                if (pelaaja.onkoKone)
+                {
+                    MinMaxPaluu minimax;
+                    int syvyys = pelaaja.syvyys;
+                    
+                    {
+                        Ajastin ajastin("alphabetaMinimaxAsync");
+                        minimax = peli.asema.alphabetaMinimaxAsync(syvyys);
+                    }
+                    
+//                    cout << minimax << endl;
+//                    
+//                    {
+//                        Ajastin ajastin("alphabetaMinimax");
+//                        minimax = peli.asema.alphabetaMinimax(syvyys);
+//                    }
+//                    
+//                    cout << minimax << endl;
+//                    
+//                    {
+//                        Ajastin ajastin("minimaxAsync");
+//                        minimax = peli.asema.minimaxAsync(syvyys);
+//                    }
+//                    
+//                    cout << minimax << endl;
+//                    
+//                    {
+//                        Ajastin ajastin("minimax");
+//                        minimax = peli.asema.minimax(syvyys);
+//                    }
+//                    
+//                    cout << minimax << endl;
+                    
+                    siirto = minimax.parasSiirto;
+                    
+                    cout << "Koneen siirto: ";
+                    
+                    if (!siirto.onkoLyhytLinna() && !siirto.onkoPitkaLinna())
+                    {
+                        int y = siirto.getAlkuruutu().getRivi();
+                        int x = siirto.getAlkuruutu().getSarake();
+                        char kirjain = toupper(peli.asema.lauta[y][x]->getKirjainSuomi());
+                        cout << kirjain;
+                    }
+                    
+                    cout << siirto << endl;
+                }
+                else
+                {
+                    siirto = kayttoliittyma.kysyVastustajanSiirto();
+                }
+                
+                ok = peli.asema.tarkistaSiirto(siirto);
+            }
+            
+            peli.asema.paivitaAsema(siirto);
+            peli.viimeisinSiirto = siirto;
         }
-        
-        asema.paivitaAsema(siirto);
     }
     
     //int lopetus = 100;

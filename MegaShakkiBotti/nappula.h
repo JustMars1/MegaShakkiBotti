@@ -11,8 +11,9 @@ class Asema;
 // Vakioarvot nappulatyypeille.
 enum NappulaKoodi
 {
-    VT,VR,VL,VD,VK,VS,
-    MT,MR,ML,MD,MK,MS
+    VT, VR, VL, VD, VK, VS,
+    MT, MR, ML, MD, MK, MS,
+    NappulaKoodiMaara
 };
 
 // Yliluokka shakkinappuloille.

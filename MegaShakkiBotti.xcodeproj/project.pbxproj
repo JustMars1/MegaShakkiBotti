@@ -16,6 +16,8 @@
 		7AC2439C296D641000C589F0 /* kayttoliittyma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC2438B296D641000C589F0 /* kayttoliittyma.cpp */; };
 		7AC2439D296D641000C589F0 /* siirto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC2438F296D641000C589F0 /* siirto.cpp */; };
 		7AD75F942986E6E5001EC37C /* varikoodit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AD75F922986E6E5001EC37C /* varikoodit.cpp */; };
+		7ADF858629A8570300DD235C /* peli.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7ADF858429A8570300DD235C /* peli.cpp */; };
+		7ADF858929A857D000DD235C /* pelaaja.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7ADF858729A857D000DD235C /* pelaaja.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -52,6 +54,10 @@
 		7AC24395296D641000C589F0 /* evaluointi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = evaluointi.h; sourceTree = "<group>"; };
 		7AD75F922986E6E5001EC37C /* varikoodit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = varikoodit.cpp; sourceTree = "<group>"; };
 		7AD75F932986E6E5001EC37C /* varikoodit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = varikoodit.h; sourceTree = "<group>"; };
+		7ADF858429A8570300DD235C /* peli.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = peli.cpp; sourceTree = "<group>"; };
+		7ADF858529A8570300DD235C /* peli.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = peli.h; sourceTree = "<group>"; };
+		7ADF858729A857D000DD235C /* pelaaja.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pelaaja.cpp; sourceTree = "<group>"; };
+		7ADF858829A857D000DD235C /* pelaaja.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pelaaja.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +110,10 @@
 				7AD75F922986E6E5001EC37C /* varikoodit.cpp */,
 				7A778A88299B948100EAA155 /* ajastin.h */,
 				7A42553D299B993C00A0512A /* ajastin.cpp */,
+				7ADF858529A8570300DD235C /* peli.h */,
+				7ADF858429A8570300DD235C /* peli.cpp */,
+				7ADF858829A857D000DD235C /* pelaaja.h */,
+				7ADF858729A857D000DD235C /* pelaaja.cpp */,
 			);
 			path = MegaShakkiBotti;
 			sourceTree = "<group>";
@@ -168,12 +178,14 @@
 				7AD75F942986E6E5001EC37C /* varikoodit.cpp in Sources */,
 				7AC24398296D641000C589F0 /* asema.cpp in Sources */,
 				7A42553E299B993C00A0512A /* ajastin.cpp in Sources */,
+				7ADF858629A8570300DD235C /* peli.cpp in Sources */,
 				7AC24399296D641000C589F0 /* nappula.cpp in Sources */,
 				7AC2439C296D641000C589F0 /* kayttoliittyma.cpp in Sources */,
 				7AC2439B296D641000C589F0 /* ruutu.cpp in Sources */,
 				7AC24376296D636800C589F0 /* main.cpp in Sources */,
 				7A2D1C11299E5B4100E57AE1 /* minmaxpaluu.cpp in Sources */,
 				7AC2439D296D641000C589F0 /* siirto.cpp in Sources */,
+				7ADF858929A857D000DD235C /* pelaaja.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
