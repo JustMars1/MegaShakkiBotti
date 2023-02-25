@@ -42,6 +42,12 @@
     <ClCompile Include="MegaShakkiBotti\minmaxpaluu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MegaShakkiBotti\pelaaja.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MegaShakkiBotti\peli.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="megashakkibotti\asema.h">
@@ -69,6 +75,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MegaShakkiBotti\ajastin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MegaShakkiBotti\peli.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MegaShakkiBotti\pelaaja.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -246,7 +246,7 @@ void Kayttoliittyma::piirra(const Peli& peli) const
     {
         mustaAlhaalla = true;
     }
-    else if (!peli.musta.onkoKone && !peli.musta.onkoKone)
+    else if (!peli.musta.onkoKone && !peli.valkoinen.onkoKone)
     {
         mustaAlhaalla = peli.asema.getSiirtovuoro() == 1;
     }
