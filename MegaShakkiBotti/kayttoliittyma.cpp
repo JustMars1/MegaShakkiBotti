@@ -366,8 +366,13 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto()
         }
         else
         {
-            cout << "Sy\xc3\xb6t\xc3\xa4 siirto muodossa: Nappula, alkuruutu ja loppuruutu.\n";
-            cout << "Esim. Rg1-f3.\n";
+            cout << endl;
+            cout << "[S|R|L|T|D|K]            = nappula\n";
+            cout << "[a, h][1, 8]             = ruutu (sarake, rivi)\n";
+            cout << "[nappula][ruutu]-[ruutu] = siirto\n";
+            cout << "O-O                      = lyhyt linnoitus siirto\n";
+            cout << "O-O-O                    = pitk\xc3\xa4 linnoitus siirto\n";
+            cout << "Sy\xc3\xb6t\xc3\xa4 siirto: ";
         }
         
         string syote;
