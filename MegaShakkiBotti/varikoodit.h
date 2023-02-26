@@ -10,7 +10,7 @@ enum Vari
     keltainen = 100,
     sininen = 18,
     purppura = 93,
-    turkoosi = 27,
+    turkoosi = 37,
     harmaa = 250,
     tumman_harmaa = 244,
     kirkkaan_punainen = 196,
