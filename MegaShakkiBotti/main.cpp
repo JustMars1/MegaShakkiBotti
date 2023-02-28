@@ -49,21 +49,17 @@ int main(int argc, char* argv[])
         cout << endl;
         kayttoliittyma.kysyPelimuoto(peli);
         cout << endl;
+        cout << "[S|R|L|T|D|K]            = nappula\n";
+        cout << "[a, h][1, 8]             = ruutu (sarake, rivi)\n";
+        cout << "[nappula][ruutu]-[ruutu] = siirto\n";
+        cout << "O-O                      = lyhyt linnoitus siirto\n";
+        cout << "O-O-O                    = pitk\xc3\xa4 linnoitus siirto\n";
+        cout << endl;
         
         while (kayttoliittyma.getOhjelmaKaynnissa())
         {
-            cout << "Siirtovuoro: ";
-            if (peli.asema.getSiirtovuoro() == 0)
-            {
-                cout << "Valkoinen\n";
-            }
-            else
-            {
-                cout << "Musta\n";
-            }
-            
-            cout << "Laudan arvo: " << peli.asema.evaluoi() << endl;
             kayttoliittyma.piirra(peli);
+            cout << endl;
             
             Siirto siirto;
             bool ok = false;
@@ -120,14 +116,20 @@ int main(int argc, char* argv[])
                 }
                 else
                 {
-                    siirto = kayttoliittyma.kysyVastustajanSiirto();
+                    siirto = kayttoliittyma.kysyVastustajanSiirto(peli);
                 }
                 
                 ok = peli.asema.tarkistaSiirto(siirto);
             }
             
+            if (peli.asema.getSiirtovuoro() == 1)
+            {
+                peli.siirtoparilaskuri++;
+            }
+            
             peli.asema.paivitaAsema(siirto);
             peli.viimeisinSiirto = siirto;
+            cout << endl;
         }
     }
     

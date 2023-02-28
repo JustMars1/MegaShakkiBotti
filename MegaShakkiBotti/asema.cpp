@@ -437,7 +437,7 @@ float Asema::laskeNappuloidenArvo() const
         }
     }
     
-    return summa / maxArvo;
+    return summa;
 }
 
 bool Asema::onkoAvausTaiKeskipeli(int vari)
@@ -597,11 +597,11 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
     {
         if (_siirtovuoro == 0 && onkoRuutuUhattu(_valkeanKuninkaanRuutu, 1))
         {
-            return MinMaxPaluu(-1, Siirto());
+            return MinMaxPaluu(std::numeric_limits<float>::lowest(), Siirto());
         }
         else if (_siirtovuoro == 1 && onkoRuutuUhattu(_mustanKuninkaanRuutu, 0))
         {
-            return MinMaxPaluu(1, Siirto());
+            return MinMaxPaluu(std::numeric_limits<float>::max(), Siirto());
         }
         else
         {
@@ -728,7 +728,7 @@ MinMaxPaluu Asema::maxi(int syvyys) const
     {
         if (onkoRuutuUhattu(_valkeanKuninkaanRuutu, 1))
         {
-            return MinMaxPaluu(-1, Siirto());
+            return MinMaxPaluu(std::numeric_limits<float>::lowest(), Siirto());
         }
         else
         {
@@ -768,7 +768,7 @@ MinMaxPaluu Asema::mini(int syvyys) const
     {
         if (onkoRuutuUhattu(_mustanKuninkaanRuutu, 0))
         {
-            return MinMaxPaluu(1, Siirto());
+            return MinMaxPaluu(std::numeric_limits<float>::max(), Siirto());
         }
         else
         {
@@ -814,11 +814,11 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
     {
         if (_siirtovuoro == 0 && onkoRuutuUhattu(_valkeanKuninkaanRuutu, 1))
         {
-            return MinMaxPaluu(-1, Siirto());
+            return MinMaxPaluu(std::numeric_limits<float>::lowest(), Siirto());
         }
         else if (_siirtovuoro == 1 && onkoRuutuUhattu(_mustanKuninkaanRuutu, 0))
         {
-            return MinMaxPaluu(1, Siirto());
+            return MinMaxPaluu(std::numeric_limits<float>::max(), Siirto());
         }
         else
         {
@@ -959,7 +959,7 @@ MinMaxPaluu Asema::alphabetaMaxi(int syvyys, float alpha, float beta) const
     {
         if (onkoRuutuUhattu(_valkeanKuninkaanRuutu, 1))
         {
-            return MinMaxPaluu(-1, Siirto());
+            return MinMaxPaluu(std::numeric_limits<float>::lowest(), Siirto());
         }
         else
         {
@@ -1006,7 +1006,7 @@ MinMaxPaluu Asema::alphabetaMini(int syvyys, float alpha, float beta) const
     {
         if (onkoRuutuUhattu(_mustanKuninkaanRuutu, 0))
         {
-            return MinMaxPaluu(1, Siirto());
+            return MinMaxPaluu(std::numeric_limits<float>::max(), Siirto());
         }
         else
         {

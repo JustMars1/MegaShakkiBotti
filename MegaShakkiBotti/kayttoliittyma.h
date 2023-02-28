@@ -14,7 +14,7 @@ public:
     void kysyPelimuoto(Peli& peli) const;
     std::optional<Peli> kysyFEN() const;
     
-    Siirto kysyVastustajanSiirto();
+    Siirto kysyVastustajanSiirto(const Peli& peli);
     
     void piirra(const Peli& peli) const;
     bool tarkistaKomento(std::string komento, const Peli& peli) const;

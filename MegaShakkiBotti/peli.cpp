@@ -3,4 +3,5 @@
 Peli::Peli(Pelaaja valkoinen, Pelaaja musta)
 : valkoinen(valkoinen)
 , musta(musta)
-, viimeisinSiirto(std::nullopt) {}
+, viimeisinSiirto(std::nullopt)
+, siirtoparilaskuri{1} {}

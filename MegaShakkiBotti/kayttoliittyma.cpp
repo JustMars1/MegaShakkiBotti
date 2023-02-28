@@ -11,6 +11,7 @@
 #include <iostream>
 #include <limits>
 #include <cctype>
+#include <array>
 #include "kayttoliittyma.h"
 
 #include "varikoodit.h"
@@ -102,7 +103,7 @@ void Kayttoliittyma::kysyPelimuoto(Peli& peli) const
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
-        else if (pelimuoto == 0 || pelimuoto == 1 || pelimuoto == 2)
+        else if (pelimuoto == PELAAJA_VS_KONE || pelimuoto == KONE_VS_KONE || pelimuoto == PELAAJA_VS_PELAAJA)
         {
             break;
         }
@@ -251,20 +252,34 @@ void Kayttoliittyma::piirra(const Peli& peli) const
         mustaAlhaalla = peli.asema.getSiirtovuoro() == 1;
     }
     
-    for (int rivi = 0; rivi < 8; rivi++)
+    float laudanArvo = peli.asema.evaluoi();
+    
+    array<string, 8> sivupalkki =
     {
-        int y = mustaAlhaalla ? rivi : 8 - rivi - 1;
-        cout << resetoiVarit() << to_string(y + 1) << " ";
-        for (int sarake = 0; sarake < 8; sarake++)
+        to_string(peli.siirtoparilaskuri) + ". siirtopari",
+        string(peli.asema.getSiirtovuoro() == 0 ? "Valkoisen" : "Mustan") + " siirtovuoro",
+        (laudanArvo > 0 ? "+" : "") + to_string(laudanArvo),
+        "Komennot:",
+        "/siirrot = listaa lailliset siirrot",
+        "/fen     = tulosta asema FEN-merkint\xc3\xa4n\xc3\xa4",
+        "/",
+        "/"
+    };
+    
+    for (int y = 0; y < 8; y++)
+    {
+        int rivi = mustaAlhaalla ? y : 7 - y;
+        cout << resetoiVarit() << to_string(rivi + 1) << " ";
+        for (int x = 0; x < 8; x++)
         {
-            int x = mustaAlhaalla ? 8 - sarake - 1 : sarake;
+            int sarake = mustaAlhaalla ? 7 - x : x;
             
             // Joka toinen rivi valkoinen
-            
-            if ((x + y) % 2 == 0)
+            if ((sarake + rivi) % 2 == 0)
             {
                 cout << tekstivari(musta);
-                switch (ruutujenTyypit[y][x]) {
+                switch (ruutujenTyypit[rivi][sarake])
+                {
                     case TAVALLINEN_RUUTU:
                     {
                         cout << taustavari(turkoosi);
@@ -285,7 +300,8 @@ void Kayttoliittyma::piirra(const Peli& peli) const
             else
             {
                 cout << tekstivari(musta);
-                switch (ruutujenTyypit[y][x]) {
+                switch (ruutujenTyypit[rivi][sarake])
+                {
                     case TAVALLINEN_RUUTU:
                     {
                         cout << taustavari(valkoinen);
@@ -304,33 +320,25 @@ void Kayttoliittyma::piirra(const Peli& peli) const
                 }
             }
             
-            string merkki = " ";
-            
-            if (peli.asema.lauta[y][x] != nullptr)
-            {
-                merkki = peli.asema.lauta[y][x]->getMerkki();
-            }
-            
-            cout << " " << merkki << " ";
+            Nappula* nappula = peli.asema.lauta[rivi][sarake];
+            cout << " " << (nappula == nullptr ? " " : nappula->getMerkki()) << " ";
         }
         
-        cout << resetoiVarit();
-#ifdef _WIN32
-        cout << " |";
-#endif
-        cout << endl;
+        cout << resetoiVarit() << " " << sivupalkki[y] << endl;
     }
     
     cout << resetoiVarit();
     
     if (mustaAlhaalla)
     {
-        cout << "   h  g  f  e  d  c  b  a  \n";
+        cout << "   h  g  f  e  d  c  b  a  ";
     }
     else
     {
-        cout << "   a  b  c  d  e  f  g  h  \n";
+        cout << "   a  b  c  d  e  f  g  h  ";
     }
+    
+    cout << endl;
 }
 
 /*
@@ -338,7 +346,7 @@ void Kayttoliittyma::piirra(const Peli& peli) const
  muodollisesti korrekti (ei tarkista aseman laillisuutta)
  Ottaa irti myös nappulan kirjaimen (K/D/L/R/T), tarkistaa että kirjain korrekti
  */
-Siirto Kayttoliittyma::kysyVastustajanSiirto()
+Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
 {
     auto tarkistaNappula = [this](char kirjain) -> Nappula*
     {
@@ -366,12 +374,6 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto()
         }
         else
         {
-            cout << endl;
-            cout << "[S|R|L|T|D|K]            = nappula\n";
-            cout << "[a, h][1, 8]             = ruutu (sarake, rivi)\n";
-            cout << "[nappula][ruutu]-[ruutu] = siirto\n";
-            cout << "O-O                      = lyhyt linnoitus siirto\n";
-            cout << "O-O-O                    = pitk\xc3\xa4 linnoitus siirto\n";
             cout << "Sy\xc3\xb6t\xc3\xa4 siirto: ";
         }
         
@@ -379,6 +381,10 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto()
         cin >> syote;
         
         if (cin.fail())
+        {
+            continue;
+        }
+        else if (tarkistaKomento(syote, peli))
         {
             continue;
         }
@@ -459,7 +465,7 @@ bool Kayttoliittyma::tarkistaKomento(string komento, const Peli& peli) const
         kirjain = tolower(kirjain);
     }
     
-    if (komento == "siirrot")
+    if (komento == "/siirrot")
     {
         vector<Siirto> siirrot = peli.asema.annaLaillisetSiirrot();
         
@@ -477,6 +483,10 @@ bool Kayttoliittyma::tarkistaKomento(string komento, const Peli& peli) const
         }
         
         return true;
+    }
+    else if (komento == "/fen")
+    {
+        
     }
     
     return false;
@@ -496,7 +506,6 @@ optional<Peli> Kayttoliittyma::kysyFEN() const
     peli.asema.setValkeaKuningasLiikkunut(true);
     
     // Lauta
-    
     string lauta;
     cin >> lauta;
     
@@ -520,7 +529,7 @@ optional<Peli> Kayttoliittyma::kysyFEN() const
                 return nullopt;
             }
             
-            int rivi = 8 - y - 1;
+            int rivi = 7 - y;
             
             if (*nappulaItr == &Asema::vk)
             {
@@ -632,9 +641,8 @@ optional<Peli> Kayttoliittyma::kysyFEN() const
     }
     
     // Siirtolaskuri
-    
-    int siirtolaskuri = -1;
-    cin >> siirtolaskuri;
+    int siirtoaSyonnistaTaiSotilaanSiirrosta = -1;
+    cin >> siirtoaSyonnistaTaiSotilaanSiirrosta;
     
     if (cin.fail())
     {
@@ -642,14 +650,15 @@ optional<Peli> Kayttoliittyma::kysyFEN() const
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
     
-    if (siirtolaskuri < 0)
+    if (siirtoaSyonnistaTaiSotilaanSiirrosta < 0)
     {
         tulostaVirhe("Virheellinen FEN (siirtolaskuri)");
         return nullopt;
     }
     
-    int vuorolaskuri = -1;
-    cin >> vuorolaskuri;
+    // Siirtoparilaskuri
+    int siirtoparilaskuri = -1;
+    cin >> siirtoparilaskuri;
     
     if (cin.fail())
     {
@@ -657,11 +666,13 @@ optional<Peli> Kayttoliittyma::kysyFEN() const
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
     
-    if (vuorolaskuri < 0)
+    if (siirtoparilaskuri < 0)
     {
         tulostaVirhe("Virheellinen FEN (vuorolaskuri)");
         return nullopt;
     }
+    
+    peli.siirtoparilaskuri = siirtoparilaskuri;
     
     return peli;
 }

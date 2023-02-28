@@ -11,6 +11,8 @@ public:
     Pelaaja musta;
     Asema asema;
     
+    int siirtoparilaskuri;
+    
     std::optional<Siirto> viimeisinSiirto;
     
     Peli(Pelaaja valkoinen = Pelaaja(false, 0), Pelaaja musta = Pelaaja(true, 4));
