@@ -397,14 +397,18 @@ void Kayttoliittyma::piirra(const Peli& peli) const
     
     float laudanArvo = peli.asema.evaluoi();
     
+    string siirrotKomento = "/siirrot"_k;
+    string fenKomento = "/fen";
+    size_t leveys = std::max(siirrotKomento.length(), fenKomento.length());
+    
     array<string, 8> sivupalkki =
     {
         to_string(peli.siirtoparilaskuri) + ". " + "siirtopari"_k,
         (peli.asema.getSiirtovuoro() == 0 ? "valkoisenSiirtovuoro"_k : "mustanSiirtovuoro"_k),
         (laudanArvo > 0 ? "+" : "") + to_string(laudanArvo),
         "komennot"_k + ": ",
-        "/siirrot"_k + " = " + ("listaaLaillisetSiirrot"_k),
-        "/fen     = " + ("tulostaAsemaFEN-merkintana"_k),
+        siirrotKomento + string(leveys - siirrotKomento.length(), ' ') + " = " + ("listaaLaillisetSiirrot"_k),
+        fenKomento + string(leveys - fenKomento.length(), ' ') + " = " + ("tulostaAsemaFEN-merkintana"_k),
         "/",
         "/"
     };
