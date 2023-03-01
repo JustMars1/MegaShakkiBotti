@@ -344,7 +344,7 @@ void Kayttoliittyma::piirra(const Peli& peli) const
 /*
  Aliohjelma tarkistaa että käyttäjän antama syšte siirroksi on
  muodollisesti korrekti (ei tarkista aseman laillisuutta)
- Ottaa irti myös nappulan kirjaimen (K/D/L/R/T), tarkistaa että kirjain korrekti
+ Ottaa irti myös korotettaessa nappulan kirjaimen (D/L/R/T), tarkistaa että kirjain korrekti
  */
 Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
 {
@@ -355,7 +355,9 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
         for (auto nappula : Asema::nappulat)
         {
             char nappulaKirjain = nappula->getKirjainSuomi();
-            if (tolower(nappulaKirjain) != kirjain)
+            // Tää if oli alunperin != tsekkaus. Sillä ei toiminut, etsi aina tornin, tai kun yritti korottaa torniksi niin etsi ratsun
+            // Nyt tuolla == tsekkauksella korotus toimii.
+            if (tolower(nappulaKirjain) == kirjain)
             {
                 return nappula;
             }
@@ -363,7 +365,7 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
         
         return nullptr;
     };
-    
+
     
     while(true)
     {
@@ -397,56 +399,58 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
             return Siirto(lyhytLinna, pitkaLinna);
         }
         
-        if (syote.length() == 6)
-        {
-            char nappulaKirjain = 'i';
-            
+        // UCI-protokollalle sopiva syötemuoto.
+        // Syötteeseen riittää vain ruudut. Esim. h2-h4.
+        if (syote.length() == 5)
+        {       
             Ruutu alku(-1, -1);
             Ruutu loppu(-1, -1);
             
-            nappulaKirjain = syote[0];
+            alku.setSarake(syote[0] - 'a');
+            alku.setRivi(syote[1] - '0' - 1);
+            loppu.setSarake(syote[3] - 'a');
+            loppu.setRivi(syote[4] - '0' - 1);
             
-            alku.setSarake(syote[1] - 'a');
-            alku.setRivi(syote[2] - '0' - 1);
-            loppu.setSarake(syote[4] - 'a');
-            loppu.setRivi(syote[5] - '0' - 1);
-            
-            Nappula* nappula = tarkistaNappula(nappulaKirjain);
-            if (alku.ok() && loppu.ok() && nappula != nullptr)
+            if (alku.ok() && loppu.ok())
             {
                 Siirto siirto(alku, loppu);
-                if ((nappula == &Asema::ms && loppu.getRivi() == 0) || (nappula == &Asema::vs && loppu.getRivi() == 7))
-                {
-                    while (true)
-                    {
-                        Nappula* korotus = nullptr;
-                        if (cin.fail())
-                        {
-                            cin.clear();
-                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                        }
-                        else
-                        {
-                            cout << "Sy\xc3\xb6t\xc3\xa4 miksi korotetaan:\nEsim. D, R, T tai L.\n";
-                        }
-                        
-                        char korotusKirjain;
-                        cin >> korotusKirjain;
-                        
-                        if (cin.fail())
-                        {
-                            continue;
-                        }
-                        
-                        korotus = tarkistaNappula(korotusKirjain);
-                        if (korotus != nullptr && korotus != &Asema::ms && korotus != &Asema::vs)
-                        {
-                            siirto.miksiKorotetaan = korotus;
-                            break;
-                        }
-                    }
-                }
                 
+                return siirto;
+            }
+        }
+
+        // UCI-protokollaan sopiva korotus
+        // Korotus muodossa siirto + mihin korotetaan. Esim. h7-h8d
+        else if (syote.length() == 6)
+        {
+            Ruutu alku(-1, -1);
+            Ruutu loppu(-1, -1);
+
+            char korotuskirjain = 'i';
+
+            alku.setSarake(syote[0] - 'a');
+            alku.setRivi(syote[1] - '0' - 1);
+            loppu.setSarake(syote[3] - 'a');
+            loppu.setRivi(syote[4] - '0' - 1);
+
+            // Mihin korotetaan otetaan syötteen vikasta merkistä.
+            korotuskirjain = syote[5];
+
+            Nappula* korotus = nullptr;
+            // Tarkistetaan että siirrettävä nappula on sotilas. 
+            // En vielä testannut mitä tapahtuu jos yrittää korottaa muuta nappulaa. Testaan huomenna.
+            Nappula* nappula = peli.asema.lauta[alku.getRivi()][alku.getSarake()];
+            if ((alku.ok() && loppu.ok()) && (nappula == &Asema::ms || nappula == &Asema::vs))
+            {
+                Siirto siirto(alku, loppu);
+
+                // BUGI: Mustan korotukset korottaa valkoisiksi. Katson huomenna.
+                korotus = tarkistaNappula(korotuskirjain);
+                if (korotus != nullptr && korotus != &Asema::ms && korotus != &Asema::vs)
+                {
+                    siirto.miksiKorotetaan = korotus;
+
+                }
                 return siirto;
             }
         }

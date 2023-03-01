@@ -51,7 +51,8 @@ int main(int argc, char* argv[])
         cout << endl;
         cout << "[S|R|L|T|D|K]            = nappula\n";
         cout << "[a, h][1, 8]             = ruutu (sarake, rivi)\n";
-        cout << "[nappula][ruutu]-[ruutu] = siirto\n";
+        cout << "[ruutu]-[ruutu]          = siirto\n";
+        cout << "[ruutu]-[ruutu][nappula] = korotus\n";
         cout << "O-O                      = lyhyt linnoitus siirto\n";
         cout << "O-O-O                    = pitk\xc3\xa4 linnoitus siirto\n";
         cout << endl;
