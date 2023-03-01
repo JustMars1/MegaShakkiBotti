@@ -15,6 +15,7 @@
 #include <cctype>
 #include <array>
 #include <exception>
+#include <algorithm>
 #include "kayttoliittyma.h"
 
 #include "varikoodit.h"

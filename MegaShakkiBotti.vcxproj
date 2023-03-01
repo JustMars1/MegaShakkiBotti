@@ -114,6 +114,7 @@
     <ClCompile Include="MegaShakkiBotti\ajastin.cpp" />
     <ClCompile Include="MegaShakkiBotti\asema.cpp" />
     <ClCompile Include="megashakkibotti\kayttoliittyma.cpp" />
+    <ClCompile Include="MegaShakkiBotti\kieli.cpp" />
     <ClCompile Include="megashakkibotti\main.cpp" />
     <ClCompile Include="MegaShakkiBotti\minmaxpaluu.cpp" />
     <ClCompile Include="megashakkibotti\nappula.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="MegaShakkiBotti\ajastin.h" />
     <ClInclude Include="megashakkibotti\asema.h" />
     <ClInclude Include="megashakkibotti\kayttoliittyma.h" />
+    <ClInclude Include="MegaShakkiBotti\kieli.h" />
     <ClInclude Include="megashakkibotti\minmaxpaluu.h" />
     <ClInclude Include="megashakkibotti\nappula.h" />
     <ClInclude Include="MegaShakkiBotti\pelaaja.h" />
@@ -135,6 +137,15 @@
     <ClInclude Include="megashakkibotti\siirto.h" />
     <ClInclude Include="MegaShakkiBotti\varikoodit.h" />
     <ClInclude Include="megashakkibotti\evaluointi.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="MegaShakkiBotti\kielet.csv">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

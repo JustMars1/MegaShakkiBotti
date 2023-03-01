@@ -12,6 +12,7 @@
 #include <clocale>
 #include <limits>
 #include <vector>
+#include <algorithm>
 
 #include "kayttoliittyma.h"
 #include "siirto.h"
