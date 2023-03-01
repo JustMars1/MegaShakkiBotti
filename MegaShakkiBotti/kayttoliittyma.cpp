@@ -8,19 +8,83 @@
 #include <iostream>
 #include <string>
 #include <string_view>
+#include <sstream>
 #include <iostream>
+#include <fstream>
 #include <limits>
 #include <cctype>
 #include <array>
+#include <exception>
 #include "kayttoliittyma.h"
 
 #include "varikoodit.h"
 
 using namespace std;
 
+const std::string& operator""_k(const char* avain, size_t)
+{
+    return Kayttoliittyma::getInstance().getKieli().get(avain);
+}
+
 Kayttoliittyma::Kayttoliittyma()
 : _ohjelmaKaynnissa{true}
-, _varitaRuudut{true} {}
+, _varitaRuudut{true}
+, _kielet(lataaKielet())
+, _kieli(0) {}
+
+vector<Kieli> Kayttoliittyma::lataaKielet()
+{
+    ifstream file("kielet.csv");
+    
+    if (file)
+    {
+        std::vector<Kieli> kielet;
+        string tmp;
+        
+        {
+            getline(file, tmp);
+            stringstream nimiRivi(tmp);
+            string nimiAvain, nimiArvo;
+            
+            getline(nimiRivi, nimiAvain, ',');
+            while(getline(nimiRivi, nimiArvo, ','))
+            {
+                Kieli kieli;
+                kieli.kaannokset[nimiAvain] = nimiArvo;
+                kielet.push_back(kieli);
+            }
+        }
+        
+        while(getline(file, tmp))
+        {
+            stringstream rivi(tmp);
+            
+            string avain;
+            getline(rivi, avain, ',');
+            
+            int i = 0;
+            string arvo;
+            while(getline(rivi, arvo, ','))
+            {
+                kielet[i].kaannokset[avain] = arvo;
+                i++;
+            }
+        }
+        
+        if (kielet.empty())
+        {
+            cerr << "! virhe kielten lataamisessa !" << endl;
+            terminate();
+        }
+        
+        return kielet;
+    }
+    else
+    {
+        cerr << "! kielet.csv tiedosto puuttuu !" << endl;
+        terminate();
+    }
+}
 
 Kayttoliittyma& Kayttoliittyma::getInstance()
 {
@@ -44,12 +108,76 @@ void Kayttoliittyma::suljeOhjelma()
     _ohjelmaKaynnissa = false;
 }
 
+const Kieli& Kayttoliittyma::getKieli() const { return _kielet[_kieli]; }
+
+void Kayttoliittyma::kysyKieli()
+{
+    for (size_t i = 0; i < _kielet.size(); i++)
+    {
+        cout << i << " = " << _kielet[i].get("kielenNimi") << endl;
+    }
+    
+    for (size_t i = 0; i < _kielet.size() - 1; i++)
+    {
+        cout << _kielet[i].get("valitseKieli") << "/";
+    }
+    
+    cout << _kielet.back().get("valitseKieli")  << ": ";
+    
+    int kieli = -1;
+    while(true)
+    {
+        cin >> kieli;
+        
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        else if (kieli > -1 && kieli < _kielet.size())
+        {
+            break;
+        }
+    }
+    
+    _kieli = kieli;
+}
+
+void Kayttoliittyma::tulostaSiirtoOhje() const
+{
+    string nappulaOhje = "[";
+    int nappulaLkm = Asema::nappulat.size() / 2;
+    for (int i = 0; i < nappulaLkm - 1; i++)
+    {
+        nappulaOhje += Asema::nappulat[i]->getSiirtoMerkki() + "|";
+    }
+    nappulaOhje += Asema::nappulat[nappulaLkm - 1]->getSiirtoMerkki() + "]";
+    
+    string ruutuOhje = "[a, h][1, 8]";
+    
+    string siirtoOhje = "[" + "nappula"_k + "][" + "ruutu"_k + "]-[" + "ruutu"_k + "]";
+    
+    string lyhytLinnoitusOhje = "O-O";
+    string pitkaLinnoitusOhje = "O-O-O";
+    
+    size_t leveys = max(siirtoOhje.length(), nappulaOhje.length());
+    
+    cout << nappulaOhje << string(leveys - nappulaOhje.length(), ' ') << " = " << "nappula"_k << endl;
+    cout << ruutuOhje << string(leveys - ruutuOhje.length(), ' ') << " = " << "ruutu"_k << " (" << "sarake"_k << ", " << "rivi"_k << ")" << endl;
+    cout << siirtoOhje << string(leveys - siirtoOhje.length(), ' ') << " = " << "siirto"_k << endl;
+    cout << lyhytLinnoitusOhje << string(leveys - lyhytLinnoitusOhje.length(), ' ') << " = " << "lyhytLinnoitus"_k << endl;
+    cout << pitkaLinnoitusOhje << string(leveys - pitkaLinnoitusOhje.length(), ' ') << " = " << "pitkaLinnoitus"_k << endl;
+}
+
 Peli Kayttoliittyma::kysyPeli() const
 {
     optional<Peli> peli = nullopt;
     while(!peli.has_value())
     {
-        cout << "0 = uusi peli\n1 = lataa peli\nValitse ladataanko peli: ";
+        cout
+        << "0 = " << "uusiPeli"_k << endl
+        << "1 = " << "lataaPeli"_k << endl
+        << "valitseLadataankoPeli"_k << ": ";
         
         bool lataaPeli = false;
         while(true)
@@ -84,7 +212,11 @@ Peli Kayttoliittyma::kysyPeli() const
 
 void Kayttoliittyma::kysyPelimuoto(Peli& peli) const
 {
-    cout << "0 = pelaaja vs kone\n1 = kone vs kone\n2 = pelaaja vs pelaaja\nValitse pelimuoto: ";
+    cout
+    << "0 = " << "pelaajaVsKone"_k << endl
+    << "1 = " << "koneVsKone"_k << endl
+    << "2 = " << "pelaajaVsPelaaja"_k << endl
+    << "valitsePelimuoto"_k << ": ";
     
     enum Pelimuoto
     {
@@ -113,7 +245,10 @@ void Kayttoliittyma::kysyPelimuoto(Peli& peli) const
     {
         case PELAAJA_VS_KONE:
         {
-            cout << "\n0 = valkoinen\n1 = musta\nValitse kummalla v\xc3\xa4rill\xc3\xa4 pelaat: ";
+            cout << endl
+            << "0 = " << "valkoinen"_k << endl
+            << "1 = " << "musta"_k << endl
+            << "valitseKummallaVarillaPelaat"_k << ": ";
             
             int pelaajanVari = -1;
             while(true)
@@ -131,7 +266,9 @@ void Kayttoliittyma::kysyPelimuoto(Peli& peli) const
                 }
             }
             
-            cout << "\n[1, " << numeric_limits<int>::max() << "] = hakusyvyys\nValitse koneen hakusyvyys: ";
+            cout << endl
+            << "[1, " << numeric_limits<int>::max() << "] = " << "hakusyvyys"_k << endl
+            << "valitseKoneenHakusyvyys"_k << ": ";
             int syvyys = -1;
             while(true)
             {
@@ -164,7 +301,10 @@ void Kayttoliittyma::kysyPelimuoto(Peli& peli) const
         }
         case KONE_VS_KONE:
         {
-            cout << "\n[1, " << numeric_limits<int>::max() << "] = valkoisen hakusyvyys\nValitse valkoisen hakusyvyys: ";
+            cout << endl
+            << "[1, " << numeric_limits<int>::max() << "] = " << "hakusyvyys"_k << endl
+            << "valitseValkoisenHakusyvyys"_k << ": ";
+            
             int valkoisenSyvyys = -1;
             while(true)
             {
@@ -181,8 +321,11 @@ void Kayttoliittyma::kysyPelimuoto(Peli& peli) const
                 }
             }
             
-            cout << "\n[1, " << numeric_limits<int>::max() << "] = mustan hakusyvyys\nValitse mustan hakusyvyys: ";
+            cout << endl
+            << "[1, " << numeric_limits<int>::max() << "] = " << "hakusyvyys"_k << endl
+            << "valitseMustanHakusyvyys"_k << ": ";
             int mustanSyvyys = -1;
+            
             while(true)
             {
                 cin >> mustanSyvyys;
@@ -256,12 +399,12 @@ void Kayttoliittyma::piirra(const Peli& peli) const
     
     array<string, 8> sivupalkki =
     {
-        to_string(peli.siirtoparilaskuri) + ". siirtopari",
-        string(peli.asema.getSiirtovuoro() == 0 ? "Valkoisen" : "Mustan") + " siirtovuoro",
+        to_string(peli.siirtoparilaskuri) + ". " + "siirtopari"_k,
+        (peli.asema.getSiirtovuoro() == 0 ? "valkoisenSiirtovuoro"_k : "mustanSiirtovuoro"_k),
         (laudanArvo > 0 ? "+" : "") + to_string(laudanArvo),
-        "Komennot:",
-        "/siirrot = listaa lailliset siirrot",
-        "/fen     = tulosta asema FEN-merkint\xc3\xa4n\xc3\xa4",
+        "komennot"_k + ": ",
+        "/siirrot"_k + " = " + ("listaaLaillisetSiirrot"_k),
+        "/fen     = " + ("tulostaAsemaFEN-merkintana"_k),
         "/",
         "/"
     };
@@ -321,7 +464,7 @@ void Kayttoliittyma::piirra(const Peli& peli) const
             }
             
             Nappula* nappula = peli.asema.lauta[rivi][sarake];
-            cout << " " << (nappula == nullptr ? " " : nappula->getMerkki()) << " ";
+            cout << " " << (nappula == nullptr ? " " : nappula->getLautaMerkki()) << " ";
         }
         
         cout << resetoiVarit() << " " << sivupalkki[y] << endl;
@@ -348,16 +491,21 @@ void Kayttoliittyma::piirra(const Peli& peli) const
  */
 Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
 {
-    auto tarkistaNappula = [this](char kirjain) -> Nappula*
+    auto tarkistaNappula = [this, &peli](string merkki) -> Nappula*
     {
-        kirjain = tolower(kirjain);
+        transform(merkki.begin(), merkki.end(), merkki.begin(), ::tolower);
         
         for (auto nappula : Asema::nappulat)
         {
-            char nappulaKirjain = nappula->getKirjainSuomi();
-            if (tolower(nappulaKirjain) != kirjain)
+            if (nappula->getVari() == peli.asema.getSiirtovuoro())
             {
-                return nappula;
+                string siirtoMerkki = nappula->getSiirtoMerkki();
+                transform(siirtoMerkki.begin(), siirtoMerkki.end(), siirtoMerkki.begin(), ::tolower);
+                
+                if (siirtoMerkki != merkki)
+                {
+                    return nappula;
+                }
             }
         }
         
@@ -374,7 +522,7 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
         }
         else
         {
-            cout << "Sy\xc3\xb6t\xc3\xa4 siirto: ";
+            cout << "syotaSiirto"_k << ": ";
         }
         
         string syote;
@@ -397,21 +545,25 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
             return Siirto(lyhytLinna, pitkaLinna);
         }
         
-        if (syote.length() == 6)
+        if (syote.length() >= 6)
         {
-            char nappulaKirjain = 'i';
-            
             Ruutu alku(-1, -1);
             Ruutu loppu(-1, -1);
             
-            nappulaKirjain = syote[0];
+            alku.setSarake(syote[syote.length() - 5] - 'a');
+            alku.setRivi(syote[syote.length() - 4] - '0' - 1);
             
-            alku.setSarake(syote[1] - 'a');
-            alku.setRivi(syote[2] - '0' - 1);
-            loppu.setSarake(syote[4] - 'a');
-            loppu.setRivi(syote[5] - '0' - 1);
+            if (syote[syote.length() - 3] != '-')
+            {
+                continue;
+            }
             
-            Nappula* nappula = tarkistaNappula(nappulaKirjain);
+            loppu.setSarake(syote[syote.length() - 2] - 'a');
+            loppu.setRivi(syote[syote.length() - 1] - '0' - 1);
+            
+            string nappulaMerkki = syote.substr(0, syote.length() - 5);
+            
+            Nappula* nappula = tarkistaNappula(nappulaMerkki);
             if (alku.ok() && loppu.ok() && nappula != nullptr)
             {
                 Siirto siirto(alku, loppu);
@@ -427,18 +579,18 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
                         }
                         else
                         {
-                            cout << "Sy\xc3\xb6t\xc3\xa4 miksi korotetaan:\nEsim. D, R, T tai L.\n";
+                            cout << "syotaMiksiKorotetaan"_k << ": ";
                         }
                         
-                        char korotusKirjain;
-                        cin >> korotusKirjain;
+                        string korotusMerkki;
+                        cin >> korotusMerkki;
                         
                         if (cin.fail())
                         {
                             continue;
                         }
                         
-                        korotus = tarkistaNappula(korotusKirjain);
+                        korotus = tarkistaNappula(korotusMerkki);
                         if (korotus != nullptr && korotus != &Asema::ms && korotus != &Asema::vs)
                         {
                             siirto.miksiKorotetaan = korotus;
@@ -465,7 +617,7 @@ bool Kayttoliittyma::tarkistaKomento(string komento, const Peli& peli) const
         kirjain = tolower(kirjain);
     }
     
-    if (komento == "/siirrot")
+    if (komento == "/siirrot"_k)
     {
         vector<Siirto> siirrot = peli.asema.annaLaillisetSiirrot();
         
@@ -475,8 +627,9 @@ bool Kayttoliittyma::tarkistaKomento(string komento, const Peli& peli) const
             {
                 int y = siirto.getAlkuruutu().getRivi();
                 int x = siirto.getAlkuruutu().getSarake();
-                char kirjain = toupper(peli.asema.lauta[y][x]->getKirjainSuomi());
-                cout << kirjain;
+                string merkki = peli.asema.lauta[y][x]->getSiirtoMerkki();
+                transform(merkki.begin(), merkki.end(), merkki.begin(), ::toupper);
+                cout << merkki;
             }
             
             cout << siirto << endl;
@@ -494,7 +647,7 @@ bool Kayttoliittyma::tarkistaKomento(string komento, const Peli& peli) const
 
 optional<Peli> Kayttoliittyma::kysyFEN() const
 {
-    cout << "Anna FEN: ";
+    cout << "annaFEN"_k << ": ";
     
     Peli peli;
     peli.asema = Asema({nullptr});
@@ -520,7 +673,7 @@ optional<Peli> Kayttoliittyma::kysyFEN() const
         else if (kirjain != '/')
         {
             auto nappulaItr = find_if(Asema::nappulat.begin(), Asema::nappulat.end(), [kirjain](auto nappula) {
-                return nappula->getKirjainEnglanti() == kirjain;
+                return nappula->getFENMerkki() == kirjain;
             });
             
             if (nappulaItr == Asema::nappulat.end())

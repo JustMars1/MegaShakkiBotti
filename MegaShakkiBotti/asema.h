@@ -35,7 +35,7 @@ public:
     
     // Ohestalyöntiä varten (-1 = sotilaan kaksoisaskelta ei tapahtunut edellisellä siirrolla).
     
-    static std::array<Nappula*, NappulaKoodiMaara> nappulat;
+    static std::array<Nappula*, NappulaKoodiLkm> nappulat;
     
     static const float maxArvo;
     
@@ -91,7 +91,7 @@ public:
     MinMaxPaluu alphabetaMinimax(int syvyys) const;
     MinMaxPaluu alphabetaMinimaxAsync(int syvyys) const;
     
-    std::vector<size_t> jaaSiirrotSaikeidenKesken(size_t siirtoMaara) const;
+    std::vector<size_t> jaaSiirrotSaikeidenKesken(size_t siirtoLkm) const;
     
     void annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const;
     std::vector<Siirto> annaLaillisetSiirrot() const;

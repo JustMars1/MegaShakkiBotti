@@ -48,7 +48,7 @@ std::ostream& operator<<(std::ostream& os, const Siirto& siirto)
         
         if (siirto.miksiKorotetaan != nullptr)
         {
-            os << " " << siirto.miksiKorotetaan->getKirjainSuomi();
+            os << " " << siirto.miksiKorotetaan->getSiirtoMerkki();
         }
     }
     

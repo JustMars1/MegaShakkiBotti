@@ -1,0 +1,46 @@
+kielenNimi,suomi,English
+valitseKieli,Valitse kieli,Select language
+uusiPeli,uusi peli,new game
+lataaPeli,lataa peli,load game
+valitseLadataankoPeli,Valitse ladataanko peli,Select whether to load game
+pelaajaVsKone,pelaaja vs kone,player vs computer
+koneVsKone,kone vs kone,computer vs computer
+pelaajaVsPelaaja,pelaaja vs pelaaja,player vs player
+valitsePelimuoto,Valitse pelimuoto,Select gamemode
+valkoinen,valkoinen,white
+musta,musta,black
+valitseKummallaVarillaPelaat,Valitse kummalla värillä pelaat,Select which color you play
+hakusyvyys,hakusyvyys,search depth
+valitseKoneenHakusyvyys,Valitse koneen hakusyvyys,Select computer's search depth
+valitseValkoisenHakusyvyys,Valitse valkoisen hakusyvyys,Select white's search depth
+valitseMustanHakusyvyys,Valitse mustan hakusyvyys,Select black's search depth
+siirtopari,siirtopari,fullmove
+valkoisenSiirtovuoro,Valkoisen siirtovuoro,White's turn
+mustanSiirtovuoro,Mustan siirtovuoro, Black's turn
+komennot,Komennot,Commands
+/siirrot,/siirrot,/moves
+listaaLaillisetSiirrot,listaa lailliset siirrot,lists legal moves
+tulostaAsemaFEN-merkintana,tulosta asema FEN-merkintänä,print position as FEN-record
+syotaSiirto,Syötä siirto,Enter a move
+syotaMiksiKorotetaan,Syötä miksi korotetaan,Enter to which to promote
+annaFEN,Anna FEN,Enter FEN
+koneenSiirto,Koneen siirto,Computer's move
+nappula,nappula,piece
+ruutu,ruutu,square
+sarake,sarake,column
+rivi,rivi,row
+siirto,siirto,move
+lyhytLinnoitus,lyhyt linnoitus,short castling
+pitkaLinnoitus,pitkä linnoitus,long castling
+vk,K,K
+vd,D,Q
+vt,T,R
+vl,L,B
+vr,R,N
+vs,S,P
+mk,k,k
+md,d,q
+mt,t,r
+ml,l,b
+mr,r,n
+ms,s,p

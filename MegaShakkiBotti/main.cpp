@@ -43,17 +43,16 @@ int main(int argc, char* argv[])
         }
     }
     
+    kayttoliittyma.kysyKieli();
+    cout << endl;
+    
     while(kayttoliittyma.getOhjelmaKaynnissa())
     {
         Peli peli = kayttoliittyma.kysyPeli();
         cout << endl;
         kayttoliittyma.kysyPelimuoto(peli);
         cout << endl;
-        cout << "[S|R|L|T|D|K]            = nappula\n";
-        cout << "[a, h][1, 8]             = ruutu (sarake, rivi)\n";
-        cout << "[nappula][ruutu]-[ruutu] = siirto\n";
-        cout << "O-O                      = lyhyt linnoitus siirto\n";
-        cout << "O-O-O                    = pitk\xc3\xa4 linnoitus siirto\n";
+        kayttoliittyma.tulostaSiirtoOhje();
         cout << endl;
         
         while (kayttoliittyma.getOhjelmaKaynnissa())
@@ -108,8 +107,11 @@ int main(int argc, char* argv[])
                     {
                         int y = siirto.getAlkuruutu().getRivi();
                         int x = siirto.getAlkuruutu().getSarake();
-                        char kirjain = toupper(peli.asema.lauta[y][x]->getKirjainSuomi());
-                        cout << kirjain;
+                        
+                        string merkki = peli.asema.lauta[y][x]->getSiirtoMerkki();
+                        
+                        transform(merkki.begin(), merkki.end(), merkki.begin(), ::toupper);
+                        cout << merkki;
                     }
                     
                     cout << siirto << endl;

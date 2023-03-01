@@ -11,21 +11,20 @@
 #include "ruutu.h"
 #include "kayttoliittyma.h"
 
-Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK, 0.0f,   8, 'K', 'K');
-Daami Asema::vd = Daami(      "\xe2\x99\x95", 0, VD, 9.0f,  27, 'D', 'Q');
-Torni Asema::vt = Torni(      "\xe2\x99\x96", 0, VT, 5.0f,  14, 'T', 'R');
-Lahetti Asema::vl = Lahetti(  "\xe2\x99\x97", 0, VL, 3.25f, 13, 'L', 'B');
-Ratsu Asema::vr = Ratsu(      "\xe2\x99\x98", 0, VR, 3.0f,   8, 'R', 'N');
-Sotilas Asema::vs = Sotilas(  "\xe2\x99\x99", 0, VS, 1.0f,   4, 'S', 'P');
+Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK,   0.0f,   8, "vk", 'K');
+Daami Asema::vd = Daami(      "\xe2\x99\x95", 0, VD,   9.0f,  27, "vd", 'Q');
+Torni Asema::vt = Torni(      "\xe2\x99\x96", 0, VT,   5.0f,  14, "vt", 'R');
+Lahetti Asema::vl = Lahetti(  "\xe2\x99\x97", 0, VL,  3.25f,  13, "vl", 'B');
+Ratsu Asema::vr = Ratsu(      "\xe2\x99\x98", 0, VR,   3.0f,   8, "vr", 'N');
+Sotilas Asema::vs = Sotilas(  "\xe2\x99\x99", 0, VS,   1.0f,   4, "vs", 'P');
+Kuningas Asema::mk = Kuningas("\xe2\x99\x9a", 1, MK,   0.0f,   8, "mk", 'k');
+Daami Asema::md = Daami(      "\xe2\x99\x9b", 1, MD,  -9.0f,  27, "md", 'q');
+Torni Asema::mt = Torni(      "\xe2\x99\x9c", 1, MT,  -5.0f,  14, "mt", 'r');
+Lahetti Asema::ml = Lahetti(  "\xe2\x99\x9d", 1, ML, -3.25f,  13, "ml", 'b');
+Ratsu Asema::mr = Ratsu(      "\xe2\x99\x9e", 1, MR,  -3.0f,   8, "mr", 'n');
+Sotilas Asema::ms = Sotilas(  "\xe2\x99\x9f", 1, MS,  -1.0f,   4, "ms", 'p');
 
-Kuningas Asema::mk = Kuningas("\xe2\x99\x9a", 1, MK, 0.0f,    8, 'k', 'k');
-Daami Asema::md = Daami(      "\xe2\x99\x9b", 1, MD, -9.0f,  27, 'd', 'q');
-Torni Asema::mt = Torni(      "\xe2\x99\x9c", 1, MT, -5.0f,  14, 't', 'r');
-Lahetti Asema::ml = Lahetti(  "\xe2\x99\x9d", 1, ML, -3.25f, 13, 'l', 'b');
-Ratsu Asema::mr = Ratsu(      "\xe2\x99\x9e", 1, MR, -3.0f,   8, 'r', 'n');
-Sotilas Asema::ms = Sotilas(  "\xe2\x99\x9f", 1, MS, -1.0f,   4, 's', 'p');
-
-std::array<Nappula*, NappulaKoodiMaara> Asema::nappulat =
+std::array<Nappula*, NappulaKoodiLkm> Asema::nappulat =
 {
     &vt, &vr, &vl, &vd, &vk, &vs,
     &mt, &mr, &ml, &md, &mk, &ms
@@ -533,40 +532,40 @@ float Asema::linjat(int vari)
     
 }
 
-std::vector<size_t> Asema::jaaSiirrotSaikeidenKesken(size_t siirtoMaara) const
+std::vector<size_t> Asema::jaaSiirrotSaikeidenKesken(size_t siirtoLkm) const
 {
-    uint32_t saieMaara = std::max(1u, std::thread::hardware_concurrency());
+    uint32_t saieLkm = std::max(1u, std::thread::hardware_concurrency());
     
     std::vector<size_t> siirtoaPerSaie;
-    siirtoaPerSaie.reserve(siirtoMaara);
+    siirtoaPerSaie.reserve(siirtoLkm);
     
-    if (siirtoMaara < saieMaara)
+    if (siirtoLkm < saieLkm)
     {
-        for (size_t i = 0; i < siirtoMaara; i++)
+        for (size_t i = 0; i < siirtoLkm; i++)
         {
             siirtoaPerSaie.push_back(1);
         }
     }
-    else if (siirtoMaara % saieMaara == 0)
+    else if (siirtoLkm % saieLkm == 0)
     {
-        for (size_t i = 0; i < saieMaara; i++)
+        for (size_t i = 0; i < saieLkm; i++)
         {
-            siirtoaPerSaie.push_back(siirtoMaara / saieMaara);
+            siirtoaPerSaie.push_back(siirtoLkm / saieLkm);
         }
     }
     else
     {
-        size_t pieniMaara = siirtoMaara / saieMaara;
-        size_t suuriMaara = saieMaara - (siirtoMaara % saieMaara);
+        size_t pieniLkm = siirtoLkm / saieLkm;
+        size_t suuriLkm = saieLkm - (siirtoLkm % saieLkm);
         
-        for (size_t i = 0; i < suuriMaara; i++)
+        for (size_t i = 0; i < suuriLkm; i++)
         {
-            siirtoaPerSaie.push_back(pieniMaara);
+            siirtoaPerSaie.push_back(pieniLkm);
         }
         
-        for (size_t i = suuriMaara; i < saieMaara; i++)
+        for (size_t i = suuriLkm; i < saieLkm; i++)
         {
-            siirtoaPerSaie.push_back(pieniMaara + 1);
+            siirtoaPerSaie.push_back(pieniLkm + 1);
         }
     }
     
@@ -609,11 +608,11 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
         }
     }
     
-    size_t siirtoMaara = siirrot.size();
+    size_t siirtoLkm = siirrot.size();
     
-    std::vector<size_t> siirtoaPerSaie = jaaSiirrotSaikeidenKesken(siirtoMaara);
+    std::vector<size_t> siirtoaPerSaie = jaaSiirrotSaikeidenKesken(siirtoLkm);
     std::vector<std::future<MinMaxPaluu>> tehtavat;
-    tehtavat.reserve(siirtoMaara);
+    tehtavat.reserve(siirtoLkm);
     
     if (_siirtovuoro == 0)
     {
@@ -826,12 +825,12 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
         }
     }
     
-    size_t siirtoMaara = siirrot.size();
+    size_t siirtoLkm = siirrot.size();
     
-    std::vector<size_t> siirtoaPerSaie = jaaSiirrotSaikeidenKesken(siirtoMaara);
+    std::vector<size_t> siirtoaPerSaie = jaaSiirrotSaikeidenKesken(siirtoLkm);
     
     std::vector<std::future<MinMaxPaluu>> tehtavat;
-    tehtavat.reserve(siirtoMaara);
+    tehtavat.reserve(siirtoLkm);
     
     if (_siirtovuoro == 0)
     {

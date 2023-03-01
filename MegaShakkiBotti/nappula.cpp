@@ -4,30 +4,36 @@
 #include "nappula.h"
 
 #include <iostream>
+#include "kayttoliittyma.h"
 
 using namespace std;
 
-Nappula::Nappula(string merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, char kirjainSuomi, char kirjainEnglanti)
+Nappula::Nappula(const string& merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, const std::string& siirtoMerkkiAvain, char fenMerkki)
 : _merkki(merkki)
 , _vari{vari}
 , _koodi{koodi}
 , _arvo{arvo}
 , _maxSiirrot{maxSiirrot}
-, _kirjainSuomi{kirjainSuomi}
-, _kirjainEnglanti{kirjainEnglanti} {}
+, _siirtoMerkkiAvain{siirtoMerkkiAvain}
+, _fenMerkki{fenMerkki} {}
 
-Daami::Daami(string merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, char kirjainSuomi, char kirjainEnglanti)
-: Nappula(merkki, vari, koodi, arvo, maxSiirrot, kirjainSuomi, kirjainEnglanti)
-, Torni(merkki, vari, koodi, arvo, maxSiirrot, kirjainSuomi, kirjainEnglanti)
-, Lahetti(merkki, vari, koodi, arvo, maxSiirrot, kirjainSuomi, kirjainEnglanti) {}
+Daami::Daami(const string& merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, const std::string& siirtoMerkkiAvain, char fenMerkki)
+: Nappula(merkki, vari, koodi, arvo, maxSiirrot, siirtoMerkkiAvain, fenMerkki)
+, Torni(merkki, vari, koodi, arvo, maxSiirrot, siirtoMerkkiAvain, fenMerkki)
+, Lahetti(merkki, vari, koodi, arvo, maxSiirrot, siirtoMerkkiAvain, fenMerkki) {}
 
 NappulaKoodi Nappula::getKoodi() const { return _koodi; }
 int Nappula::getVari() const { return _vari; }
-const string& Nappula::getMerkki() const { return _merkki; }
 float Nappula::getArvo() const { return _arvo; }
 
-char Nappula::getKirjainSuomi() const { return _kirjainSuomi; }
-char Nappula::getKirjainEnglanti() const { return _kirjainEnglanti; }
+const string& Nappula::getLautaMerkki() const { return _merkki; }
+
+const std::string& Nappula::getSiirtoMerkki() const
+{
+    return Kayttoliittyma::getInstance().getKieli().get(_siirtoMerkkiAvain);
+}
+
+char Nappula::getFENMerkki() const { return _fenMerkki; }
 
 int Nappula::getMaxSiirrot() const { return _maxSiirrot; }
 
