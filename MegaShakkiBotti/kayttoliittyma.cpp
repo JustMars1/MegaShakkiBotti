@@ -485,9 +485,9 @@ void Kayttoliittyma::piirra(const Peli& peli) const
 }
 
 /*
- Aliohjelma tarkistaa että käyttäjän antama syšte siirroksi on
+ Aliohjelma tarkistaa ettï¿½ kï¿½yttï¿½jï¿½n antama syï¿½te siirroksi on
  muodollisesti korrekti (ei tarkista aseman laillisuutta)
- Ottaa irti myös nappulan kirjaimen (K/D/L/R/T), tarkistaa että kirjain korrekti
+ Ottaa irti myï¿½s nappulan kirjaimen (K/D/L/R/T), tarkistaa ettï¿½ kirjain korrekti
  */
 Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
 {
@@ -511,7 +511,7 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
         
         return nullptr;
     };
-    
+
     
     while(true)
     {
