@@ -404,7 +404,7 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
  */
 float Asema::evaluoi() const
 {
-    float summa = laskeNappuloidenArvo();
+    float summa = laskeNappuloidenArvo() + nappuloitaKeskella();
     return summa;
     
     //kertoimet asetettu sen takia että niiden avulla asioiden painoarvoa voidaan säätää helposti yhdestä paikasta
@@ -503,23 +503,57 @@ bool Asema::onkoAvausTaiKeskipeli(int vari)
     return false;
 }
 
-float Asema::nappuloitaKeskella(int vari)
+float Asema::nappuloitaKeskella() const
 {
-    return 0;
+    float summa = 0;
     
-    //sotilaat ydinkeskustassa + 0.25/napa
-    //ratsut ydinkeskustassa + 0.25/napa
-    //sotilaat laitakeskustassa + 0.11/napa
-    //ratsut laitakeskustassa + 0.11/napa
-    
-    //valkeille ydinkeskusta
-    
-    //valkeille laitakeskusta
-    
-    //mustille ydinkeskusta
-    
-    //mustille laitakeskusta
-    
+    //Ydinkeskusta
+    for (int y = 3; y < 5; y++)
+    {
+        for (int x = 3; x < 5; x++)
+        {
+            if (lauta[y][x] != NULL && (lauta[y][x]->getKoodi() == VS || lauta[y][x]->getKoodi() == VR)) {
+                summa += 0.25;
+            }
+
+            else if (lauta[y][x] != NULL && (lauta[y][x]->getKoodi() == MS || lauta[y][x]->getKoodi() == MR))
+            {
+                summa -= 0.25;
+            }
+        }
+    }
+
+    //Laitakeskusta
+    for (int x = 2; x < 6; x++)
+    {
+        if (lauta[2][x] != NULL)
+        {
+            if (lauta[2][x]->getKoodi() == VS || lauta[2][x]->getKoodi() == VR) summa += 0.11;
+            else if (lauta[2][x]->getKoodi() == MS || lauta[2][x]->getKoodi() == MR) summa -= 0.11;
+        }
+
+        if (lauta[5][x] != NULL)
+        {
+            if (lauta[5][x]->getKoodi() == VS || lauta[5][x]->getKoodi() == VR) summa += 0.11;
+            else if (lauta[5][x]->getKoodi() == MS || lauta[5][x]->getKoodi() == MR) summa -= 0.11;
+        }
+    }
+
+    for (int y = 3; y < 5; y++) {
+        if (lauta[y][2] != NULL)
+        {
+            if (lauta[y][2]->getKoodi() == VS || lauta[y][2]->getKoodi() == VR) summa += 0.11;
+            else if (lauta[y][2]->getKoodi() == MS || lauta[y][2]->getKoodi() == MR) summa -= 0.11;
+        }
+
+        if (lauta[y][5] != NULL)
+        {
+            if (lauta[y][5]->getKoodi() == VS || lauta[y][5]->getKoodi() == VR) summa += 0.11;
+            else if (lauta[y][5]->getKoodi() == MS || lauta[y][5]->getKoodi() == MR) summa -= 0.11;
+        }
+    }
+
+    return summa;
 }
 
 float Asema::linjat(int vari)
