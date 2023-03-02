@@ -1,4 +1,5 @@
 #include "siirto.h"
+#include <algorithm>
 #include "kayttoliittyma.h"
 
 Siirto::Siirto(Ruutu alku, Ruutu loppu)
