@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Nappula::Nappula(const string& merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, const std::string& siirtoMerkkiAvain, char fenMerkki)
+Nappula::Nappula(const string& merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, const std::string& siirtoMerkkiAvain, const string& fenMerkki)
 : _merkki(merkki)
 , _vari{vari}
 , _koodi{koodi}
@@ -17,7 +17,7 @@ Nappula::Nappula(const string& merkki, int vari, NappulaKoodi koodi, float arvo,
 , _siirtoMerkkiAvain{siirtoMerkkiAvain}
 , _fenMerkki{fenMerkki} {}
 
-Daami::Daami(const string& merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, const std::string& siirtoMerkkiAvain, char fenMerkki)
+Daami::Daami(const string& merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, const std::string& siirtoMerkkiAvain, const string& fenMerkki)
 : Nappula(merkki, vari, koodi, arvo, maxSiirrot, siirtoMerkkiAvain, fenMerkki)
 , Torni(merkki, vari, koodi, arvo, maxSiirrot, siirtoMerkkiAvain, fenMerkki)
 , Lahetti(merkki, vari, koodi, arvo, maxSiirrot, siirtoMerkkiAvain, fenMerkki) {}
@@ -30,10 +30,20 @@ const string& Nappula::getLautaMerkki() const { return _merkki; }
 
 const std::string& Nappula::getSiirtoMerkki() const
 {
+    return getSiirtoMerkki(Kayttoliittyma::getInstance().getOnkoUCI());
+}
+
+const std::string& Nappula::getSiirtoMerkki(bool uci) const
+{
+    if (uci)
+    {
+        return getFENMerkki();
+    }
+    
     return Kayttoliittyma::getInstance().getKieli().get(_siirtoMerkkiAvain);
 }
 
-char Nappula::getFENMerkki() const { return _fenMerkki; }
+const string& Nappula::getFENMerkki() const { return _fenMerkki; }
 
 int Nappula::getMaxSiirrot() const { return _maxSiirrot; }
 

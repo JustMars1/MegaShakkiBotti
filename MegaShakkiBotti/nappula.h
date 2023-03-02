@@ -20,7 +20,7 @@ enum NappulaKoodi
 class Nappula
 {
 public:
-    Nappula(const std::string& merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, const std::string& siirtoMerkkiAvain, char fenMerkki);
+    Nappula(const std::string& merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, const std::string& siirtoMerkkiAvain, const std::string& fenMerkki);
     
     virtual void annaSiirrot(std::vector<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) = 0;
     
@@ -30,7 +30,9 @@ public:
     
     const std::string& getLautaMerkki() const;
     const std::string& getSiirtoMerkki() const;
-    char getFENMerkki() const;
+    const std::string& getFENMerkki() const;
+    
+    const std::string& getSiirtoMerkki(bool uci) const;
     
     int getMaxSiirrot() const;
 protected:
@@ -40,7 +42,7 @@ protected:
     const float              _arvo;
     const int                _maxSiirrot;
     const std::string        _siirtoMerkkiAvain;
-    const char               _fenMerkki;
+    const std::string        _fenMerkki;
 };
 
 // Torni-aliluokka. Virtuaalinen perint‰ tarkoittaa, ett‰ kantaluokka perit‰‰n moniperinn‰ss‰ vain kerran
@@ -65,7 +67,7 @@ public:
 class Daami : public Lahetti, public Torni
 {
 public:
-    Daami(const std::string& merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, const std::string& siirtoMerkkiAvain, char fenMerkki);
+    Daami(const std::string& merkki, int vari, NappulaKoodi koodi, float arvo, int maxSiirrot, const std::string& siirtoMerkkiAvain, const std::string&);
     void annaSiirrot(std::vector<Siirto>& lista, const Ruutu& ruutu, const Asema& asema, int vari) override;
 };
 

@@ -46,6 +46,8 @@ int main(int argc, char* argv[])
     
     kayttoliittyma.kysyKieli();
     cout << endl;
+    kayttoliittyma.kysySiirronMerkintatapa();
+    cout << endl;
     
     while(kayttoliittyma.getOhjelmaKaynnissa())
     {
@@ -53,7 +55,7 @@ int main(int argc, char* argv[])
         cout << endl;
         kayttoliittyma.kysyPelimuoto(peli);
         cout << endl;
-        kayttoliittyma.tulostaSiirtoOhje();
+        kayttoliittyma.tulostaSiirtoOhje(kayttoliittyma.getOnkoUCI());
         cout << endl;
         
         while (kayttoliittyma.getOhjelmaKaynnissa())
@@ -102,9 +104,9 @@ int main(int argc, char* argv[])
                     
                     siirto = minimax.parasSiirto;
                     
-                    cout << "Koneen siirto: ";
+                    cout << "koneenSiirto"_k << ": ";
                     
-                    if (!siirto.onkoLyhytLinna() && !siirto.onkoPitkaLinna())
+                    if (!kayttoliittyma.getOnkoUCI() && !siirto.onkoLyhytLinna() && !siirto.onkoPitkaLinna())
                     {
                         int y = siirto.getAlkuruutu().getRivi();
                         int x = siirto.getAlkuruutu().getSarake();

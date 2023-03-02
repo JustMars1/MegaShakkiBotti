@@ -34,21 +34,25 @@ bool Siirto::onkoPitkaLinna() const { return _pitkaLinna; }
 
 std::ostream& operator<<(std::ostream& os, const Siirto& siirto)
 {
+    bool uci = Kayttoliittyma::getInstance().getOnkoUCI();
+    
+    // TODO
     if (siirto.onkoPitkaLinna())
     {
-        os << "O-O-O";
+        os << (uci ? "??" : "O-O-O");
     }
     else if (siirto.onkoLyhytLinna())
     {
-        os << "O-O";
+        os << (uci ? "?" : "O-O");
     }
     else
     {
-        os << siirto.getAlkuruutu() << "-" << siirto.getLoppuruutu();
-        
+        os << siirto.getAlkuruutu() << (uci ? "" : "-") << siirto.getLoppuruutu();
         if (siirto.miksiKorotetaan != nullptr)
         {
-            os << " " << siirto.miksiKorotetaan->getSiirtoMerkki();
+            std::string merkki = siirto.miksiKorotetaan->getSiirtoMerkki();
+            std::transform(merkki.begin(), merkki.end(), merkki.begin(), ::tolower);
+            os << merkki;
         }
     }
     

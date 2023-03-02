@@ -13,13 +13,15 @@ public:
     
     void kysyKieli();
     
+    void kysySiirronMerkintatapa();
+    
     Peli kysyPeli() const;
     void kysyPelimuoto(Peli& peli) const;
     std::optional<Peli> kysyFEN() const;
     
     Siirto kysyVastustajanSiirto(const Peli& peli);
     
-    void tulostaSiirtoOhje() const;
+    void tulostaSiirtoOhje(bool uci, size_t sisennys = 0) const;
     
     void piirra(const Peli& peli) const;
     bool tarkistaKomento(std::string komento, const Peli& peli) const;
@@ -34,11 +36,15 @@ public:
     
     const Kieli& getKieli() const;
     
+    bool getOnkoUCI() const;
+    
     const std::string& teksti();
 private:
     bool _varitaRuudut;
     bool _ohjelmaKaynnissa;
     int _kieli;
+    
+    bool _onkoUCI;
     
     std::vector<Kieli> _kielet;
     

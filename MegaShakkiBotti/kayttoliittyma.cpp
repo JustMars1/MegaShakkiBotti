@@ -31,7 +31,8 @@ Kayttoliittyma::Kayttoliittyma()
 : _ohjelmaKaynnissa{true}
 , _varitaRuudut{true}
 , _kielet(lataaKielet())
-, _kieli(0) {}
+, _kieli(0)
+, _onkoUCI{false} {}
 
 vector<Kieli> Kayttoliittyma::lataaKielet()
 {
@@ -111,6 +112,8 @@ void Kayttoliittyma::suljeOhjelma()
 
 const Kieli& Kayttoliittyma::getKieli() const { return _kielet[_kieli]; }
 
+bool Kayttoliittyma::getOnkoUCI() const { return _onkoUCI; }
+
 void Kayttoliittyma::kysyKieli()
 {
     for (size_t i = 0; i < _kielet.size(); i++)
@@ -144,29 +147,77 @@ void Kayttoliittyma::kysyKieli()
     _kieli = kieli;
 }
 
-void Kayttoliittyma::tulostaSiirtoOhje() const
+void Kayttoliittyma::tulostaSiirtoOhje(bool uci, size_t sisennys) const
 {
     string nappulaOhje = "[";
     int nappulaLkm = Asema::nappulat.size() / 2;
+    
     for (int i = 0; i < nappulaLkm - 1; i++)
     {
-        nappulaOhje += Asema::nappulat[i]->getSiirtoMerkki() + "|";
+        Nappula* nappula = Asema::nappulat[i];
+        string merkki = nappula->getSiirtoMerkki(uci);
+        if (uci)
+        {
+            transform(merkki.begin(), merkki.end(), merkki.begin(), ::tolower);
+        }
+        
+        nappulaOhje += merkki + "|";
     }
-    nappulaOhje += Asema::nappulat[nappulaLkm - 1]->getSiirtoMerkki() + "]";
+    
+    {
+        Nappula* nappula = Asema::nappulat[nappulaLkm - 1];
+        string merkki = nappula->getSiirtoMerkki(uci);
+        if (uci)
+        {
+            transform(merkki.begin(), merkki.end(), merkki.begin(), ::tolower);
+        }
+        
+        nappulaOhje += merkki + "]";
+    }
+    
+    string siirtoOhje;
+    if (uci)
+    {
+        siirtoOhje = "[" + "ruutu"_k + "][" + "ruutu"_k + "]";
+    }
+    else
+    {
+        siirtoOhje = "[" + "nappula"_k + "][" + "ruutu"_k + "]-[" + "ruutu"_k + "]";
+    }
+    
+    string korotusOhje;
+    if (uci)
+    {
+        korotusOhje = "[" + "ruutu"_k + "][" + "ruutu"_k + "]" + "[" + "nappula"_k + "]";
+    }
+    else
+    {
+        korotusOhje = "[" + "nappula"_k + "]" + "[" + "ruutu"_k + "]-[" + "ruutu"_k + "]" + "[" + "nappula"_k + "]";
+    }
     
     string ruutuOhje = "[a, h][1, 8]";
-    
-    string siirtoOhje = "[" + "nappula"_k + "][" + "ruutu"_k + "]-[" + "ruutu"_k + "]";
-    
-    string lyhytLinnoitusOhje = "O-O";
-    string pitkaLinnoitusOhje = "O-O-O";
+    string lyhytLinnoitusOhje = uci ? "e1g1/e7g7" : "O-O";
+    string pitkaLinnoitusOhje = uci ? "e1c1/e7c7" : "O-O-O";
     
     size_t leveys = max(siirtoOhje.length(), nappulaOhje.length());
+    leveys = max(leveys, korotusOhje.length());
     
+    cout << string(sisennys, ' ');
     cout << nappulaOhje << string(leveys - nappulaOhje.length(), ' ') << " = " << "nappula"_k << endl;
+    
+    cout << string(sisennys, ' ');
     cout << ruutuOhje << string(leveys - ruutuOhje.length(), ' ') << " = " << "ruutu"_k << " (" << "sarake"_k << ", " << "rivi"_k << ")" << endl;
+    
+    cout << string(sisennys, ' ');
     cout << siirtoOhje << string(leveys - siirtoOhje.length(), ' ') << " = " << "siirto"_k << endl;
+    
+    cout << string(sisennys, ' ');
+    cout << korotusOhje << string(leveys - korotusOhje.length(), ' ') << " = " << "korotus"_k << endl;
+    
+    cout << string(sisennys, ' ');
     cout << lyhytLinnoitusOhje << string(leveys - lyhytLinnoitusOhje.length(), ' ') << " = " << "lyhytLinnoitus"_k << endl;
+    
+    cout << string(sisennys, ' ');
     cout << pitkaLinnoitusOhje << string(leveys - pitkaLinnoitusOhje.length(), ' ') << " = " << "pitkaLinnoitus"_k << endl;
 }
 
@@ -492,7 +543,12 @@ void Kayttoliittyma::piirra(const Peli& peli) const
 /*
  Aliohjelma tarkistaa ett� k�ytt�j�n antama sy�te siirroksi on
  muodollisesti korrekti (ei tarkista aseman laillisuutta)
- Ottaa irti my�s nappulan kirjaimen (K/D/L/R/T), tarkistaa ett� kirjain korrekti
+ 
+ UCI:
+ Ottaa irti myös korotettaessa nappulan kirjaimen (D/L/R/T), tarkistaa että kirjain korrekti
+ 
+ Ei UCI:
+ Ottaa irti myös nappulan kirjaimen (K/D/L/R/T), tarkistaa että kirjain korrekti
  */
 Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
 {
@@ -507,7 +563,7 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
                 string siirtoMerkki = nappula->getSiirtoMerkki();
                 transform(siirtoMerkki.begin(), siirtoMerkki.end(), siirtoMerkki.begin(), ::tolower);
                 
-                if (siirtoMerkki != merkki)
+                if (siirtoMerkki == merkki)
                 {
                     return nappula;
                 }
@@ -516,7 +572,6 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
         
         return nullptr;
     };
-
     
     while(true)
     {
@@ -542,70 +597,133 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
             continue;
         }
         
-        bool pitkaLinna = syote == "O-O-O";
-        bool lyhytLinna = syote == "O-O";
-        
-        if (pitkaLinna || lyhytLinna)
+        if (_onkoUCI)
         {
-            return Siirto(lyhytLinna, pitkaLinna);
-        }
-        
-        if (syote.length() >= 6)
-        {
-            Ruutu alku(-1, -1);
-            Ruutu loppu(-1, -1);
+            // TODO
+            bool pitkaLinna = syote == "?";
+            bool lyhytLinna = syote == "??";
             
-            alku.setSarake(syote[syote.length() - 5] - 'a');
-            alku.setRivi(syote[syote.length() - 4] - '0' - 1);
-            
-            if (syote[syote.length() - 3] != '-')
+            if (pitkaLinna || lyhytLinna)
             {
+                return Siirto(lyhytLinna, pitkaLinna);
+            }
+            
+            if (syote.length() < 4)
+            {
+                tulostaVirhe("Tuntematon siirto");
                 continue;
             }
             
-            loppu.setSarake(syote[syote.length() - 2] - 'a');
-            loppu.setRivi(syote[syote.length() - 1] - '0' - 1);
+            Ruutu alku(-1, -1);
+            Ruutu loppu(-1, -1);
             
-            string nappulaMerkki = syote.substr(0, syote.length() - 5);
+            alku.setSarake(syote[0] - 'a');
+            alku.setRivi(syote[1] - '0' - 1);
             
-            Nappula* nappula = tarkistaNappula(nappulaMerkki);
-            if (alku.ok() && loppu.ok() && nappula != nullptr)
+            loppu.setSarake(syote[2] - 'a');
+            loppu.setRivi(syote[3] - '0' - 1);
+            
+            if (!alku.ok() || !loppu.ok())
             {
-                Siirto siirto(alku, loppu);
-                if ((nappula == &Asema::ms && loppu.getRivi() == 0) || (nappula == &Asema::vs && loppu.getRivi() == 7))
+                tulostaVirhe("Virheelliset ruudut");
+                continue;
+            }
+            
+            Siirto siirto(alku, loppu);
+            
+            if (syote.length() > 4)
+            {
+                string korotusMerkki = syote.substr(4);
+                Nappula* korotusNappula = tarkistaNappula(korotusMerkki);
+                
+                if (korotusNappula == nullptr || korotusNappula == &Asema::vs || korotusNappula == &Asema::ms)
                 {
-                    while (true)
-                    {
-                        Nappula* korotus = nullptr;
-                        if (cin.fail())
-                        {
-                            cin.clear();
-                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                        }
-                        else
-                        {
-                            cout << "syotaMiksiKorotetaan"_k << ": ";
-                        }
-                        
-                        string korotusMerkki;
-                        cin >> korotusMerkki;
-                        
-                        if (cin.fail())
-                        {
-                            continue;
-                        }
-                        
-                        korotus = tarkistaNappula(korotusMerkki);
-                        if (korotus != nullptr && korotus != &Asema::ms && korotus != &Asema::vs)
-                        {
-                            siirto.miksiKorotetaan = korotus;
-                            break;
-                        }
-                    }
+                    tulostaVirhe("Siirron lopussa on virheellisia merkkeja.");
+                    continue;
                 }
                 
-                return siirto;
+                siirto.miksiKorotetaan = korotusNappula;
             }
+            
+            return siirto;
+        }
+        else
+        {
+            bool pitkaLinna = syote == "O-O-O";
+            bool lyhytLinna = syote == "O-O";
+            
+            if (pitkaLinna || lyhytLinna)
+            {
+                return Siirto(lyhytLinna, pitkaLinna);
+            }
+            
+            if (syote.length() < 6)
+            {
+                tulostaVirhe("Tuntematon siirto");
+                continue;
+            }
+            
+            auto viivaIdx = syote.find('-');
+            
+            if (viivaIdx == string::npos)
+            {
+                tulostaVirhe("Siirrosta puuttuu -");
+                continue;
+            }
+            
+            if (viivaIdx + 2 > syote.length() - 1 || viivaIdx - 2 < 1)
+            {
+                tulostaVirhe("Virheellinen siirto");
+                continue;
+            }
+            
+            Ruutu alku(-1, -1);
+            Ruutu loppu(-1, -1);
+            
+            alku.setSarake(syote[viivaIdx - 2] - 'a');
+            alku.setRivi(syote[viivaIdx - 1] - '0' - 1);
+            
+            loppu.setSarake(syote[viivaIdx + 1] - 'a');
+            loppu.setRivi(syote[viivaIdx + 2] - '0' - 1);
+            
+            string siirtoMerkki = syote.substr(0, viivaIdx - 2);
+            Nappula* siirtoNappula = tarkistaNappula(siirtoMerkki);
+            
+            if (siirtoNappula == nullptr)
+            {
+                tulostaVirhe("Siirron alussa ei mainita nappulaa.");
+                continue;
+            }
+            
+            if (!alku.ok() || !loppu.ok())
+            {
+                tulostaVirhe("Virheelliset ruudut");
+                continue;
+            }
+            
+            Siirto siirto(alku, loppu);
+            
+            if (syote.length() - 1 > viivaIdx + 2)
+            {
+                string korotusMerkki = syote.substr(viivaIdx + 2 + 1);
+                Nappula* korotusNappula = tarkistaNappula(korotusMerkki);
+                
+                if (korotusNappula == nullptr || korotusNappula == &Asema::vs || korotusNappula == &Asema::ms)
+                {
+                    tulostaVirhe("Siirron lopussa on virheellisia merkkeja.");
+                    continue;
+                }
+                
+                if (siirtoNappula != &Asema::vs && siirtoNappula != &Asema::ms)
+                {
+                    tulostaVirhe("Vain sotilas voidaan korottaa.");
+                    continue;
+                }
+                
+                siirto.miksiKorotetaan = korotusNappula;
+            }
+            
+            return siirto;
         }
     }
 }
@@ -678,7 +796,7 @@ optional<Peli> Kayttoliittyma::kysyFEN() const
         else if (kirjain != '/')
         {
             auto nappulaItr = find_if(Asema::nappulat.begin(), Asema::nappulat.end(), [kirjain](auto nappula) {
-                return nappula->getFENMerkki() == kirjain;
+                return nappula->getFENMerkki()[0] == kirjain;
             });
             
             if (nappulaItr == Asema::nappulat.end())
@@ -833,4 +951,33 @@ optional<Peli> Kayttoliittyma::kysyFEN() const
     peli.siirtoparilaskuri = siirtoparilaskuri;
     
     return peli;
+}
+
+void Kayttoliittyma::kysySiirronMerkintatapa()
+{
+    cout << "0" << endl;
+    tulostaSiirtoOhje(false, 3);
+    cout << endl << "1" << endl;
+    tulostaSiirtoOhje(true, 3);
+    cout << endl << "valitseSiirronMerkintatapa"_k << ": ";
+    
+    bool uci = false;
+    while(true)
+    {
+        int syote;
+        cin >> syote;
+        
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        else if (syote == 0 || syote == 1)
+        {
+            uci = syote;
+            break;
+        }
+    }
+    
+    _onkoUCI = uci;
 }

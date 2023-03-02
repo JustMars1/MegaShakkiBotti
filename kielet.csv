@@ -22,7 +22,6 @@ komennot,Komennot,Commands
 listaaLaillisetSiirrot,listaa lailliset siirrot,lists legal moves
 tulostaAsemaFEN-merkintana,tulosta asema FEN-merkintänä,print position as FEN-record
 syotaSiirto,Syötä siirto,Enter a move
-syotaMiksiKorotetaan,Syötä miksi korotetaan,Enter to which to promote
 annaFEN,Anna FEN,Enter FEN
 koneenSiirto,Koneen siirto,Computer's move
 nappula,nappula,piece
@@ -44,3 +43,5 @@ mt,t,r
 ml,l,b
 mr,r,n
 ms,s,p
+valitseSiirronMerkintatapa,Valitse siirron merkintätapa,Select move notation
+korotus,korotus,promotion

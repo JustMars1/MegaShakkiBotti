@@ -11,18 +11,18 @@
 #include "ruutu.h"
 #include "kayttoliittyma.h"
 
-Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK,   0.0f,   8, "vk", 'K');
-Daami Asema::vd = Daami(      "\xe2\x99\x95", 0, VD,   9.0f,  27, "vd", 'Q');
-Torni Asema::vt = Torni(      "\xe2\x99\x96", 0, VT,   5.0f,  14, "vt", 'R');
-Lahetti Asema::vl = Lahetti(  "\xe2\x99\x97", 0, VL,  3.25f,  13, "vl", 'B');
-Ratsu Asema::vr = Ratsu(      "\xe2\x99\x98", 0, VR,   3.0f,   8, "vr", 'N');
-Sotilas Asema::vs = Sotilas(  "\xe2\x99\x99", 0, VS,   1.0f,   4, "vs", 'P');
-Kuningas Asema::mk = Kuningas("\xe2\x99\x9a", 1, MK,   0.0f,   8, "mk", 'k');
-Daami Asema::md = Daami(      "\xe2\x99\x9b", 1, MD,  -9.0f,  27, "md", 'q');
-Torni Asema::mt = Torni(      "\xe2\x99\x9c", 1, MT,  -5.0f,  14, "mt", 'r');
-Lahetti Asema::ml = Lahetti(  "\xe2\x99\x9d", 1, ML, -3.25f,  13, "ml", 'b');
-Ratsu Asema::mr = Ratsu(      "\xe2\x99\x9e", 1, MR,  -3.0f,   8, "mr", 'n');
-Sotilas Asema::ms = Sotilas(  "\xe2\x99\x9f", 1, MS,  -1.0f,   4, "ms", 'p');
+Kuningas Asema::vk = Kuningas("\xe2\x99\x94", 0, VK,   0.0f,   8, "vk", "K");
+Daami Asema::vd = Daami(      "\xe2\x99\x95", 0, VD,   9.0f,  27, "vd", "Q");
+Torni Asema::vt = Torni(      "\xe2\x99\x96", 0, VT,   5.0f,  14, "vt", "R");
+Lahetti Asema::vl = Lahetti(  "\xe2\x99\x97", 0, VL,  3.25f,  13, "vl", "B");
+Ratsu Asema::vr = Ratsu(      "\xe2\x99\x98", 0, VR,   3.0f,   8, "vr", "N");
+Sotilas Asema::vs = Sotilas(  "\xe2\x99\x99", 0, VS,   1.0f,   4, "vs", "P");
+Kuningas Asema::mk = Kuningas("\xe2\x99\x9a", 1, MK,   0.0f,   8, "mk", "k");
+Daami Asema::md = Daami(      "\xe2\x99\x9b", 1, MD,  -9.0f,  27, "md", "q");
+Torni Asema::mt = Torni(      "\xe2\x99\x9c", 1, MT,  -5.0f,  14, "mt", "r");
+Lahetti Asema::ml = Lahetti(  "\xe2\x99\x9d", 1, ML, -3.25f,  13, "ml", "b");
+Ratsu Asema::mr = Ratsu(      "\xe2\x99\x9e", 1, MR,  -3.0f,   8, "mr", "n");
+Sotilas Asema::ms = Sotilas(  "\xe2\x99\x9f", 1, MS,  -1.0f,   4, "ms", "p");
 
 std::array<Nappula*, NappulaKoodiLkm> Asema::nappulat =
 {
