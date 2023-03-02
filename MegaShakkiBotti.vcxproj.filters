@@ -91,6 +91,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="MegaShakkiBotti\kielet.csv" />
+    <CopyFileToFolders Include="kielet.csv" />
   </ItemGroup>
 </Project>

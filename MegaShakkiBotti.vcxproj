@@ -139,7 +139,7 @@
     <ClInclude Include="megashakkibotti\evaluointi.h" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="MegaShakkiBotti\kielet.csv">
+    <CopyFileToFolders Include="kielet.csv">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
