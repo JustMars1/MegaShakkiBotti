@@ -51,6 +51,9 @@
     <ClCompile Include="MegaShakkiBotti\kieli.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Uci.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="megashakkibotti\asema.h">
@@ -87,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MegaShakkiBotti\kieli.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Uci.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

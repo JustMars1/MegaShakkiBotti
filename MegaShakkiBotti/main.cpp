@@ -18,7 +18,7 @@
 #include "siirto.h"
 #include "asema.h"
 #include "ajastin.h"
-
+#include "uci.h"
 #include <chrono>
 #include <cstring>
 
@@ -43,7 +43,11 @@ int main(int argc, char* argv[])
             Kayttoliittyma::getInstance().setVaritaRuudut(false);
         }
     }
-    
+
+    Peli peli;
+    Uci uci;
+    uci.uciLoop();
+
     kayttoliittyma.kysyKieli();
     cout << endl;
     kayttoliittyma.kysySiirronMerkintatapa();
@@ -51,7 +55,8 @@ int main(int argc, char* argv[])
     
     while(kayttoliittyma.getOhjelmaKaynnissa())
     {
-        Peli peli = kayttoliittyma.kysyPeli();
+
+        peli = kayttoliittyma.kysyPeli();
         cout << endl;
         kayttoliittyma.kysyPelimuoto(peli);
         cout << endl;

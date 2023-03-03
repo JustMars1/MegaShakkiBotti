@@ -37,14 +37,21 @@ std::ostream& operator<<(std::ostream& os, const Siirto& siirto)
 {
     bool uci = Kayttoliittyma::getInstance().getOnkoUCI();
     
-    // TODO
     if (siirto.onkoPitkaLinna())
     {
-        os << (uci ? "??" : "O-O-O");
+        os << (uci ? "e1c1" : "O-O-O");
+    }
+    else if (siirto.onkoPitkaLinna())
+    {
+        os << (uci ? "e8c8" : "O-O-O");
     }
     else if (siirto.onkoLyhytLinna())
     {
-        os << (uci ? "?" : "O-O");
+        os << (uci ? "e1g1" : "O-O");
+    }
+    else if (siirto.onkoLyhytLinna())
+    {
+        os << (uci ? "e8g8" : "O-O");
     }
     else
     {

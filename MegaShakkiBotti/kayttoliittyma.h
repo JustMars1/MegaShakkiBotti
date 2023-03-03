@@ -2,6 +2,7 @@
 #include <optional>
 #include "peli.h"
 #include "kieli.h"
+#include "ajastin.h"
 
 // Shakkiohjelman käyttöliittymä, joka osaa visualisoida nykyisen aseman
 // ja lukea käyttäjän syöttämät siirrot. Singleton.
@@ -37,6 +38,10 @@ public:
     const Kieli& getKieli() const;
     
     bool getOnkoUCI() const;
+    void setOnkoUCI(bool uci);
+
+    bool getAloitaUCI() const;
+    void uciProtokolla(Kayttoliittyma kayttoliittyma) const;
     
     const std::string& teksti();
 private:

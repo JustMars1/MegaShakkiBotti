@@ -196,8 +196,8 @@ void Kayttoliittyma::tulostaSiirtoOhje(bool uci, size_t sisennys) const
     }
     
     string ruutuOhje = "[a, h][1, 8]";
-    string lyhytLinnoitusOhje = uci ? "e1g1/e7g7" : "O-O";
-    string pitkaLinnoitusOhje = uci ? "e1c1/e7c7" : "O-O-O";
+    string lyhytLinnoitusOhje = uci ? "e1g1/e8g8" : "O-O";
+    string pitkaLinnoitusOhje = uci ? "e1c1/e8c8" : "O-O-O";
     
     size_t leveys = max(siirtoOhje.length(), nappulaOhje.length());
     leveys = max(leveys, korotusOhje.length());
@@ -599,9 +599,17 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
         
         if (_onkoUCI)
         {
-            // TODO
-            bool pitkaLinna = syote == "?";
-            bool lyhytLinna = syote == "??";
+            bool pitkaLinna = false;
+            bool lyhytLinna = false;
+
+            if (syote == "e1c1" || syote == "e8c8")
+            {
+                pitkaLinna = true;
+            }
+            else if (syote == "e1g1" || syote == "e8g8")
+            {
+                lyhytLinna = true;
+            }
             
             if (pitkaLinna || lyhytLinna)
             {
@@ -979,5 +987,10 @@ void Kayttoliittyma::kysySiirronMerkintatapa()
         }
     }
     
+    _onkoUCI = uci;
+}
+
+void Kayttoliittyma::setOnkoUCI(bool uci)
+{
     _onkoUCI = uci;
 }
