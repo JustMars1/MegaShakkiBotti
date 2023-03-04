@@ -10,7 +10,6 @@
 #include <string_view>
 #include <sstream>
 #include <iostream>
-#include <fstream>
 #include <limits>
 #include <cctype>
 #include <array>
@@ -36,56 +35,52 @@ Kayttoliittyma::Kayttoliittyma()
 
 vector<Kieli> Kayttoliittyma::lataaKielet()
 {
-    ifstream file("kielet.csv");
+    const char* kieletCSV =
+#include "kielet.csv"
+    ;
     
-    if (file)
+    stringstream data(kieletCSV);
+    
+    std::vector<Kieli> kielet;
+    string tmp;
+    
     {
-        std::vector<Kieli> kielet;
-        string tmp;
+        getline(data, tmp);
+        stringstream nimiRivi(tmp);
+        string nimiAvain, nimiArvo;
         
+        getline(nimiRivi, nimiAvain, ',');
+        while(getline(nimiRivi, nimiArvo, ','))
         {
-            getline(file, tmp);
-            stringstream nimiRivi(tmp);
-            string nimiAvain, nimiArvo;
-            
-            getline(nimiRivi, nimiAvain, ',');
-            while(getline(nimiRivi, nimiArvo, ','))
-            {
-                Kieli kieli;
-                kieli.kaannokset[nimiAvain] = nimiArvo;
-                kielet.push_back(kieli);
-            }
+            Kieli kieli;
+            kieli.kaannokset[nimiAvain] = nimiArvo;
+            kielet.push_back(kieli);
         }
-        
-        while(getline(file, tmp))
-        {
-            stringstream rivi(tmp);
-            
-            string avain;
-            getline(rivi, avain, ',');
-            
-            int i = 0;
-            string arvo;
-            while(getline(rivi, arvo, ','))
-            {
-                kielet[i].kaannokset[avain] = arvo;
-                i++;
-            }
-        }
-        
-        if (kielet.empty())
-        {
-            cerr << "! virhe kielten lataamisessa !" << endl;
-            terminate();
-        }
-        
-        return kielet;
     }
-    else
+    
+    while(getline(data, tmp))
     {
-        cerr << "! kielet.csv tiedosto puuttuu !" << endl;
+        stringstream rivi(tmp);
+        
+        string avain;
+        getline(rivi, avain, ',');
+        
+        int i = 0;
+        string arvo;
+        while(getline(rivi, arvo, ','))
+        {
+            kielet[i].kaannokset[avain] = arvo;
+            i++;
+        }
+    }
+    
+    if (kielet.empty())
+    {
+        cerr << "! virhe kielten lataamisessa !" << endl;
         terminate();
     }
+    
+    return kielet;
 }
 
 Kayttoliittyma& Kayttoliittyma::getInstance()
@@ -98,16 +93,6 @@ bool Kayttoliittyma::getVaritaRuudut() const { return _varitaRuudut; }
 void Kayttoliittyma::setVaritaRuudut(bool varita)
 {
     _varitaRuudut = varita;
-}
-
-bool Kayttoliittyma::getOhjelmaKaynnissa() const
-{
-    return _ohjelmaKaynnissa;
-}
-
-void Kayttoliittyma::suljeOhjelma()
-{
-    _ohjelmaKaynnissa = false;
 }
 
 const Kieli& Kayttoliittyma::getKieli() const { return _kielet[_kieli]; }
@@ -601,7 +586,7 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
         {
             bool pitkaLinna = false;
             bool lyhytLinna = false;
-
+            
             if (syote == "e1c1" || syote == "e8c8")
             {
                 pitkaLinna = true;

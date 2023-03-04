@@ -9,35 +9,24 @@
 /* Begin PBXBuildFile section */
 		7A2D1C11299E5B4100E57AE1 /* minmaxpaluu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A2D1C10299E5B4100E57AE1 /* minmaxpaluu.cpp */; };
 		7A42553E299B993C00A0512A /* ajastin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A42553D299B993C00A0512A /* ajastin.cpp */; };
+		7A42BEA329B380B50038CF47 /* uci.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A42BEA129B380B50038CF47 /* uci.cpp */; };
 		7AC24376296D636800C589F0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC24375296D636800C589F0 /* main.cpp */; };
 		7AC24398296D641000C589F0 /* asema.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC24384296D641000C589F0 /* asema.cpp */; };
 		7AC24399296D641000C589F0 /* nappula.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC24385296D641000C589F0 /* nappula.cpp */; };
 		7AC2439B296D641000C589F0 /* ruutu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC24389296D641000C589F0 /* ruutu.cpp */; };
 		7AC2439C296D641000C589F0 /* kayttoliittyma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC2438B296D641000C589F0 /* kayttoliittyma.cpp */; };
 		7AC2439D296D641000C589F0 /* siirto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AC2438F296D641000C589F0 /* siirto.cpp */; };
-		7AC4AE3029B0345B00840C12 /* kielet.csv in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7AC4AE2F29B0344F00840C12 /* kielet.csv */; };
 		7AD35F6F29AE699C00409F6C /* kieli.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AD35F6D29AE699C00409F6C /* kieli.cpp */; };
 		7AD75F942986E6E5001EC37C /* varikoodit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AD75F922986E6E5001EC37C /* varikoodit.cpp */; };
 		7ADF858629A8570300DD235C /* peli.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7ADF858429A8570300DD235C /* peli.cpp */; };
 		7ADF858929A857D000DD235C /* pelaaja.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7ADF858729A857D000DD235C /* pelaaja.cpp */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		7AC24370296D636800C589F0 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
-			dstPath = "";
-			dstSubfolderSpec = 16;
-			files = (
-				7AC4AE3029B0345B00840C12 /* kielet.csv in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		7A2D1C10299E5B4100E57AE1 /* minmaxpaluu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = minmaxpaluu.cpp; sourceTree = "<group>"; };
 		7A42553D299B993C00A0512A /* ajastin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ajastin.cpp; sourceTree = "<group>"; };
+		7A42BEA129B380B50038CF47 /* uci.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = uci.cpp; sourceTree = "<group>"; };
+		7A42BEA229B380B50038CF47 /* uci.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uci.h; sourceTree = "<group>"; };
 		7A771CC729A151DA0059D776 /* testi-peli.pgn */ = {isa = PBXFileReference; lastKnownFileType = text; path = "testi-peli.pgn"; sourceTree = "<group>"; };
 		7A778A88299B948100EAA155 /* ajastin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ajastin.h; sourceTree = "<group>"; };
 		7AC24372296D636800C589F0 /* MegaShakkiBotti */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MegaShakkiBotti; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,7 +69,6 @@
 		7AC24369296D636800C589F0 = {
 			isa = PBXGroup;
 			children = (
-				7AC4AE2F29B0344F00840C12 /* kielet.csv */,
 				7AC24374296D636800C589F0 /* MegaShakkiBotti */,
 				7AC24373296D636800C589F0 /* Products */,
 			);
@@ -97,6 +85,9 @@
 		7AC24374296D636800C589F0 /* MegaShakkiBotti */ = {
 			isa = PBXGroup;
 			children = (
+				7AC4AE2F29B0344F00840C12 /* kielet.csv */,
+				7A42BEA129B380B50038CF47 /* uci.cpp */,
+				7A42BEA229B380B50038CF47 /* uci.h */,
 				7A771CC729A151DA0059D776 /* testi-peli.pgn */,
 				7AC24375296D636800C589F0 /* main.cpp */,
 				7AC24395296D641000C589F0 /* evaluointi.h */,
@@ -136,7 +127,6 @@
 			buildPhases = (
 				7AC2436E296D636800C589F0 /* Sources */,
 				7AC2436F296D636800C589F0 /* Frameworks */,
-				7AC24370296D636800C589F0 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -194,6 +184,7 @@
 				7AC2439B296D641000C589F0 /* ruutu.cpp in Sources */,
 				7AC24376296D636800C589F0 /* main.cpp in Sources */,
 				7A2D1C11299E5B4100E57AE1 /* minmaxpaluu.cpp in Sources */,
+				7A42BEA329B380B50038CF47 /* uci.cpp in Sources */,
 				7AC2439D296D641000C589F0 /* siirto.cpp in Sources */,
 				7ADF858929A857D000DD235C /* pelaaja.cpp in Sources */,
 			);

@@ -32,9 +32,6 @@ public:
     bool getVaritaRuudut() const;
     void setVaritaRuudut(bool varita);
     
-    bool getOhjelmaKaynnissa() const;
-    void suljeOhjelma();
-    
     const Kieli& getKieli() const;
     
     bool getOnkoUCI() const;

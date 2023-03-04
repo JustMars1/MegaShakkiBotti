@@ -1,4 +1,4 @@
-kielenNimi,suomi,English
+R"(kielenNimi,suomi,English
 valitseKieli,Valitse kieli,Select language
 uusiPeli,uusi peli,new game
 lataaPeli,lataa peli,load game
@@ -44,4 +44,4 @@ ml,l,b
 mr,r,n
 ms,s,p
 valitseSiirronMerkintatapa,Valitse siirron merkintätapa,Select move notation
-korotus,korotus,promotion
+korotus,korotus,promotion)"

@@ -43,19 +43,20 @@ int main(int argc, char* argv[])
             Kayttoliittyma::getInstance().setVaritaRuudut(false);
         }
     }
-
+    
     Peli peli;
-    Uci uci;
+    UCI uci;
     uci.uciLoop();
-
+    
     kayttoliittyma.kysyKieli();
     cout << endl;
     kayttoliittyma.kysySiirronMerkintatapa();
     cout << endl;
     
-    while(kayttoliittyma.getOhjelmaKaynnissa())
+    bool ohjelmaKaynnissa = true;
+    while(ohjelmaKaynnissa)
     {
-
+        
         peli = kayttoliittyma.kysyPeli();
         cout << endl;
         kayttoliittyma.kysyPelimuoto(peli);
@@ -63,7 +64,8 @@ int main(int argc, char* argv[])
         kayttoliittyma.tulostaSiirtoOhje(kayttoliittyma.getOnkoUCI());
         cout << endl;
         
-        while (kayttoliittyma.getOhjelmaKaynnissa())
+        bool peliKaynnissa = true;
+        while (peliKaynnissa)
         {
             kayttoliittyma.piirra(peli);
             cout << endl;
@@ -84,28 +86,28 @@ int main(int argc, char* argv[])
                         minimax = peli.asema.alphabetaMinimaxAsync(syvyys);
                     }
                     
-//                    cout << minimax << endl;
-//                    
-//                    {
-//                        Ajastin ajastin("alphabetaMinimax");
-//                        minimax = peli.asema.alphabetaMinimax(syvyys);
-//                    }
-//                    
-//                    cout << minimax << endl;
-//                    
-//                    {
-//                        Ajastin ajastin("minimaxAsync");
-//                        minimax = peli.asema.minimaxAsync(syvyys);
-//                    }
-//                    
-//                    cout << minimax << endl;
-//                    
-//                    {
-//                        Ajastin ajastin("minimax");
-//                        minimax = peli.asema.minimax(syvyys);
-//                    }
-//                    
-//                    cout << minimax << endl;
+                    //                    cout << minimax << endl;
+                    //
+                    //                    {
+                    //                        Ajastin ajastin("alphabetaMinimax");
+                    //                        minimax = peli.asema.alphabetaMinimax(syvyys);
+                    //                    }
+                    //
+                    //                    cout << minimax << endl;
+                    //
+                    //                    {
+                    //                        Ajastin ajastin("minimaxAsync");
+                    //                        minimax = peli.asema.minimaxAsync(syvyys);
+                    //                    }
+                    //
+                    //                    cout << minimax << endl;
+                    //
+                    //                    {
+                    //                        Ajastin ajastin("minimax");
+                    //                        minimax = peli.asema.minimax(syvyys);
+                    //                    }
+                    //
+                    //                    cout << minimax << endl;
                     
                     siirto = minimax.parasSiirto;
                     

@@ -1,5 +1,4 @@
 #pragma once
-
 #include <optional>
 #include "pelaaja.h"
 #include "asema.h"
@@ -15,5 +14,6 @@ public:
     
     std::optional<Siirto> viimeisinSiirto;
     
-    Peli(Pelaaja valkoinen = Pelaaja(false, 0), Pelaaja musta = Pelaaja(true, 4));
+    Peli(Pelaaja valkoinen, Pelaaja musta);
+    Peli();
 };
