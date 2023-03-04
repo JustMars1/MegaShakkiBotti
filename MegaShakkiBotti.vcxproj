@@ -123,7 +123,7 @@
     <ClCompile Include="megashakkibotti\ruutu.cpp" />
     <ClCompile Include="megashakkibotti\siirto.cpp" />
     <ClCompile Include="MegaShakkiBotti\varikoodit.cpp" />
-    <ClCompile Include="megaShakkiBotti\Uci.cpp" />
+    <ClCompile Include="megaShakkiBotti\uci.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MegaShakkiBotti\ajastin.h" />
@@ -138,16 +138,10 @@
     <ClInclude Include="megashakkibotti\siirto.h" />
     <ClInclude Include="MegaShakkiBotti\varikoodit.h" />
     <ClInclude Include="megashakkibotti\evaluointi.h" />
-    <ClInclude Include="megashakkibotti\Uci.h" />
+    <ClInclude Include="megashakkibotti\uci.h" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="kielet.csv">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-      <FileType>Document</FileType>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </CopyFileToFolders>
+    <None Include="MegaShakkiBotti\kielet.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

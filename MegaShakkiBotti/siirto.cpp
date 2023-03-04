@@ -25,7 +25,11 @@ Siirto::Siirto()
 
 bool Siirto::operator==(const Siirto& rhs) const
 {
-    return _alkuRuutu == rhs._alkuRuutu && _loppuRuutu == rhs._loppuRuutu && _lyhytLinna == rhs._lyhytLinna && _pitkaLinna == rhs._pitkaLinna;
+    return _alkuRuutu == rhs._alkuRuutu &&
+    _loppuRuutu == rhs._loppuRuutu &&
+    _lyhytLinna == rhs._lyhytLinna &&
+    _pitkaLinna == rhs._pitkaLinna &&
+    miksiKorotetaan == rhs.miksiKorotetaan;
 }
 
 const Ruutu& Siirto::getAlkuruutu() const { return _alkuRuutu; }
