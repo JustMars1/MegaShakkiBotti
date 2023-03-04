@@ -123,7 +123,7 @@
     <ClCompile Include="megashakkibotti\ruutu.cpp" />
     <ClCompile Include="megashakkibotti\siirto.cpp" />
     <ClCompile Include="MegaShakkiBotti\varikoodit.cpp" />
-    <ClCompile Include="megaShakkiBotti\Uci.cpp" />
+    <ClCompile Include="megaShakkiBotti\uci.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MegaShakkiBotti\ajastin.h" />
@@ -138,7 +138,7 @@
     <ClInclude Include="megashakkibotti\siirto.h" />
     <ClInclude Include="MegaShakkiBotti\varikoodit.h" />
     <ClInclude Include="megashakkibotti\evaluointi.h" />
-    <ClInclude Include="megashakkibotti\Uci.h" />
+    <ClInclude Include="megashakkibotti\uci.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MegaShakkiBotti\kielet.csv" />
