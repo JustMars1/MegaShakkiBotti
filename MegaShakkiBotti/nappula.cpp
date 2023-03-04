@@ -395,7 +395,15 @@ void Sotilas::annaSiirrot(vector<Siirto>& lista, const Ruutu& ruutu, const Asema
         {
             if (asema.lauta[y][x] != nullptr && asema.lauta[y][x]->getVari() != vari)
             {
-                lista.push_back(Siirto(ruutu, Ruutu(x, y)));
+                Siirto siirto(ruutu, Ruutu(x, y));
+                if (y == 7 || y == 0)
+                {
+                    lisaaSotilaanKorotukset(siirto, lista, asema);
+                }
+                else
+                {
+                    lista.push_back(siirto);
+                }
             }
         }
     }
