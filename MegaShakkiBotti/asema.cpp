@@ -404,7 +404,9 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
  */
 float Asema::evaluoi() const
 {
-    float summa = laskeNappuloidenArvo() + nappuloitaKeskella();
+    int vari = getSiirtovuoro();
+
+    float summa = laskeNappuloidenArvo() + nappuloitaKeskella() + linjat(vari);
     return summa;
     
     //kertoimet asetettu sen takia että niiden avulla asioiden painoarvoa voidaan säätää helposti yhdestä paikasta
@@ -556,14 +558,91 @@ float Asema::nappuloitaKeskella() const
     return summa;
 }
 
-float Asema::linjat(int vari)
+float Asema::linjat(int vari) const
 {
-    return 0;
+    // daami, torni ja lähetti viihtyvät avoimilla linjoilla
+
+    //float summa = 0;
     
-    //valkoiset
+    //int sarake; // x
+    //int rivi; // y
+
+    //
+    //for (int y = 0; y < 8; y++)
+    //{
+    //    for (int x = 0; x < 8; x++)
+    //    {
+    //        Nappula* nappula = lauta[y][x];
+
+    //        if (nappula == &vt && vari == 0)
+    //        {
+    //            int sarake = _valkeanTorninRuutu.getSarake();
+    //            int rivi = _valkeanTorninRuutu.getRivi();
+    //        }
+    //    }
+    //}
+        
+    int valkeanLinjat = 0;
+    int mustanLinjat = 0; 
+
+    std::vector<Siirto> valkeat;
+    std::vector<Siirto> mustat;
+
+
+    for (int y = 0; y < 8; y++)
+    {
+        for (int x = 0; x < 8; x++)
+        {
+            Nappula* nappula = lauta[y][x];
+
+            if (lauta[y][x] == NULL)
+            {
+                continue;
+            }
+
+            // valkoiset
+            if (lauta[y][x]->getKoodi() == VT)
+            {
+                nappula->annaSiirrot(valkeat, Ruutu(x, y), *this, 0);
+            }
+            if (lauta[y][x]->getKoodi() == VL)
+            {
+                nappula->annaSiirrot(valkeat, Ruutu(x, y), *this, 0);
+            }
+            if (lauta[y][x]->getKoodi() == VD)
+            {
+                nappula->annaSiirrot(valkeat, Ruutu(x, y), *this, 0);
+            }
+
+            // mustat
+            if (lauta[y][x]->getKoodi() == MT)
+            {
+                nappula->annaSiirrot(mustat, Ruutu(x, y), *this, 1);
+            }
+            if (lauta[y][x]->getKoodi() == ML) 
+            {
+                nappula->annaSiirrot(mustat, Ruutu(x, y), *this, 1);
+            }
+            if (lauta[y][x]->getKoodi() == MD)
+            {
+                nappula->annaSiirrot(mustat, Ruutu(x, y), *this, 1);
+            }
+            
+        }
+    }
     
-    //mustat
-    
+    valkeanLinjat = valkeat.size();
+    mustanLinjat = mustat.size();
+
+    if (vari == 0)
+    {
+        return valkeanLinjat;
+    }
+    else 
+    {
+        return mustanLinjat;
+    }
+
 }
 
 std::vector<size_t> Asema::jaaSiirrotSaikeidenKesken(size_t siirtoLkm) const
