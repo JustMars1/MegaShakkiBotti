@@ -24,6 +24,7 @@ void UCI::uciLoop()
         
         stringstream syote(rivi);
         string token;
+
         while(getline(syote, token, ' '))
         {
             if (lukeeSiirtoja)
@@ -38,24 +39,26 @@ void UCI::uciLoop()
                 loppu.setRivi(token[3] - '0' - 1);
                 
                 Siirto siirto(alku, loppu);
-                
                 _asema.paivitaAsema(siirto);
+            }
+            else if (token == "moves")
+            {
+                lukeeSiirtoja = true;
             }
             else if (lukeeAsemaa)
             {
                 if (token == "startpos")
                 {
                     _asema = Asema();
-                    lukeeSiirtoja = true;
                 }
                 else
                 {
                     // FEN
                 }
             }
-            else if (token == "moves")
+            else if (token == "position")
             {
-                lukeeSiirtoja = true;
+                lukeeAsemaa = true;
             }
             else if (token == "go")
             {
