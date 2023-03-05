@@ -99,6 +99,14 @@ const Kieli& Kayttoliittyma::getKieli() const { return _kielet[_kieli]; }
 
 bool Kayttoliittyma::getOnkoUCI() const { return _onkoUCI; }
 
+void Kayttoliittyma::kysyAsetukset()
+{
+    kysyKieli();
+    cout << endl;
+    kysySiirronMerkintatapa();
+    cout << endl;
+}
+
 void Kayttoliittyma::kysyKieli()
 {
     for (size_t i = 0; i < _kielet.size(); i++)
@@ -410,14 +418,15 @@ void Kayttoliittyma::piirra(const Peli& peli) const
         ruutujenTyypit[y][x] = SIIRTO_RUUTU;
     }
     
-    if (peli.viimeisinSiirto.has_value())
+    if (!peli.siirtoHistoria.empty())
     {
-        int x = peli.viimeisinSiirto.value().getAlkuruutu().getSarake();
-        int y = peli.viimeisinSiirto.value().getAlkuruutu().getRivi();
+        const Siirto& siirto = peli.siirtoHistoria.back();
+        int x = siirto.getAlkuruutu().getSarake();
+        int y = siirto.getAlkuruutu().getRivi();
         ruutujenTyypit[y][x] = VIIMEISIN_SIIRTO_RUUTU;
         
-        x = peli.viimeisinSiirto.value().getLoppuruutu().getSarake();
-        y = peli.viimeisinSiirto.value().getLoppuruutu().getRivi();
+        x = siirto.getLoppuruutu().getSarake();
+        y = siirto.getLoppuruutu().getRivi();
         ruutujenTyypit[y][x] = VIIMEISIN_SIIRTO_RUUTU;
     }
     
@@ -434,20 +443,27 @@ void Kayttoliittyma::piirra(const Peli& peli) const
     
     float laudanArvo = peli.asema.evaluoi();
     
-    string siirrotKomento = "/siirrot"_k;
+    string siirrotKomento = "/" + "siirrot"_k;
     string fenKomento = "/fen";
+    string kumoaKomento = "/" + "kumoa"_k;
+    string asetuksetKomento = "/" + "asetukset"_k;
+    string historiaKomento = "/" + "historia"_k;
     size_t leveys = std::max(siirrotKomento.length(), fenKomento.length());
+    leveys = std::max(leveys, kumoaKomento.length());
+    leveys = std::max(leveys, asetuksetKomento.length());
+    leveys = std::max(leveys, historiaKomento.length());
     
-    array<string, 8> sivupalkki =
+    array<string, 9> sivupalkki =
     {
-        to_string(peli.siirtoparilaskuri) + ". " + "siirtopari"_k,
+        to_string(peli.siirtoHistoria.size() / 2 + 1) + ". " + "siirtopari"_k,
         (peli.asema.getSiirtovuoro() == 0 ? "valkoisenSiirtovuoro"_k : "mustanSiirtovuoro"_k),
         (laudanArvo > 0 ? "+" : "") + to_string(laudanArvo),
         "komennot"_k + ": ",
-        siirrotKomento + string(leveys - siirrotKomento.length(), ' ') + " = " + ("listaaLaillisetSiirrot"_k),
-        fenKomento + string(leveys - fenKomento.length(), ' ') + " = " + ("tulostaAsemaFEN-merkintana"_k),
-        "/",
-        "/"
+        siirrotKomento + string(leveys - siirrotKomento.length(), ' ') + " = " + "listaaLaillisetSiirrot"_k,
+        fenKomento + string(leveys - fenKomento.length(), ' ') + " = " + "tulostaAsemaFEN-merkintana"_k,
+        kumoaKomento + string(leveys - kumoaKomento.length(), ' ') + " = " + "kumoaEdellinenSiirto"_k,
+        asetuksetKomento + string(leveys - asetuksetKomento.length(), ' ') + " = " + "paivitaAsetukset"_k,
+        historiaKomento + string(leveys - historiaKomento.length(), ' ') + " = " + "listaaSiirtoHistoria"_k
     };
     
     for (int y = 0; y < 8; y++)
@@ -522,6 +538,8 @@ void Kayttoliittyma::piirra(const Peli& peli) const
         cout << "   a  b  c  d  e  f  g  h  ";
     }
     
+    cout << sivupalkki.back() << endl;
+    
     cout << endl;
 }
 
@@ -535,7 +553,7 @@ void Kayttoliittyma::piirra(const Peli& peli) const
  Ei UCI:
  Ottaa irti myös nappulan kirjaimen (K/D/L/R/T), tarkistaa että kirjain korrekti
  */
-Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
+Siirto Kayttoliittyma::kysySiirto(Peli& peli)
 {
     auto tarkistaNappula = [this, &peli](string merkki) -> Nappula*
     {
@@ -577,7 +595,8 @@ Siirto Kayttoliittyma::kysyVastustajanSiirto(const Peli& peli)
         {
             continue;
         }
-        else if (tarkistaKomento(syote, peli))
+        
+        if (tarkistaKomento(syote, peli))
         {
             continue;
         }
@@ -726,18 +745,21 @@ void Kayttoliittyma::tulostaVirhe(string virhe) const
     cout << tekstivari(punainen) << "! " << virhe <<  " !" << resetoiVarit() << endl;
 }
 
-bool Kayttoliittyma::tarkistaKomento(string komento, const Peli& peli) const
+bool Kayttoliittyma::tarkistaKomento(const string& syote, Peli& peli)
 {
-    for (char& kirjain : komento)
+    if (syote.empty() || syote[0] != '/')
     {
-        kirjain = tolower(kirjain);
+        return false;
     }
     
-    if (komento == "/siirrot"_k)
+    string komento(syote.begin() + 1, syote.end());
+    transform(komento.begin(), komento.end(), komento.begin(), ::tolower);
+    
+    if (komento == "siirrot"_k)
     {
         vector<Siirto> siirrot = peli.asema.annaLaillisetSiirrot();
         
-        for (Siirto& siirto : siirrot)
+        for (auto& siirto : siirrot)
         {
             if (!siirto.onkoLyhytLinna() && !siirto.onkoPitkaLinna())
             {
@@ -750,29 +772,73 @@ bool Kayttoliittyma::tarkistaKomento(string komento, const Peli& peli) const
             
             cout << siirto << endl;
         }
-        
-        return true;
     }
-    else if (komento == "/fen")
+    else if (komento == "fen")
     {
         
     }
+    else if (komento == "kumoa"_k)
+    {
+        if (!peli.siirtoHistoria.empty())
+        {
+            peli.siirtoHistoria.pop_back();
+            
+            Asema asema = peli.getAloitusAsema();
+            for (auto& siirto : peli.siirtoHistoria)
+            {
+                asema.paivitaAsema(siirto);
+            }
+            
+            peli.asema = asema;
+            cout << endl;
+            piirra(peli);
+            cout << endl;
+        }
+    }
+    else if (komento == "asetukset"_k)
+    {
+        cout << endl;
+        kysyAsetukset();
+        piirra(peli);
+        cout << endl;
+    }
+    else if (komento == "historia"_k)
+    {
+        Asema asema = peli.getAloitusAsema();
+        for (auto& siirto : peli.siirtoHistoria)
+        {
+            if (!siirto.onkoLyhytLinna() && !siirto.onkoPitkaLinna())
+            {
+                int y = siirto.getAlkuruutu().getRivi();
+                int x = siirto.getAlkuruutu().getSarake();
+                string merkki = asema.lauta[y][x]->getSiirtoMerkki();
+                transform(merkki.begin(), merkki.end(), merkki.begin(), ::toupper);
+                cout << merkki;
+            }
+            
+            cout << siirto << endl;
+            asema.paivitaAsema(siirto);
+        }
+    }
+    else
+    {
+        tulostaVirhe("tuntematonKomento"_k);
+    }
     
-    return false;
+    return true;
 }
 
 optional<Peli> Kayttoliittyma::kysyFEN() const
 {
     cout << "annaFEN"_k << ": ";
     
-    Peli peli;
-    peli.asema = Asema({nullptr});
-    peli.asema.setMustaDTliikkunut(true);
-    peli.asema.setMustaKTliikkunut(true);
-    peli.asema.setMustaKuningasLiikkunut(true);
-    peli.asema.setValkeaDTliikkunut(true);
-    peli.asema.setValkeaKTliikkunut(true);
-    peli.asema.setValkeaKuningasLiikkunut(true);
+    Asema asema({nullptr});
+    asema.setMustaDTliikkunut(true);
+    asema.setMustaKTliikkunut(true);
+    asema.setMustaKuningasLiikkunut(true);
+    asema.setValkeaDTliikkunut(true);
+    asema.setValkeaKTliikkunut(true);
+    asema.setValkeaKuningasLiikkunut(true);
     
     // Lauta
     string lauta;
@@ -802,14 +868,14 @@ optional<Peli> Kayttoliittyma::kysyFEN() const
             
             if (*nappulaItr == &Asema::vk)
             {
-                peli.asema.setValkeanKuninkaanRuutu(Ruutu(x, rivi));
+                asema.setValkeanKuninkaanRuutu(Ruutu(x, rivi));
             }
             else if (*nappulaItr == &Asema::mk)
             {
-                peli.asema.setMustanKuninkaanRuutu(Ruutu(x, rivi));
+                asema.setMustanKuninkaanRuutu(Ruutu(x, rivi));
             }
             
-            peli.asema.lauta[rivi][x] = *nappulaItr;
+            asema.lauta[rivi][x] = *nappulaItr;
             x++;
         }
         
@@ -824,11 +890,11 @@ optional<Peli> Kayttoliittyma::kysyFEN() const
     
     if (vuoro == 'w')
     {
-        peli.asema.setSiirtovuoro(0);
+        asema.setSiirtovuoro(0);
     }
     else if (vuoro == 'b')
     {
-        peli.asema.setSiirtovuoro(1);
+        asema.setSiirtovuoro(1);
     }
     else
     {
@@ -848,26 +914,26 @@ optional<Peli> Kayttoliittyma::kysyFEN() const
             switch (kirjain) {
                 case 'K':
                 {
-                    peli.asema.setValkeaKTliikkunut(false);
-                    peli.asema.setValkeaKuningasLiikkunut(false);
+                    asema.setValkeaKTliikkunut(false);
+                    asema.setValkeaKuningasLiikkunut(false);
                     break;
                 }
                 case 'Q':
                 {
-                    peli.asema.setValkeaDTliikkunut(false);
-                    peli.asema.setValkeaKuningasLiikkunut(false);
+                    asema.setValkeaDTliikkunut(false);
+                    asema.setValkeaKuningasLiikkunut(false);
                     break;
                 }
                 case 'k':
                 {
-                    peli.asema.setMustaKTliikkunut(false);
-                    peli.asema.setMustaKuningasLiikkunut(false);
+                    asema.setMustaKTliikkunut(false);
+                    asema.setMustaKuningasLiikkunut(false);
                     break;
                 }
                 case 'q':
                 {
-                    peli.asema.setMustaDTliikkunut(false);
-                    peli.asema.setMustaKuningasLiikkunut(false);
+                    asema.setMustaDTliikkunut(false);
+                    asema.setMustaKuningasLiikkunut(false);
                     break;
                 }
                 default:
@@ -891,7 +957,7 @@ optional<Peli> Kayttoliittyma::kysyFEN() const
             int sarake = ohestalyonti[0] - 'a';
             if (sarake >= 0 && sarake < 7)
             {
-                peli.asema.setKaksoisaskelSarake(sarake);
+                asema.setKaksoisaskelSarake(sarake);
             }
             else
             {
@@ -941,9 +1007,7 @@ optional<Peli> Kayttoliittyma::kysyFEN() const
         return nullopt;
     }
     
-    peli.siirtoparilaskuri = siirtoparilaskuri;
-    
-    return peli;
+    return Peli(Pelaaja(false, 0), Pelaaja(true, 4), asema);
 }
 
 void Kayttoliittyma::kysySiirronMerkintatapa()

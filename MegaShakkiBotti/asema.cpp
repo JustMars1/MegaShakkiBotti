@@ -405,7 +405,7 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
 float Asema::evaluoi() const
 {
     int vari = getSiirtovuoro();
-
+    
     float summa = laskeNappuloidenArvo() + nappuloitaKeskella() + linjat(vari);
     return summa;
     
@@ -517,14 +517,14 @@ float Asema::nappuloitaKeskella() const
             if (lauta[y][x] != NULL && (lauta[y][x]->getKoodi() == VS || lauta[y][x]->getKoodi() == VR)) {
                 summa += 0.25;
             }
-
+            
             else if (lauta[y][x] != NULL && (lauta[y][x]->getKoodi() == MS || lauta[y][x]->getKoodi() == MR))
             {
                 summa -= 0.25;
             }
         }
     }
-
+    
     //Laitakeskusta
     for (int x = 2; x < 6; x++)
     {
@@ -533,47 +533,47 @@ float Asema::nappuloitaKeskella() const
             if (lauta[2][x]->getKoodi() == VS || lauta[2][x]->getKoodi() == VR) summa += 0.11;
             else if (lauta[2][x]->getKoodi() == MS || lauta[2][x]->getKoodi() == MR) summa -= 0.11;
         }
-
+        
         if (lauta[5][x] != NULL)
         {
             if (lauta[5][x]->getKoodi() == VS || lauta[5][x]->getKoodi() == VR) summa += 0.11;
             else if (lauta[5][x]->getKoodi() == MS || lauta[5][x]->getKoodi() == MR) summa -= 0.11;
         }
     }
-
+    
     for (int y = 3; y < 5; y++) {
         if (lauta[y][2] != NULL)
         {
             if (lauta[y][2]->getKoodi() == VS || lauta[y][2]->getKoodi() == VR) summa += 0.11;
             else if (lauta[y][2]->getKoodi() == MS || lauta[y][2]->getKoodi() == MR) summa -= 0.11;
         }
-
+        
         if (lauta[y][5] != NULL)
         {
             if (lauta[y][5]->getKoodi() == VS || lauta[y][5]->getKoodi() == VR) summa += 0.11;
             else if (lauta[y][5]->getKoodi() == MS || lauta[y][5]->getKoodi() == MR) summa -= 0.11;
         }
     }
-
+    
     return summa;
 }
 
 float Asema::linjat(int vari) const
 {
     // daami, torni ja lähetti viihtyvät avoimilla linjoilla
-
+    
     //float summa = 0;
     
     //int sarake; // x
     //int rivi; // y
-
+    
     //
     //for (int y = 0; y < 8; y++)
     //{
     //    for (int x = 0; x < 8; x++)
     //    {
     //        Nappula* nappula = lauta[y][x];
-
+    
     //        if (nappula == &vt && vari == 0)
     //        {
     //            int sarake = _valkeanTorninRuutu.getSarake();
@@ -581,25 +581,25 @@ float Asema::linjat(int vari) const
     //        }
     //    }
     //}
-        
+    
     int valkeanLinjat = 0;
-    int mustanLinjat = 0; 
-
+    int mustanLinjat = 0;
+    
     std::vector<Siirto> valkeat;
     std::vector<Siirto> mustat;
-
-
+    
+    
     for (int y = 0; y < 8; y++)
     {
         for (int x = 0; x < 8; x++)
         {
             Nappula* nappula = lauta[y][x];
-
+            
             if (lauta[y][x] == NULL)
             {
                 continue;
             }
-
+            
             // valkoiset
             if (lauta[y][x]->getKoodi() == VT)
             {
@@ -613,13 +613,13 @@ float Asema::linjat(int vari) const
             {
                 nappula->annaSiirrot(valkeat, Ruutu(x, y), *this, 0);
             }
-
+            
             // mustat
             if (lauta[y][x]->getKoodi() == MT)
             {
                 nappula->annaSiirrot(mustat, Ruutu(x, y), *this, 1);
             }
-            if (lauta[y][x]->getKoodi() == ML) 
+            if (lauta[y][x]->getKoodi() == ML)
             {
                 nappula->annaSiirrot(mustat, Ruutu(x, y), *this, 1);
             }
@@ -633,16 +633,16 @@ float Asema::linjat(int vari) const
     
     valkeanLinjat = valkeat.size();
     mustanLinjat = mustat.size();
-
+    
     if (vari == 0)
     {
         return valkeanLinjat;
     }
-    else 
+    else
     {
         return mustanLinjat;
     }
-
+    
 }
 
 std::vector<size_t> Asema::jaaSiirrotSaikeidenKesken(size_t siirtoLkm) const

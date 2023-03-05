@@ -19,7 +19,6 @@ void UCI::uciLoop()
             break;
         }
         
-        
         bool lukeeSiirtoja = false;
         bool lukeeAsemaa = false;
         

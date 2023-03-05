@@ -1,5 +1,5 @@
 #pragma once
-#include <optional>
+#include <deque>
 #include "pelaaja.h"
 #include "asema.h"
 #include "siirto.h"
@@ -10,10 +10,12 @@ public:
     Pelaaja musta;
     Asema asema;
     
-    int siirtoparilaskuri;
+    std::deque<Siirto> siirtoHistoria;
     
-    std::optional<Siirto> viimeisinSiirto;
-    
-    Peli(Pelaaja valkoinen, Pelaaja musta);
+    Peli(Pelaaja valkoinen, Pelaaja musta, Asema aloitusAsema);
     Peli();
+    
+    const Asema& getAloitusAsema();
+private:
+    Asema _aloitusAsema;
 };

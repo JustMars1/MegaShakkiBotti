@@ -18,8 +18,8 @@ siirtopari,siirtopari,fullmove
 valkoisenSiirtovuoro,Valkoisen siirtovuoro,White's turn
 mustanSiirtovuoro,Mustan siirtovuoro, Black's turn
 komennot,Komennot,Commands
-/siirrot,/siirrot,/moves
-listaaLaillisetSiirrot,listaa lailliset siirrot,lists legal moves
+siirrot,siirrot,moves
+listaaLaillisetSiirrot,listaa lailliset siirrot,list legal moves
 tulostaAsemaFEN-merkintana,tulosta asema FEN-merkintänä,print position as FEN-record
 syotaSiirto,Syötä siirto,Enter a move
 annaFEN,Anna FEN,Enter FEN
@@ -43,5 +43,12 @@ mt,t,r
 ml,l,b
 mr,r,n
 ms,s,p
+asetukset,asetukset,settings
+tuntematonKomento,Tuntematon komento,Unknown command
+paivitaAsetukset,päivitä asetukset,update settings
+kumoa,kumoa,undo
+historia,historia,history
+kumoaEdellinenSiirto,kumoa edellinen siirto,undo previous move
+listaaSiirtoHistoria,listaa siirto historia,list move history
 valitseSiirronMerkintatapa,Valitse siirron merkintätapa,Select move notation
 korotus,korotus,promotion)"

@@ -48,10 +48,7 @@ int main(int argc, char* argv[])
     UCI uci;
     uci.uciLoop();
     
-    kayttoliittyma.kysyKieli();
-    cout << endl;
-    kayttoliittyma.kysySiirronMerkintatapa();
-    cout << endl;
+    kayttoliittyma.kysyAsetukset();
     
     bool ohjelmaKaynnissa = true;
     while(ohjelmaKaynnissa)
@@ -128,19 +125,14 @@ int main(int argc, char* argv[])
                 }
                 else
                 {
-                    siirto = kayttoliittyma.kysyVastustajanSiirto(peli);
+                    siirto = kayttoliittyma.kysySiirto(peli);
                 }
                 
                 ok = peli.asema.tarkistaSiirto(siirto);
             }
             
-            if (peli.asema.getSiirtovuoro() == 1)
-            {
-                peli.siirtoparilaskuri++;
-            }
-            
             peli.asema.paivitaAsema(siirto);
-            peli.viimeisinSiirto = siirto;
+            peli.siirtoHistoria.push_back(siirto);
             cout << endl;
         }
     }

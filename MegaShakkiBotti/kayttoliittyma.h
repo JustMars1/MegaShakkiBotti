@@ -12,20 +12,21 @@ class Kayttoliittyma
 public:
     static Kayttoliittyma& getInstance();
     
-    void kysyKieli();
+    void kysyAsetukset();
     
+    void kysyKieli();
     void kysySiirronMerkintatapa();
     
     Peli kysyPeli() const;
     void kysyPelimuoto(Peli& peli) const;
     std::optional<Peli> kysyFEN() const;
     
-    Siirto kysyVastustajanSiirto(const Peli& peli);
+    Siirto kysySiirto(Peli& peli);
     
     void tulostaSiirtoOhje(bool uci, size_t sisennys = 0) const;
     
     void piirra(const Peli& peli) const;
-    bool tarkistaKomento(std::string komento, const Peli& peli) const;
+    bool tarkistaKomento(const std::string& syote, Peli& peli);
     
     void tulostaVirhe(std::string virhe) const;
     
