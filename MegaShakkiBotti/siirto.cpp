@@ -1,5 +1,6 @@
 #include "siirto.h"
 #include <algorithm>
+#include <sstream>
 #include "kayttoliittyma.h"
 
 Siirto::Siirto(Ruutu alku, Ruutu loppu)
@@ -36,6 +37,32 @@ const Ruutu& Siirto::getAlkuruutu() const { return _alkuRuutu; }
 const Ruutu& Siirto::getLoppuruutu() const { return _loppuRuutu; }
 bool Siirto::onkoLyhytLinna() const { return _lyhytLinna; }
 bool Siirto::onkoPitkaLinna() const { return _pitkaLinna; }
+
+Nappula* Siirto::getNappula(const Asema& alkuAsema) const
+{
+    return _lyhytLinna || _pitkaLinna ? nullptr : _alkuRuutu.getNappula(alkuAsema);
+}
+
+std::string Siirto::getMerkinta(const Asema& asema) const
+{
+    std::stringstream merkinta;
+    Nappula* nappula = getNappula(asema);
+    
+    if (nappula != nullptr)
+    {
+        merkinta << nappula->getLautaMerkki() << " ";
+        if (!Kayttoliittyma::getInstance().getOnkoUCI())
+        {
+            std::string merkki = nappula->getSiirtoMerkki();
+            transform(merkki.begin(), merkki.end(), merkki.begin(), ::toupper);
+            merkinta << merkki;
+        }
+    }
+    
+    merkinta << *this;
+    
+    return merkinta.str();
+}
 
 std::ostream& operator<<(std::ostream& os, const Siirto& siirto)
 {

@@ -4,8 +4,7 @@
 
 // Ns. "forward declaration". Nyt Asema-luokassa voidaa esitellä Nappula-osoittimia ilman,
 // että nappula.h -tiedostoa täytyy includoida.
-class Nappula; 
-
+class Nappula;
 
 // Siirto kuvaa nappulan siirtymisen ruudusta toiseen, mukaanlukien erikoissiirrot
 // (linnoitus ja ohestalyönti).
@@ -22,6 +21,11 @@ public:
     const Ruutu& getLoppuruutu() const;
     bool onkoLyhytLinna() const;
     bool onkoPitkaLinna() const;
+    
+    Nappula* getNappula(const Asema& alkuAsema) const;
+    
+    std::string getMerkinta(const Asema& asema) const;
+    
     Nappula* miksiKorotetaan;
 private:
     Ruutu _alkuRuutu;

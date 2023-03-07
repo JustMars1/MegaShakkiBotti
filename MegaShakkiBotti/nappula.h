@@ -32,13 +32,11 @@ public:
     const std::string& getSiirtoMerkki() const;
     const std::string& getFENMerkki() const;
     
-    const std::string& getSiirtoMerkki(bool uci) const;
-    
     int getMaxSiirrot() const;
 protected:
-    const std::string        _merkki; // nappulaa vastaava unicode-merkki
+    const std::string        _merkki;
     const int                _vari;   // valkea = 0, musta = 1
-    const NappulaKoodi       _koodi;  // VT, VR, MT tms.
+    const NappulaKoodi       _koodi;
     const float              _arvo;
     const int                _maxSiirrot;
     const std::string        _siirtoMerkkiAvain;

@@ -15,6 +15,7 @@
 #include <array>
 #include <exception>
 #include <algorithm>
+#include <iomanip>
 #include "kayttoliittyma.h"
 
 #include "varikoodit.h"
@@ -140,7 +141,7 @@ void Kayttoliittyma::kysyKieli()
     _kieli = kieli;
 }
 
-void Kayttoliittyma::tulostaSiirtoOhje(bool uci, size_t sisennys) const
+void Kayttoliittyma::tulostaSiirtoOhje(bool uci, int sisennys) const
 {
     string nappulaOhje = "[";
     int nappulaLkm = Asema::nappulat.size() / 2;
@@ -148,23 +149,15 @@ void Kayttoliittyma::tulostaSiirtoOhje(bool uci, size_t sisennys) const
     for (int i = 0; i < nappulaLkm - 1; i++)
     {
         Nappula* nappula = Asema::nappulat[i];
-        string merkki = nappula->getSiirtoMerkki(uci);
-        if (uci)
-        {
-            transform(merkki.begin(), merkki.end(), merkki.begin(), ::tolower);
-        }
-        
+        string merkki = uci ? nappula->getFENMerkki() : nappula->getSiirtoMerkki();
+        transform(merkki.begin(), merkki.end(), merkki.begin(), (uci ? ::tolower : ::toupper));
         nappulaOhje += merkki + "|";
     }
     
     {
         Nappula* nappula = Asema::nappulat[nappulaLkm - 1];
-        string merkki = nappula->getSiirtoMerkki(uci);
-        if (uci)
-        {
-            transform(merkki.begin(), merkki.end(), merkki.begin(), ::tolower);
-        }
-        
+        string merkki = uci ? nappula->getFENMerkki() : nappula->getSiirtoMerkki();
+        transform(merkki.begin(), merkki.end(), merkki.begin(), (uci ? ::tolower : ::toupper));
         nappulaOhje += merkki + "]";
     }
     
@@ -192,26 +185,26 @@ void Kayttoliittyma::tulostaSiirtoOhje(bool uci, size_t sisennys) const
     string lyhytLinnoitusOhje = uci ? "e1g1/e8g8" : "O-O";
     string pitkaLinnoitusOhje = uci ? "e1c1/e8c8" : "O-O-O";
     
-    size_t leveys = max(siirtoOhje.length(), nappulaOhje.length());
-    leveys = max(leveys, korotusOhje.length());
+    int leveys = static_cast<int>(max(siirtoOhje.length(), nappulaOhje.length()));
+    leveys = max(leveys, static_cast<int>(korotusOhje.length()));
     
-    cout << string(sisennys, ' ');
-    cout << nappulaOhje << string(leveys - nappulaOhje.length(), ' ') << " = " << "nappula"_k << endl;
+    cout << left << setw(sisennys) << "";
+    cout << setw(leveys) << nappulaOhje << " = " << "nappula"_k << endl;
     
-    cout << string(sisennys, ' ');
-    cout << ruutuOhje << string(leveys - ruutuOhje.length(), ' ') << " = " << "ruutu"_k << " (" << "sarake"_k << ", " << "rivi"_k << ")" << endl;
+    cout << setw(sisennys) << "";
+    cout << setw(leveys) << ruutuOhje << " = " << "ruutu"_k << " (" << "sarake"_k << ", " << "rivi"_k << ")" << endl;
     
-    cout << string(sisennys, ' ');
-    cout << siirtoOhje << string(leveys - siirtoOhje.length(), ' ') << " = " << "siirto"_k << endl;
+    cout << setw(sisennys) << "";
+    cout << setw(leveys) << siirtoOhje << " = " << "siirto"_k << endl;
     
-    cout << string(sisennys, ' ');
-    cout << korotusOhje << string(leveys - korotusOhje.length(), ' ') << " = " << "korotus"_k << endl;
+    cout << setw(sisennys) << "";
+    cout << setw(leveys) << korotusOhje << " = " << "korotus"_k << endl;
     
-    cout << string(sisennys, ' ');
-    cout << lyhytLinnoitusOhje << string(leveys - lyhytLinnoitusOhje.length(), ' ') << " = " << "lyhytLinnoitus"_k << endl;
+    cout << setw(sisennys) << "";
+    cout << setw(leveys) << lyhytLinnoitusOhje << " = " << "lyhytLinnoitus"_k << endl;
     
-    cout << string(sisennys, ' ');
-    cout << pitkaLinnoitusOhje << string(leveys - pitkaLinnoitusOhje.length(), ' ') << " = " << "pitkaLinnoitus"_k << endl;
+    cout << setw(sisennys) << "";
+    cout << setw(leveys) << pitkaLinnoitusOhje << " = " << "pitkaLinnoitus"_k << endl;
 }
 
 Peli Kayttoliittyma::kysyPeli() const
@@ -759,18 +752,37 @@ bool Kayttoliittyma::tarkistaKomento(const string& syote, Peli& peli)
     {
         vector<Siirto> siirrot = peli.asema.annaLaillisetSiirrot();
         
+        int lkm = 0;
+        
+        cout << left;
         for (auto& siirto : siirrot)
         {
-            if (!siirto.onkoLyhytLinna() && !siirto.onkoPitkaLinna())
-            {
-                int y = siirto.getAlkuruutu().getRivi();
-                int x = siirto.getAlkuruutu().getSarake();
-                string merkki = peli.asema.lauta[y][x]->getSiirtoMerkki();
-                transform(merkki.begin(), merkki.end(), merkki.begin(), ::toupper);
-                cout << merkki;
-            }
+            Asema tmpAsema = peli.asema;
+            tmpAsema.paivitaAsema(siirto);
+            float arvo = tmpAsema.evaluoi();
+            string etumerkki = arvo > 0 ? "+" : (arvo == 0 ? " " : "");
+            cout << setw(15) << siirto.getMerkinta(peli.asema) << setw(15) << etumerkki + to_string(arvo);
             
-            cout << siirto << endl;
+            lkm++;
+            if (lkm == 2)
+            {
+                lkm = 0;
+                cout << endl;
+            }
+        }
+        
+        cout << endl;
+        
+        for (int syvyys = 1; syvyys <= 6; syvyys++)
+        {
+            MinMaxPaluu minMax = peli.asema.alphabetaMinimaxAsync(syvyys);
+            Siirto siirto = minMax.parasSiirto;
+            float arvo = minMax.evaluointiArvo;
+            
+            string teksti = "suositus"_k + " ("  + "hakusyvyys"_k + " " + to_string(syvyys) + "): ";
+            string etumerkki = arvo > 0 ? "+" : (arvo == 0 ? " " : "");
+            
+            cout << left << teksti << setw(15) << siirto.getMerkinta(peli.asema) << etumerkki + to_string(minMax.evaluointiArvo) << endl;
         }
     }
     else if (komento == "fen")

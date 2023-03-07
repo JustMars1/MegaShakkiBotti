@@ -2,6 +2,9 @@
 #include <iostream>
 #include <cstdint>
 
+class Asema;
+class Nappula;
+
 // Shakkilaudan ruutu tietyssä (rivi, sarake) -koordinaatissa.
 class Ruutu
 {
@@ -15,6 +18,8 @@ public:
     void setSarake(int);
     
     bool ok() const;
+    
+    Nappula* getNappula(const Asema& asema) const;
     
     bool operator==(const Ruutu& rhs) const;
 private:

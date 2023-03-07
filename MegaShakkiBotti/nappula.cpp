@@ -30,16 +30,6 @@ const string& Nappula::getLautaMerkki() const { return _merkki; }
 
 const std::string& Nappula::getSiirtoMerkki() const
 {
-    return getSiirtoMerkki(Kayttoliittyma::getInstance().getOnkoUCI());
-}
-
-const std::string& Nappula::getSiirtoMerkki(bool uci) const
-{
-    if (uci)
-    {
-        return getFENMerkki();
-    }
-    
     return Kayttoliittyma::getInstance().getKieli().get(_siirtoMerkkiAvain);
 }
 

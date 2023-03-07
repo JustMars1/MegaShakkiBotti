@@ -1,4 +1,5 @@
 #include "ruutu.h"
+#include "asema.h"
 
 Ruutu::Ruutu(int sarake, int rivi)
 : _sarake{sarake}
@@ -25,6 +26,11 @@ bool Ruutu::operator==(const Ruutu& rhs) const
 bool Ruutu::ok() const
 {
     return _sarake >= 0 && _sarake < 8 && _rivi >= 0 && _rivi < 8;
+}
+
+Nappula* Ruutu::getNappula(const Asema& asema) const
+{
+    return asema.lauta[_rivi][_sarake];
 }
 
 std::ostream& operator<<(std::ostream& os, const Ruutu& ruutu)

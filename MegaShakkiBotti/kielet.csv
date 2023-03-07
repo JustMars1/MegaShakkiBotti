@@ -31,12 +31,12 @@ rivi,rivi,row
 siirto,siirto,move
 lyhytLinnoitus,lyhyt linnoitus,short castling
 pitkaLinnoitus,pitkä linnoitus,long castling
-vk,K,K
-vd,D,Q
-vt,T,R
-vl,L,B
-vr,R,N
-vs,S,P
+vk,k,k
+vd,d,q
+vt,t,r
+vl,l,b
+vr,r,n
+vs,s,p
 mk,k,k
 md,d,q
 mt,t,r
@@ -51,4 +51,5 @@ historia,historia,history
 kumoaEdellinenSiirto,kumoa edellinen siirto,undo previous move
 listaaSiirtoHistoria,listaa siirto historia,list move history
 valitseSiirronMerkintatapa,Valitse siirron merkintätapa,Select move notation
+suositus,Suositus,Suggestion
 korotus,korotus,promotion)"

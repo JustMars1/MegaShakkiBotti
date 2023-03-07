@@ -108,20 +108,7 @@ int main(int argc, char* argv[])
                     
                     siirto = minimax.parasSiirto;
                     
-                    cout << "koneenSiirto"_k << ": ";
-                    
-                    if (!kayttoliittyma.getOnkoUCI() && !siirto.onkoLyhytLinna() && !siirto.onkoPitkaLinna())
-                    {
-                        int y = siirto.getAlkuruutu().getRivi();
-                        int x = siirto.getAlkuruutu().getSarake();
-                        
-                        string merkki = peli.asema.lauta[y][x]->getSiirtoMerkki();
-                        
-                        transform(merkki.begin(), merkki.end(), merkki.begin(), ::toupper);
-                        cout << merkki;
-                    }
-                    
-                    cout << siirto << endl;
+                    cout << "koneenSiirto"_k << ": " << siirto.getMerkinta(peli.asema) << endl;
                 }
                 else
                 {

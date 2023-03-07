@@ -23,7 +23,7 @@ public:
     
     Siirto kysySiirto(Peli& peli);
     
-    void tulostaSiirtoOhje(bool uci, size_t sisennys = 0) const;
+    void tulostaSiirtoOhje(bool uci, int sisennys = 0) const;
     
     void piirra(const Peli& peli) const;
     bool tarkistaKomento(const std::string& syote, Peli& peli);
