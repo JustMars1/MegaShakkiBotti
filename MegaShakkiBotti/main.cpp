@@ -1,5 +1,3 @@
-#include <iostream>
-
 #ifdef _WIN32
 #define NOMINMAX
 #include <Windows.h>
@@ -9,18 +7,16 @@
 
 #include <iostream>
 #include <string>
-#include <clocale>
 #include <limits>
 #include <vector>
 #include <algorithm>
+#include <cstring>
 
 #include "kayttoliittyma.h"
 #include "siirto.h"
 #include "asema.h"
 #include "ajastin.h"
 #include "uci.h"
-#include <chrono>
-#include <cstring>
 
 using namespace std;
 
@@ -44,7 +40,6 @@ int main(int argc, char* argv[])
         }
     }
     
-    Peli peli;
     UCI uci;
     uci.uciLoop();
     
@@ -53,8 +48,7 @@ int main(int argc, char* argv[])
     bool ohjelmaKaynnissa = true;
     while(ohjelmaKaynnissa)
     {
-        
-        peli = kayttoliittyma.kysyPeli();
+        Peli peli = kayttoliittyma.kysyPeli();
         cout << endl;
         kayttoliittyma.kysyPelimuoto(peli);
         cout << endl;
@@ -107,12 +101,40 @@ int main(int argc, char* argv[])
                     //                    cout << minimax << endl;
                     
                     siirto = minimax.parasSiirto;
-                    
                     cout << "koneenSiirto"_k << ": " << siirto.getMerkinta(peli.asema) << endl;
                 }
                 else
                 {
-                    siirto = kayttoliittyma.kysySiirto(peli);
+                    if (cin.fail())
+                    {
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    }
+                    else
+                    {
+                        cout << "syotaSiirto"_k << ": ";
+                    }
+                    
+                    string syote;
+                    cin >> syote;
+                    
+                    if (cin.fail())
+                    {
+                        continue;
+                    }
+                    
+                    if (kayttoliittyma.tarkistaKomento(syote, peli))
+                    {
+                        continue;
+                    }
+                    
+                    optional<Siirto> luettuSiirto = Siirto::lue(syote, peli.asema.getSiirtovuoro());
+                    if (!luettuSiirto.has_value())
+                    {
+                        continue;
+                    }
+                    
+                    siirto = luettuSiirto.value();
                 }
                 
                 ok = peli.asema.tarkistaSiirto(siirto);

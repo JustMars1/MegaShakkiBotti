@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <optional>
 #include "ruutu.h"
 
 // Ns. "forward declaration". Nyt Asema-luokassa voidaa esitellä Nappula-osoittimia ilman,
@@ -11,6 +12,8 @@ class Nappula;
 class Siirto
 {
 public:
+    static std::optional<Siirto> lue(std::string merkinta, int vari);
+    
     Siirto(Ruutu alku, Ruutu loppu);
     Siirto(bool lyhytLinna, bool pitkaLinna); // Linnoitus lyhesti (K-siipi) tai pitkästi (D-siipi)?
     Siirto();

@@ -21,8 +21,6 @@ public:
     void kysyPelimuoto(Peli& peli) const;
     std::optional<Peli> kysyFEN() const;
     
-    Siirto kysySiirto(Peli& peli);
-    
     void tulostaSiirtoOhje(bool uci, int sisennys = 0) const;
     
     void piirra(const Peli& peli) const;

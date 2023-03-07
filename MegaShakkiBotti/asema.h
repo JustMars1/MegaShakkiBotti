@@ -14,7 +14,7 @@
 // (nappuloiden sijainti, siirtovuoro, linnoitusoikeudet jne.).
 class Asema
 {
-public:
+public:    
     // Nappula-oliot. Huomaa, että samaa nappulaa voidaan käyttää useissa eri ruuduissa.
     // Määritelty static-määreellä, joten nappulat ovat kaikkien lauta-olioiden "yhteiskäytössä"
     // (suorituskyvyn vuoksi).

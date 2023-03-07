@@ -3,6 +3,178 @@
 #include <sstream>
 #include "kayttoliittyma.h"
 
+/*
+ Aliohjelma tarkistaa ett� k�ytt�j�n antama sy�te siirroksi on
+ muodollisesti korrekti (ei tarkista aseman laillisuutta)
+ 
+ UCI:
+ Ottaa irti myös korotettaessa nappulan kirjaimen (D/L/R/T), tarkistaa että kirjain korrekti
+ 
+ Ei UCI:
+ Ottaa irti myös nappulan kirjaimen (K/D/L/R/T), tarkistaa että kirjain korrekti
+ */
+std::optional<Siirto> Siirto::lue(std::string merkinta, int vari)
+{
+    auto& kayttoliittyma = Kayttoliittyma::getInstance();
+    auto tarkistaNappula = [vari](std::string merkki) -> Nappula*
+    {
+        transform(merkki.begin(), merkki.end(), merkki.begin(), ::tolower);
+        
+        for (auto nappula : Asema::nappulat)
+        {
+            if (nappula->getVari() == vari)
+            {
+                std::string siirtoMerkki = nappula->getSiirtoMerkki();
+                transform(siirtoMerkki.begin(), siirtoMerkki.end(), siirtoMerkki.begin(), ::tolower);
+                
+                if (siirtoMerkki == merkki)
+                {
+                    return nappula;
+                }
+            }
+        }
+        
+        return nullptr;
+    };
+    
+    if (kayttoliittyma.getOnkoUCI())
+    {
+        bool pitkaLinna = false;
+        bool lyhytLinna = false;
+        
+        if (merkinta == "e1c1" || merkinta == "e8c8")
+        {
+            pitkaLinna = true;
+        }
+        else if (merkinta == "e1g1" || merkinta == "e8g8")
+        {
+            lyhytLinna = true;
+        }
+        
+        if (pitkaLinna || lyhytLinna)
+        {
+            return Siirto(lyhytLinna, pitkaLinna);
+        }
+        
+        if (merkinta.length() < 4)
+        {
+            kayttoliittyma.tulostaVirhe("Tuntematon siirto");
+            return std::nullopt;
+        }
+        
+        Ruutu alku(-1, -1);
+        Ruutu loppu(-1, -1);
+        
+        alku.setSarake(merkinta[0] - 'a');
+        alku.setRivi(merkinta[1] - '0' - 1);
+        
+        loppu.setSarake(merkinta[2] - 'a');
+        loppu.setRivi(merkinta[3] - '0' - 1);
+        
+        if (!alku.ok() || !loppu.ok())
+        {
+            kayttoliittyma.tulostaVirhe("Virheelliset ruudut");
+            return std::nullopt;
+        }
+        
+        Siirto siirto(alku, loppu);
+        
+        if (merkinta.length() > 4)
+        {
+            std::string korotusMerkki = merkinta.substr(4);
+            Nappula* korotusNappula = tarkistaNappula(korotusMerkki);
+            
+            if (korotusNappula == nullptr || korotusNappula == &Asema::vs || korotusNappula == &Asema::ms)
+            {
+                kayttoliittyma.tulostaVirhe("Siirron lopussa on virheellisia merkkeja.");
+                return std::nullopt;
+            }
+            
+            siirto.miksiKorotetaan = korotusNappula;
+        }
+        
+        return siirto;
+    }
+    else
+    {
+        bool pitkaLinna = merkinta == "O-O-O";
+        bool lyhytLinna = merkinta == "O-O";
+        
+        if (pitkaLinna || lyhytLinna)
+        {
+            return Siirto(lyhytLinna, pitkaLinna);
+        }
+        
+        if (merkinta.length() < 6)
+        {
+            kayttoliittyma.tulostaVirhe("Tuntematon siirto");
+            return std::nullopt;
+        }
+        
+        auto viivaIdx = merkinta.find('-');
+        
+        if (viivaIdx == std::string::npos)
+        {
+            kayttoliittyma.tulostaVirhe("Siirrosta puuttuu -");
+            return std::nullopt;
+        }
+        
+        if (viivaIdx + 2 > merkinta.length() - 1 || viivaIdx - 2 < 1)
+        {
+            kayttoliittyma.tulostaVirhe("Virheellinen siirto");
+            return std::nullopt;
+        }
+        
+        Ruutu alku(-1, -1);
+        Ruutu loppu(-1, -1);
+        
+        alku.setSarake(merkinta[viivaIdx - 2] - 'a');
+        alku.setRivi(merkinta[viivaIdx - 1] - '0' - 1);
+        
+        loppu.setSarake(merkinta[viivaIdx + 1] - 'a');
+        loppu.setRivi(merkinta[viivaIdx + 2] - '0' - 1);
+        
+        std::string siirtoMerkki = merkinta.substr(0, viivaIdx - 2);
+        Nappula* siirtoNappula = tarkistaNappula(siirtoMerkki);
+        
+        if (siirtoNappula == nullptr)
+        {
+            kayttoliittyma.tulostaVirhe("Siirron alussa ei mainita nappulaa.");
+            return std::nullopt;
+        }
+        
+        if (!alku.ok() || !loppu.ok())
+        {
+            kayttoliittyma.tulostaVirhe("Virheelliset ruudut");
+            return std::nullopt;
+        }
+        
+        Siirto siirto(alku, loppu);
+        
+        if (merkinta.length() - 1 > viivaIdx + 2)
+        {
+            std::string korotusMerkki = merkinta.substr(viivaIdx + 2 + 1);
+            Nappula* korotusNappula = tarkistaNappula(korotusMerkki);
+            
+            if (korotusNappula == nullptr || korotusNappula == &Asema::vs || korotusNappula == &Asema::ms)
+            {
+                kayttoliittyma.tulostaVirhe("Siirron lopussa on virheellisia merkkeja.");
+                return std::nullopt;
+            }
+            
+            if (siirtoNappula != &Asema::vs && siirtoNappula != &Asema::ms)
+            {
+                kayttoliittyma.tulostaVirhe("Vain sotilas voidaan korottaa.");
+                return std::nullopt;
+            }
+            
+            siirto.miksiKorotetaan = korotusNappula;
+        }
+        
+        return siirto;
+    }
+}
+
 Siirto::Siirto(Ruutu alku, Ruutu loppu)
 : _alkuRuutu(alku)
 , _loppuRuutu(loppu)
@@ -90,7 +262,7 @@ std::ostream& operator<<(std::ostream& os, const Siirto& siirto)
         if (siirto.miksiKorotetaan != nullptr)
         {
             std::string merkki = siirto.miksiKorotetaan->getSiirtoMerkki();
-            std::transform(merkki.begin(), merkki.end(), merkki.begin(), ::tolower);
+            std::transform(merkki.begin(), merkki.end(), merkki.begin(), (uci ? ::tolower : ::toupper));
             os << merkki;
         }
     }

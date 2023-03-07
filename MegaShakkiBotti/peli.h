@@ -6,6 +6,8 @@
 
 class Peli {
 public:
+    static std::optional<Peli> lue(std::string fen);
+    
     Pelaaja valkoinen;
     Pelaaja musta;
     Asema asema;

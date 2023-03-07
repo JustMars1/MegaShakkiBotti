@@ -48,7 +48,8 @@ tuntematonKomento,Tuntematon komento,Unknown command
 paivitaAsetukset,päivitä asetukset,update settings
 kumoa,kumoa,undo
 historia,historia,history
-kumoaEdellinenSiirto,kumoa edellinen siirto,undo previous move
+kumoa2EdellistaSiirtoa,kumoaa 2 edellista siirto,undo 2 previous moves
+kumottu,kumottu,undoed
 listaaSiirtoHistoria,listaa siirto historia,list move history
 valitseSiirronMerkintatapa,Valitse siirron merkintätapa,Select move notation
 suositus,Suositus,Suggestion

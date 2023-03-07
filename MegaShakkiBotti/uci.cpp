@@ -21,6 +21,7 @@ void UCI::uciLoop()
         
         bool lukeeSiirtoja = false;
         bool lukeeAsemaa = false;
+        string fen;
         
         stringstream syote(rivi);
         string token;
@@ -29,20 +30,24 @@ void UCI::uciLoop()
         {
             if (lukeeSiirtoja)
             {
-                Ruutu alku(-1, -1);
-                Ruutu loppu(-1, -1);
+                optional<Siirto> siirto = Siirto::lue(token, _asema.getSiirtovuoro());
                 
-                alku.setSarake(token[0] - 'a');
-                alku.setRivi(token[1] - '0' - 1);
-                
-                loppu.setSarake(token[2] - 'a');
-                loppu.setRivi(token[3] - '0' - 1);
-                
-                Siirto siirto(alku, loppu);
-                _asema.paivitaAsema(siirto);
+                if (siirto.has_value())
+                {
+                    _asema.paivitaAsema(siirto.value());
+                }
             }
             else if (token == "moves")
             {
+                if (!fen.empty())
+                {
+                    optional<Peli> peli = Peli::lue(fen);
+                    if (peli.has_value())
+                    {
+                        _asema = peli.value().asema;
+                    }
+                }
+                
                 lukeeSiirtoja = true;
             }
             else if (lukeeAsemaa)
@@ -53,7 +58,7 @@ void UCI::uciLoop()
                 }
                 else
                 {
-                    // FEN
+                    fen += token;
                 }
             }
             else if (token == "position")
