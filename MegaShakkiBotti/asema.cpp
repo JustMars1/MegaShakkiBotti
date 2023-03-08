@@ -400,41 +400,42 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
 
 float Asema::evaluoi() const
 {
-    int vari = getSiirtovuoro();
-    float summa = laskeNappuloidenArvo() + nappuloitaKeskella() +linjat(vari);
-    
-    //jos avaus tai keskipeli, niin hyva etta kuningas on ruudussa g1 tai b1/c1
-    if (onkoAvausTaiKeskipeli(vari)) {
-        //onko valkean f ja g sotilas paikallaan
-        if (lauta[0][6] != NULL && lauta[1][5] != NULL && lauta[1][6] != NULL)
-        {
-            if (lauta[0][6]->getKoodi() == VK && (lauta[1][5]->getKoodi() == VS && (lauta[1][6]->getKoodi() == VS)))
-                summa += 2;
-        }
-        
-        //onko valkean c ja b sotilas paikallaan
-        if (lauta[0][1] != NULL && lauta[0][2] != NULL && lauta[1][1] != NULL && lauta[1][2] != NULL)
-        {
-            if ((lauta[0][1]->getKoodi() == VK || lauta[0][2]->getKoodi() == VK) && (lauta[1][1]->getKoodi() == VS && (lauta[1][2]->getKoodi() == VS)))
-                summa += 1;
-        }
-        
-        //onko mustan f ja g sotilas paikallaan
-        if (lauta[7][6] != NULL && lauta[6][5] != NULL && lauta[6][6] != NULL)
-        {
-            if (lauta[7][6]->getKoodi() == MK && (lauta[6][5]->getKoodi() == MS && (lauta[6][6]->getKoodi() == MS)))
-                summa -= 2;
-        }
-        
-        //onko mustan c ja b sotilas paikallaan
-        if (lauta[7][1] != NULL && lauta[7][2] != NULL && lauta[7][1] != NULL && lauta[7][2] != NULL)
-        {
-            if ((lauta[7][1]->getKoodi() == MK || lauta[7][2]->getKoodi() == MK) && (lauta[7][1]->getKoodi() == MS && (lauta[7][2]->getKoodi() == MS)))
-                summa -= 1;
-        }
-    }
-    
-    return summa;
+    return laskeNappuloidenArvo();
+//    int vari = getSiirtovuoro();
+//    float summa = laskeNappuloidenArvo() + nappuloitaKeskella() +linjat(vari);
+//
+//    //jos avaus tai keskipeli, niin hyva etta kuningas on ruudussa g1 tai b1/c1
+//    if (onkoAvausTaiKeskipeli(vari)) {
+//        //onko valkean f ja g sotilas paikallaan
+//        if (lauta[0][6] != NULL && lauta[1][5] != NULL && lauta[1][6] != NULL)
+//        {
+//            if (lauta[0][6]->getKoodi() == VK && (lauta[1][5]->getKoodi() == VS && (lauta[1][6]->getKoodi() == VS)))
+//                summa += 2;
+//        }
+//
+//        //onko valkean c ja b sotilas paikallaan
+//        if (lauta[0][1] != NULL && lauta[0][2] != NULL && lauta[1][1] != NULL && lauta[1][2] != NULL)
+//        {
+//            if ((lauta[0][1]->getKoodi() == VK || lauta[0][2]->getKoodi() == VK) && (lauta[1][1]->getKoodi() == VS && (lauta[1][2]->getKoodi() == VS)))
+//                summa += 1;
+//        }
+//
+//        //onko mustan f ja g sotilas paikallaan
+//        if (lauta[7][6] != NULL && lauta[6][5] != NULL && lauta[6][6] != NULL)
+//        {
+//            if (lauta[7][6]->getKoodi() == MK && (lauta[6][5]->getKoodi() == MS && (lauta[6][6]->getKoodi() == MS)))
+//                summa -= 2;
+//        }
+//
+//        //onko mustan c ja b sotilas paikallaan
+//        if (lauta[7][1] != NULL && lauta[7][2] != NULL && lauta[7][1] != NULL && lauta[7][2] != NULL)
+//        {
+//            if ((lauta[7][1]->getKoodi() == MK || lauta[7][2]->getKoodi() == MK) && (lauta[7][1]->getKoodi() == MS && (lauta[7][2]->getKoodi() == MS)))
+//                summa -= 1;
+//        }
+//    }
+//
+//    return summa;
 }
 
 float Asema::laskeNappuloidenArvo() const

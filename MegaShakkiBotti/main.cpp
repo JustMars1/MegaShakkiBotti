@@ -77,28 +77,28 @@ int main(int argc, char* argv[])
                         minimax = peli.asema.alphabetaMinimaxAsync(syvyys);
                     }
 
-                    cout << minimax << endl;
-
-                    {
-                        Ajastin ajastin("alphabetaMinimax");
-                        minimax = peli.asema.alphabetaMinimax(syvyys);
-                    }
-
-                    cout << minimax << endl;
-
-                    {
-                        Ajastin ajastin("minimaxAsync");
-                        minimax = peli.asema.minimaxAsync(syvyys);
-                    }
-
-                    cout << minimax << endl;
-
-                    {
-                        Ajastin ajastin("minimax");
-                        minimax = peli.asema.minimax(syvyys);
-                    }
-
-                    cout << minimax << endl;
+//                    cout << minimax << endl;
+//
+//                    {
+//                        Ajastin ajastin("alphabetaMinimax");
+//                        minimax = peli.asema.alphabetaMinimax(syvyys);
+//                    }
+//
+//                    cout << minimax << endl;
+//
+//                    {
+//                        Ajastin ajastin("minimaxAsync");
+//                        minimax = peli.asema.minimaxAsync(syvyys);
+//                    }
+//
+//                    cout << minimax << endl;
+//
+//                    {
+//                        Ajastin ajastin("minimax");
+//                        minimax = peli.asema.minimax(syvyys);
+//                    }
+//
+//                    cout << minimax << endl;
                     
                     siirto = minimax.parasSiirto;
                     cout << "koneenSiirto"_k << ": " << siirto.getMerkinta(peli.asema) << endl;
