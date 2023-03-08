@@ -750,7 +750,7 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
         }
         
         MinMaxPaluu maxi = tehtavat[0].get();
-        for (size_t i = 0; i ;)
+        for (size_t i = 1; i < tehtavat.size(); i++)
         {
             MinMaxPaluu arvo = tehtavat[i].get();
             if (arvo.evaluointiArvo > maxi.evaluointiArvo)
@@ -766,9 +766,7 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
         using KaanteisIteraattori = std::vector<Siirto>::reverse_iterator;
         auto miniAsync = [this, syvyys](KaanteisIteraattori alku, KaanteisIteraattori loppu) -> MinMaxPaluu
         {
-            MinMaxPaluu mini;
-            mini.evaluointiArvo = std::numeric_limits<float>::max();
-            mini.parasSiirto = *(alku);
+            MinMaxPaluu mini(std::numeric_limits<float>::max(), *alku);
             
             for (auto& iter = alku; iter != loppu; ++iter)
             {
@@ -796,6 +794,8 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
         }
         
         MinMaxPaluu mini = tehtavat[0].get();
+        
+        // Reverse for loop.                    ;)
         for (size_t i = tehtavat.size(); i-- > 1;)
         {
             MinMaxPaluu arvo = tehtavat[i].get();
@@ -803,7 +803,6 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
             {
                 mini = arvo;
             }
-            
         }
         
         return mini;
@@ -817,9 +816,6 @@ MinMaxPaluu Asema::maxi(int syvyys) const
     {
         return MinMaxPaluu(evaluoi(), Siirto());
     }
-    
-    MinMaxPaluu maxi;
-    maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
     
     std::vector<Siirto> siirrot = annaLaillisetSiirrot();
     
@@ -835,7 +831,7 @@ MinMaxPaluu Asema::maxi(int syvyys) const
         }
     }
     
-    maxi.parasSiirto = siirrot.front();
+    MinMaxPaluu maxi(std::numeric_limits<float>::lowest(), siirrot.front());
     
     for (auto& siirto : siirrot)
     {
@@ -858,11 +854,7 @@ MinMaxPaluu Asema::mini(int syvyys) const
         return MinMaxPaluu(evaluoi(), Siirto());
     }
     
-    MinMaxPaluu mini;
-    mini.evaluointiArvo = std::numeric_limits<float>::max();
-    
     std::vector<Siirto> siirrot = annaLaillisetSiirrot();
-    
     if (siirrot.empty())
     {
         if (onkoRuutuUhattu(_mustanKuninkaanRuutu, 0))
@@ -874,7 +866,8 @@ MinMaxPaluu Asema::mini(int syvyys) const
             return MinMaxPaluu(0, Siirto());
         }
     }
-    mini.parasSiirto = siirrot.back();
+    
+    MinMaxPaluu mini(std::numeric_limits<float>::max(), siirrot.back());
     
     // Reverse for loop.                    ;)
     for (size_t i = siirrot.size(); i-- > 0 ;)
@@ -887,7 +880,6 @@ MinMaxPaluu Asema::mini(int syvyys) const
         {
             mini = arvo;
         }
-        
     }
     return mini;
 }
@@ -936,9 +928,7 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
         using Iteraattori = std::vector<Siirto>::iterator;
         auto maxiAsync = [this, syvyys](Iteraattori alku, Iteraattori loppu) -> MinMaxPaluu
         {
-            MinMaxPaluu maxi;
-            maxi.parasSiirto = *(alku);
-            maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
+            MinMaxPaluu maxi(std::numeric_limits<float>::lowest(), *alku);
             
             constexpr float beta = std::numeric_limits<float>::max();
             
@@ -974,7 +964,7 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
         
         MinMaxPaluu maxi = tehtavat[0].get();
         
-        for (size_t i = tehtavat.size(); i-- > 1;)
+        for (size_t i = 1; i < tehtavat.size(); i++)
         {
             MinMaxPaluu arvo = tehtavat[i].get();
             if (arvo.evaluointiArvo > maxi.evaluointiArvo)
@@ -990,10 +980,7 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
         using KaanteisIteraattori = std::vector<Siirto>::reverse_iterator;
         auto miniAsync = [this, syvyys](KaanteisIteraattori alku, KaanteisIteraattori loppu) -> MinMaxPaluu
         {
-            MinMaxPaluu mini;
-            
-            mini.parasSiirto = *(alku);
-            mini.evaluointiArvo = std::numeric_limits<float>::max();
+            MinMaxPaluu mini(std::numeric_limits<float>::max(), *alku);
             
             constexpr float alpha = std::numeric_limits<float>::lowest();
             
@@ -1029,6 +1016,7 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
         
         MinMaxPaluu mini = tehtavat[0].get();
         
+        // Reverse for loop.                    ;)
         for (size_t i = tehtavat.size(); i-- > 1;)
         {
             MinMaxPaluu arvo = tehtavat[i].get();
@@ -1049,9 +1037,6 @@ MinMaxPaluu Asema::alphabetaMaxi(int syvyys, float alpha, float beta) const
         return MinMaxPaluu(evaluoi(), Siirto());
     }
     
-    MinMaxPaluu maxi;
-    maxi.evaluointiArvo = alpha;
-    
     std::vector<Siirto> siirrot = annaLaillisetSiirrot();
     
     if (siirrot.empty())
@@ -1066,7 +1051,7 @@ MinMaxPaluu Asema::alphabetaMaxi(int syvyys, float alpha, float beta) const
         }
     }
     
-    maxi.parasSiirto = siirrot.front();
+    MinMaxPaluu maxi(alpha, siirrot.front());
     
     for (auto& siirto : siirrot)
     {
@@ -1096,9 +1081,6 @@ MinMaxPaluu Asema::alphabetaMini(int syvyys, float alpha, float beta) const
         return MinMaxPaluu(evaluoi(), Siirto());
     }
     
-    MinMaxPaluu mini;
-    mini.evaluointiArvo = beta;
-    
     std::vector<Siirto> siirrot = annaLaillisetSiirrot();
     
     if (siirrot.empty())
@@ -1113,7 +1095,7 @@ MinMaxPaluu Asema::alphabetaMini(int syvyys, float alpha, float beta) const
         }
     }
     
-    mini.parasSiirto = siirrot.back();
+    MinMaxPaluu mini(beta, siirrot.back());
     
     // Reverse for loop.                    ;)
     for (size_t i = siirrot.size(); i-- > 0 ;)
@@ -1249,7 +1231,7 @@ void Asema::huolehdiKuninkaanShakeista(std::vector<Siirto>& siirrot) const
 std::vector<Siirto> Asema::annaLaillisetSiirrot() const
 {
     std::vector<Siirto> siirrot;
-    siirrot.reserve(30);
+    siirrot.reserve(40);
     
     for (int y = 0; y < 8; y++)
     {
