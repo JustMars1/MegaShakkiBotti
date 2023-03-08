@@ -4,6 +4,8 @@
 #include <vector>
 #include <future>
 #include <atomic>
+#include <iterator>
+#include <numeric>
 
 #include "asema.h"
 #include "minmaxpaluu.h"
@@ -383,9 +385,7 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
         }
     }
     
-    std::vector<Siirto> siirrot;
-    siirrot.reserve(50);
-    annaLaillisetSiirrot(siirrot);
+    std::vector<Siirto> siirrot = annaLaillisetSiirrot();
     
     if (std::find(siirrot.begin(), siirrot.end(), siirto) != siirrot.end())
     {
@@ -402,38 +402,38 @@ float Asema::evaluoi() const
 {
     int vari = getSiirtovuoro();
     float summa = laskeNappuloidenArvo() + nappuloitaKeskella() +linjat(vari);
-
+    
     //jos avaus tai keskipeli, niin hyva etta kuningas on ruudussa g1 tai b1/c1
     if (onkoAvausTaiKeskipeli(vari)) {
-	    //onko valkean f ja g sotilas paikallaan
-	    if (lauta[0][6] != NULL && lauta[1][5] != NULL && lauta[1][6] != NULL) 
+        //onko valkean f ja g sotilas paikallaan
+        if (lauta[0][6] != NULL && lauta[1][5] != NULL && lauta[1][6] != NULL)
         {
-		    if (lauta[0][6]->getKoodi() == VK && (lauta[1][5]->getKoodi() == VS && (lauta[1][6]->getKoodi() == VS)))
-			    summa += 2;
-	    }
-
-	    //onko valkean c ja b sotilas paikallaan
-	    if (lauta[0][1] != NULL && lauta[0][2] != NULL && lauta[1][1] != NULL && lauta[1][2] != NULL) 
-        {
-		    if ((lauta[0][1]->getKoodi() == VK || lauta[0][2]->getKoodi() == VK) && (lauta[1][1]->getKoodi() == VS && (lauta[1][2]->getKoodi() == VS)))
-			    summa += 1;
-	    }
-
-        //onko mustan f ja g sotilas paikallaan
-        if (lauta[7][6] != NULL && lauta[6][5] != NULL && lauta[6][6] != NULL) 
-        {
-             if (lauta[7][6]->getKoodi() == MK && (lauta[6][5]->getKoodi() == MS && (lauta[6][6]->getKoodi() == MS)))
-                 summa -= 2;
+            if (lauta[0][6]->getKoodi() == VK && (lauta[1][5]->getKoodi() == VS && (lauta[1][6]->getKoodi() == VS)))
+                summa += 2;
         }
-
-        //onko mustan c ja b sotilas paikallaan
-        if (lauta[7][1] != NULL && lauta[7][2] != NULL && lauta[7][1] != NULL && lauta[7][2] != NULL) 
+        
+        //onko valkean c ja b sotilas paikallaan
+        if (lauta[0][1] != NULL && lauta[0][2] != NULL && lauta[1][1] != NULL && lauta[1][2] != NULL)
         {
-             if ((lauta[7][1]->getKoodi() == MK || lauta[7][2]->getKoodi() == MK) && (lauta[7][1]->getKoodi() == MS && (lauta[7][2]->getKoodi() == MS)))
-                 summa -= 1;
+            if ((lauta[0][1]->getKoodi() == VK || lauta[0][2]->getKoodi() == VK) && (lauta[1][1]->getKoodi() == VS && (lauta[1][2]->getKoodi() == VS)))
+                summa += 1;
+        }
+        
+        //onko mustan f ja g sotilas paikallaan
+        if (lauta[7][6] != NULL && lauta[6][5] != NULL && lauta[6][6] != NULL)
+        {
+            if (lauta[7][6]->getKoodi() == MK && (lauta[6][5]->getKoodi() == MS && (lauta[6][6]->getKoodi() == MS)))
+                summa -= 2;
+        }
+        
+        //onko mustan c ja b sotilas paikallaan
+        if (lauta[7][1] != NULL && lauta[7][2] != NULL && lauta[7][1] != NULL && lauta[7][2] != NULL)
+        {
+            if ((lauta[7][1]->getKoodi() == MK || lauta[7][2]->getKoodi() == MK) && (lauta[7][1]->getKoodi() == MS && (lauta[7][2]->getKoodi() == MS)))
+                summa -= 1;
         }
     }
-
+    
     return summa;
 }
 
@@ -463,7 +463,7 @@ bool Asema::onkoAvausTaiKeskipeli(int vari) const
     int mustaUpseeriLkm = 0;
     bool valkeaDaami = false;
     bool mustaDaami = false;
-
+    
     for (int x = 0; x < 8; x++) {
         for (int y = 0; y < 8; y++) {
             if (lauta[y][x] == NULL) {
@@ -471,41 +471,41 @@ bool Asema::onkoAvausTaiKeskipeli(int vari) const
             }
             
             Nappula* nappula = lauta[y][x];
-
+            
             switch (nappula->getKoodi())
             {
-            case VD:
-                valkeaUpseeriLkm += 1;
-                valkeaDaami = true;
-                break;
-            case VT:
-                valkeaUpseeriLkm += 1;
-                break;
-            case VL:
-                valkeaUpseeriLkm += 1;
-                break;
-            case VR:
-                valkeaUpseeriLkm += 1;
-                break;
-            case MD:
-                mustaUpseeriLkm += 1;
-                break;
-            case MT:
-                mustaUpseeriLkm += 1;
-                mustaDaami = true;
-                break;
-            case ML:
-                mustaUpseeriLkm += 1;
-                break;
-            case MR:
-                mustaUpseeriLkm += 1;
-                break;
-            default:
-                break;
+                case VD:
+                    valkeaUpseeriLkm += 1;
+                    valkeaDaami = true;
+                    break;
+                case VT:
+                    valkeaUpseeriLkm += 1;
+                    break;
+                case VL:
+                    valkeaUpseeriLkm += 1;
+                    break;
+                case VR:
+                    valkeaUpseeriLkm += 1;
+                    break;
+                case MD:
+                    mustaUpseeriLkm += 1;
+                    break;
+                case MT:
+                    mustaUpseeriLkm += 1;
+                    mustaDaami = true;
+                    break;
+                case ML:
+                    mustaUpseeriLkm += 1;
+                    break;
+                case MR:
+                    mustaUpseeriLkm += 1;
+                    break;
+                default:
+                    break;
             }
         }
     }
-
+    
     if (vari == 0) {
         if (mustaUpseeriLkm > 2 || (mustaDaami == true && mustaUpseeriLkm > 1))
             return true;
@@ -576,7 +576,7 @@ float Asema::nappuloitaKeskella() const
 float Asema::linjat(int vari) const
 {
     // daami, torni ja lähetti viihtyvät avoimilla linjoilla
-        
+    
     int valkeanLinjat = 0;
     int mustanLinjat = 0;
     
@@ -694,9 +694,7 @@ MinMaxPaluu Asema::minimax(int syvyys) const
 
 MinMaxPaluu Asema::minimaxAsync(int syvyys) const
 {
-    std::vector<Siirto> siirrot;
-    siirrot.reserve(50);
-    annaLaillisetSiirrot(siirrot);
+    std::vector<Siirto> siirrot = annaLaillisetSiirrot();
     
     if (siirrot.empty())
     {
@@ -725,9 +723,7 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
         using Iteraattori = std::vector<Siirto>::iterator;
         auto maxiAsync = [this, syvyys](Iteraattori alku, Iteraattori loppu) -> MinMaxPaluu
         {
-            MinMaxPaluu maxi;
-            maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
-            maxi.parasSiirto = *(alku);
+            MinMaxPaluu maxi(std::numeric_limits<float>::lowest(), *alku);
             for (auto& iter = alku; iter != loppu; ++iter)
             {
                 Siirto& siirto = *iter;
@@ -754,7 +750,7 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
         }
         
         MinMaxPaluu maxi = tehtavat[0].get();
-        for (size_t i = tehtavat.size(); i-- > 1;)
+        for (size_t i = 0; i ;)
         {
             MinMaxPaluu arvo = tehtavat[i].get();
             if (arvo.evaluointiArvo > maxi.evaluointiArvo)
@@ -773,7 +769,7 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
             MinMaxPaluu mini;
             mini.evaluointiArvo = std::numeric_limits<float>::max();
             mini.parasSiirto = *(alku);
-
+            
             for (auto& iter = alku; iter != loppu; ++iter)
             {
                 Siirto& siirto = *iter;
@@ -798,7 +794,7 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
             tehtavat.push_back(std::async(std::launch::async, tehtava));
             iter += siirtoaPerSaie[i];
         }
-
+        
         MinMaxPaluu mini = tehtavat[0].get();
         for (size_t i = tehtavat.size(); i-- > 1;)
         {
@@ -807,7 +803,7 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
             {
                 mini = arvo;
             }
-
+            
         }
         
         return mini;
@@ -825,9 +821,7 @@ MinMaxPaluu Asema::maxi(int syvyys) const
     MinMaxPaluu maxi;
     maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
     
-    std::vector<Siirto> siirrot;
-    siirrot.reserve(50);
-    annaLaillisetSiirrot(siirrot);
+    std::vector<Siirto> siirrot = annaLaillisetSiirrot();
     
     if (siirrot.empty())
     {
@@ -840,9 +834,9 @@ MinMaxPaluu Asema::maxi(int syvyys) const
             return MinMaxPaluu(0, Siirto());
         }
     }
-
+    
     maxi.parasSiirto = siirrot.front();
-
+    
     for (auto& siirto : siirrot)
     {
         Asema tmpAsema = *this;
@@ -867,9 +861,7 @@ MinMaxPaluu Asema::mini(int syvyys) const
     MinMaxPaluu mini;
     mini.evaluointiArvo = std::numeric_limits<float>::max();
     
-    std::vector<Siirto> siirrot;
-    siirrot.reserve(50);
-    annaLaillisetSiirrot(siirrot);
+    std::vector<Siirto> siirrot = annaLaillisetSiirrot();
     
     if (siirrot.empty())
     {
@@ -883,7 +875,7 @@ MinMaxPaluu Asema::mini(int syvyys) const
         }
     }
     mini.parasSiirto = siirrot.back();
-
+    
     // Reverse for loop.                    ;)
     for (size_t i = siirrot.size(); i-- > 0 ;)
     {
@@ -895,7 +887,7 @@ MinMaxPaluu Asema::mini(int syvyys) const
         {
             mini = arvo;
         }
-
+        
     }
     return mini;
 }
@@ -914,9 +906,7 @@ MinMaxPaluu Asema::alphabetaMinimax(int syvyys) const
 
 MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
 {
-    std::vector<Siirto> siirrot;
-    siirrot.reserve(50);
-    annaLaillisetSiirrot(siirrot);
+    std::vector<Siirto> siirrot = annaLaillisetSiirrot();
     
     if (siirrot.empty())
     {
@@ -1001,7 +991,7 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
         auto miniAsync = [this, syvyys](KaanteisIteraattori alku, KaanteisIteraattori loppu) -> MinMaxPaluu
         {
             MinMaxPaluu mini;
-
+            
             mini.parasSiirto = *(alku);
             mini.evaluointiArvo = std::numeric_limits<float>::max();
             
@@ -1062,9 +1052,7 @@ MinMaxPaluu Asema::alphabetaMaxi(int syvyys, float alpha, float beta) const
     MinMaxPaluu maxi;
     maxi.evaluointiArvo = alpha;
     
-    std::vector<Siirto> siirrot;
-    siirrot.reserve(50);
-    annaLaillisetSiirrot(siirrot);
+    std::vector<Siirto> siirrot = annaLaillisetSiirrot();
     
     if (siirrot.empty())
     {
@@ -1077,9 +1065,9 @@ MinMaxPaluu Asema::alphabetaMaxi(int syvyys, float alpha, float beta) const
             return MinMaxPaluu(0, Siirto());
         }
     }
-
+    
     maxi.parasSiirto = siirrot.front();
-
+    
     for (auto& siirto : siirrot)
     {
         Asema tmpAsema = *this;
@@ -1111,9 +1099,7 @@ MinMaxPaluu Asema::alphabetaMini(int syvyys, float alpha, float beta) const
     MinMaxPaluu mini;
     mini.evaluointiArvo = beta;
     
-    std::vector<Siirto> siirrot;
-    siirrot.reserve(50);
-    annaLaillisetSiirrot(siirrot);
+    std::vector<Siirto> siirrot = annaLaillisetSiirrot();
     
     if (siirrot.empty())
     {
@@ -1126,9 +1112,9 @@ MinMaxPaluu Asema::alphabetaMini(int syvyys, float alpha, float beta) const
             return MinMaxPaluu(0, Siirto());
         }
     }
-
+    
     mini.parasSiirto = siirrot.back();
-
+    
     // Reverse for loop.                    ;)
     for (size_t i = siirrot.size(); i-- > 0 ;)
     {
@@ -1136,12 +1122,12 @@ MinMaxPaluu Asema::alphabetaMini(int syvyys, float alpha, float beta) const
         tmpAsema.paivitaAsema(siirrot[i]);
         MinMaxPaluu arvo = tmpAsema.alphabetaMaxi(syvyys - 1, alpha, mini.evaluointiArvo);
         arvo.parasSiirto = siirrot[i];
-            
+        
         if (arvo.evaluointiArvo <= alpha)
         {
             return MinMaxPaluu(alpha, siirrot[i]);
         }
-            
+        
         if (arvo.evaluointiArvo < mini.evaluointiArvo)
         {
             mini = arvo;
@@ -1260,8 +1246,11 @@ void Asema::huolehdiKuninkaanShakeista(std::vector<Siirto>& siirrot) const
     siirrot = laillisetSiirrot;
 }
 
-void Asema::annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const
+std::vector<Siirto> Asema::annaLaillisetSiirrot() const
 {
+    std::vector<Siirto> siirrot;
+    siirrot.reserve(30);
+    
     for (int y = 0; y < 8; y++)
     {
         for (int x = 0; x < 8; x++)
@@ -1276,22 +1265,27 @@ void Asema::annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const
     
     annaLinnoitusSiirrot(siirrot, _siirtovuoro);
     huolehdiKuninkaanShakeista(siirrot);
-
-    std::sort(siirrot.begin(), siirrot.end(), [this](auto& a, auto& b)
-    {         
-        Asema tmpAsema1 = *this;
-        Asema tmpAsema2 = *this;
-        tmpAsema1.paivitaAsema(a);
-        tmpAsema2.paivitaAsema(b);
-
-        return tmpAsema1.evaluoi() > tmpAsema2.evaluoi();
+    
+    std::vector<float> arvot(siirrot.size());
+    std::vector<size_t> indeksit(siirrot.size());
+    for (size_t i = 0; i < siirrot.size(); i++)
+    {
+        Asema tmpAsema = *this;
+        tmpAsema.paivitaAsema(siirrot[i]);
+        arvot[i] = tmpAsema.evaluoi();
+        indeksit[i] = i;
+    }
+    
+    std::sort(indeksit.begin(), indeksit.end(), [this, &arvot](auto a, auto b) {
+        return arvot[a] > arvot[b];
     });
-}
-
-std::vector<Siirto> Asema::annaLaillisetSiirrot() const
-{
-    std::vector<Siirto> siirrot;
-    annaLaillisetSiirrot(siirrot);
+    
+    for (size_t i = 0; i < siirrot.size(); i++) {
+        Siirto tmpSiirto = siirrot[i];
+        siirrot[i] = siirrot[indeksit[i]];
+        siirrot[indeksit[i]] = tmpSiirto;
+    }
+    
     return siirrot;
 }
 

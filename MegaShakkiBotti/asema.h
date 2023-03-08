@@ -97,7 +97,6 @@ public:
     
     std::vector<size_t> jaaSiirrotSaikeidenKesken(size_t siirtoLkm) const;
     
-    void annaLaillisetSiirrot(std::vector<Siirto>& siirrot) const;
     std::vector<Siirto> annaLaillisetSiirrot() const;
 private:
     // Lisäinformaatio pelitilanteesta.
