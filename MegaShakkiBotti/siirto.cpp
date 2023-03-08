@@ -16,7 +16,7 @@
 std::optional<Siirto> Siirto::lue(std::string merkinta, int vari)
 {
     auto& kayttoliittyma = Kayttoliittyma::getInstance();
-    auto tarkistaNappula = [vari](std::string merkki) -> Nappula*
+    auto tarkistaNappula = [vari, &kayttoliittyma](std::string merkki) -> Nappula*
     {
         transform(merkki.begin(), merkki.end(), merkki.begin(), ::tolower);
         
@@ -24,7 +24,7 @@ std::optional<Siirto> Siirto::lue(std::string merkinta, int vari)
         {
             if (nappula->getVari() == vari)
             {
-                std::string siirtoMerkki = nappula->getSiirtoMerkki();
+                std::string siirtoMerkki = kayttoliittyma.getOnkoUCI() ? nappula->getFENMerkki() : nappula->getSiirtoMerkki();
                 transform(siirtoMerkki.begin(), siirtoMerkki.end(), siirtoMerkki.begin(), ::tolower);
                 
                 if (siirtoMerkki == merkki)
