@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
         {
             kayttoliittyma.piirra(peli);
             cout << endl;
-            
+
             Siirto siirto;
             bool ok = false;
             
@@ -139,49 +139,39 @@ int main(int argc, char* argv[])
                 
                 ok = peli.asema.tarkistaSiirto(siirto);
             }
-            
+
             peli.asema.paivitaAsema(siirto);
             peli.siirtoHistoria.push_back(siirto);
             cout << endl;
+
+            vector<Siirto> siirrot = peli.asema.annaLaillisetSiirrot();
+
+            if (siirrot.empty())
+            {
+                kayttoliittyma.piirra(peli);
+                
+                if (peli.asema.onkoRuutuUhattu(peli.asema.getValkeanKuninkaanRuutu(), 1))
+                {
+                    // valkoinen voittaa
+                    cout << "matti"_k << ". " << "valkoisenVoitto"_k;
+
+                }
+                else if (peli.asema.onkoRuutuUhattu(peli.asema.getMustanKuninkaanRuutu(), 0))
+                {
+                    // musta voittaa
+                    cout << "matti"_k << ". " << "mustanVoitto"_k;
+                }
+                else
+                {
+                    // patti 
+                    cout << "patti"_k;
+                }
+                peliKaynnissa = false;
+                cout << endl << "FEN: " << peli << endl << endl;
+            }
         }
+
     }
-    
-    //int lopetus = 100;
-    // Open juttu alla
-    //Peli peli(Kayttoliittyma::getInstance()->
-    //	kysyVastustajanVari());
-    //std::list<Siirto> lista;
-    //system("cls");
-    //int koneenVari = peli.getKoneenVari();
-    
-    //while (lopetus != 0) {
-    //	lista.clear();
-    //	Kayttoliittyma::getInstance()->piirraLauta();
-    //	cout << "\n";
-    //	// Tarkasta onko peli loppu?
-    //	asema.annaLaillisetSiirrot(lista);
-    //	if (lista.size() == 0) {
-    //		lopetus = 0;
-    //		std::cout << "Peli loppui";
-    //		continue;
-    //	}
-    //	Siirto siirto;
-    //	if (asema.getSiirtovuoro() == koneenVari) {
-    //		MinMaxPaluu paluu;
-    //		if (koneenVari == 0) {
-    //			paluu = asema.maxi(3);
-    //		}
-    //		else {
-    //			paluu = asema.mini(3);
-    //		}
-    //		siirto = paluu._parasSiirto;
-    //	}
-    //	else {
-    //		siirto = Kayttoliittyma::getInstance()->
-    //			annaVastustajanSiirto();
-    //	}
-    //	asema.paivitaAsema(&siirto);
-    //}
-    
+        
     return 0;
 }

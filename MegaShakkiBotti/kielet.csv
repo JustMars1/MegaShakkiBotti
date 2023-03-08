@@ -43,6 +43,10 @@ mt,t,r
 ml,l,b
 mr,r,n
 ms,s,p
+patti,Patti. Tasapeli,Stalemate. Draw
+matti,Shakkimatti,Checkmate
+mustanVoitto,Musta on voittaja,Black wins
+valkoisenVoitto,Valkoinen on voittaja,White wins
 asetukset,asetukset,settings
 tuntematonKomento,Tuntematon komento,Unknown command
 paivitaAsetukset,päivitä asetukset,update settings

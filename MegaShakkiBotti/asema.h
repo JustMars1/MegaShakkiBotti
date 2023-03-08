@@ -56,6 +56,9 @@ public:
     
     int getSiirtovuoro() const;
     void setSiirtovuoro(int vuoro);
+
+    Ruutu getValkeanKuninkaanRuutu() const;
+    Ruutu getMustanKuninkaanRuutu() const;
     
     int getKaksoisaskelSarake() const;
     void setKaksoisaskelSarake(int sarake);
@@ -79,6 +82,7 @@ public:
     
     void paivitaAsema(const Siirto& siirto);
     bool tarkistaSiirto(const Siirto& siirto) const;
+    bool onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const;
     
     float evaluoi() const;
     MinMaxPaluu maxi(int syvyys) const;
@@ -109,12 +113,10 @@ private:
     Ruutu _mustanKuninkaanRuutu;
     
     int _kaksoisaskelSarake;
-    
     float laskeNappuloidenArvo() const;
     bool onkoAvausTaiKeskipeli(int vari) const;
     float nappuloitaKeskella() const;
     float linjat(int vari) const;
-    bool onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const;
     void annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const;
     
     // Karsii siirrot, jotka jättävät oman K:n shakkiin.
