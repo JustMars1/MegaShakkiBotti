@@ -701,6 +701,7 @@ MinMaxPaluu Asema::minimax(int syvyys) const
 MinMaxPaluu Asema::minimaxAsync(int syvyys) const
 {
     using Iteraattori = std::vector<Siirto>::iterator;
+    using KaanteisIteraattori = std::vector<Siirto>::reverse_iterator;
     
     std::vector<Siirto> siirrot;
     siirrot.reserve(50);
@@ -735,7 +736,7 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
             MinMaxPaluu maxi;
             maxi.evaluointiArvo = std::numeric_limits<float>::lowest();
             maxi.parasSiirto = *(alku);
-            for (auto iter = alku; iter != loppu; ++iter)
+            for (auto& iter = alku; iter != loppu; ++iter)
             {
                 Siirto& siirto = *iter;
                 Asema tmpAsema = *this;
@@ -776,13 +777,13 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
     }
     else
     {
-        auto miniAsync = [this, syvyys](Iteraattori alku, Iteraattori loppu) -> MinMaxPaluu
+        auto miniAsync = [this, syvyys](KaanteisIteraattori alku, KaanteisIteraattori loppu) -> MinMaxPaluu
         {
             MinMaxPaluu mini;
             mini.evaluointiArvo = std::numeric_limits<float>::max();
-            mini.parasSiirto = *(loppu - 1);
+            mini.parasSiirto = *(alku);
 
-            for (auto iter = loppu; --iter != alku ;)
+            for (auto& iter = alku; iter != loppu; ++iter)
             {
                 Siirto& siirto = *iter;
                 Asema tmpAsema = *this;
@@ -799,7 +800,7 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
             return mini;
         };
         
-        Iteraattori iter = siirrot.begin();
+        KaanteisIteraattori iter = siirrot.rbegin();
         for (size_t i = 0; i < siirtoaPerSaie.size(); i++)
         {
             auto tehtava = std::bind(miniAsync, iter, iter + siirtoaPerSaie[i]);
@@ -807,10 +808,9 @@ MinMaxPaluu Asema::minimaxAsync(int syvyys) const
             iter += siirtoaPerSaie[i];
         }
 
-        MinMaxPaluu mini;
-        mini.evaluointiArvo = std::numeric_limits<float>::max();
+        MinMaxPaluu mini = tehtavat[0].get();
         
-        for (size_t i = tehtavat.size(); i-- > 0;)
+        for (size_t i = tehtavat.size(); i-- > 1;)
         {
             MinMaxPaluu arvo = tehtavat[i].get();
             if (arvo.evaluointiArvo < mini.evaluointiArvo)
@@ -859,10 +859,6 @@ MinMaxPaluu Asema::maxi(int syvyys) const
         tmpAsema.paivitaAsema(siirto);
         MinMaxPaluu arvo = tmpAsema.mini(syvyys - 1);
         arvo.parasSiirto = siirto;
-        if (syvyys == 4)
-        {
-            std::cout << arvo << std::endl;
-        }
         if (arvo.evaluointiArvo > maxi.evaluointiArvo)
         {
             maxi = arvo;
@@ -929,6 +925,7 @@ MinMaxPaluu Asema::alphabetaMinimax(int syvyys) const
 MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
 {
     using Iteraattori = std::vector<Siirto>::iterator;
+    using KaanteisIteraattori = std::vector<Siirto>::reverse_iterator;
     
     std::vector<Siirto> siirrot;
     siirrot.reserve(50);
@@ -967,7 +964,7 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
             
             constexpr float beta = std::numeric_limits<float>::max();
             
-            for (auto iter = alku; iter != loppu; ++iter)
+            for (auto& iter = alku; iter != loppu; ++iter)
             {
                 Siirto& siirto = *iter;
                 Asema tmpAsema = *this;
@@ -1013,16 +1010,16 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
     }
     else
     {
-        auto miniAsync = [this, syvyys](Iteraattori alku, Iteraattori loppu) -> MinMaxPaluu
+        auto miniAsync = [this, syvyys](KaanteisIteraattori alku, KaanteisIteraattori loppu) -> MinMaxPaluu
         {
             MinMaxPaluu mini;
 
-            mini.parasSiirto = *(loppu - 1);
+            mini.parasSiirto = *(alku);
             mini.evaluointiArvo = std::numeric_limits<float>::max();
             
             constexpr float alpha = std::numeric_limits<float>::lowest();
             
-            for (auto& iter = loppu; iter != alku ; iter--)
+            for (auto& iter = alku; iter != loppu; ++iter)
             {
                 Siirto& siirto = *iter;
                 Asema tmpAsema = *this;
@@ -1044,7 +1041,7 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
             return mini;
         };
         
-        auto iter = siirrot.begin();
+        KaanteisIteraattori iter = siirrot.rbegin();
         for (size_t i = 0; i < siirtoaPerSaie.size(); i++)
         {
             auto tehtava = std::bind(miniAsync, iter, iter + siirtoaPerSaie[i]);
@@ -1052,10 +1049,9 @@ MinMaxPaluu Asema::alphabetaMinimaxAsync(int syvyys) const
             iter += siirtoaPerSaie[i];
         }
         
-        MinMaxPaluu mini;
-        mini.evaluointiArvo = std::numeric_limits<float>::max();
+        MinMaxPaluu mini = tehtavat[0].get();
         
-        for (size_t i = tehtavat.size(); i-- > 0 ;)
+        for (size_t i = tehtavat.size(); i-- > 1 ;)
         {
             MinMaxPaluu arvo = tehtavat[i].get();
             if (arvo.evaluointiArvo < mini.evaluointiArvo)
