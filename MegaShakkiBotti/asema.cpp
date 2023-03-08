@@ -388,37 +388,39 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
     }
 }
 
-/* 1. Laske nappuloiden arvo
- Daami = 9
- Torni = 5
- Lähetti = 3,25
- Ratsu = 3
- Sotilas = 1
- 
- 2. Kuninkaan hyvyys
- Jos avaus tai keskipeli, niin hyvä että kunigas g1 tai b1/c1
- Loppupelissä vaikea sanoa halutaanko olla auttamassa omaa sotilasta korottumaan
- vai olla estämässä vastustajan korotusta siksi ei oteta kantaa
- 3. Arvosta keskustaa sotilailla ja ratsuilla
- 4. Arvosta pitkiä linjoja daami, torni ja lähetti
- */
 float Asema::evaluoi() const
 {
     int vari = getSiirtovuoro();
-    
-    float summa = laskeNappuloidenArvo() + nappuloitaKeskella() + linjat(vari);
+    float summa = laskeNappuloidenArvo() + nappuloitaKeskella() +linjat(vari);
+
+    //jos avaus tai keskipeli, niin hyva etta kuningas on ruudussa g1 tai b1/c1
+    if (onkoAvausTaiKeskipeli(vari)) {
+	    //onko valkean f ja g sotilas paikallaan
+	    if (lauta[0][6] != NULL && lauta[1][5] != NULL && lauta[1][6] != NULL) {
+		    if (lauta[0][6]->getKoodi() == VK && (lauta[1][5]->getKoodi() == VS && (lauta[1][6]->getKoodi() == VS)))
+			    summa += 2;
+	    }
+
+	    //onko valkean c ja b sotilas paikallaan
+	    if (lauta[0][1] != NULL && lauta[0][2] != NULL && lauta[1][1] != NULL && lauta[1][2] != NULL) {
+		    if (lauta[0][1]->getKoodi() == VK || lauta[0][2]->getKoodi() == VK && (lauta[1][1]->getKoodi() == VS && (lauta[1][2]->getKoodi() == VS)))
+			    summa += 1;
+	    }
+
+        //onko mustan f ja g sotilas paikallaan
+        if (lauta[7][6] != NULL && lauta[6][5] != NULL && lauta[6][6] != NULL) {
+             if (lauta[7][6]->getKoodi() == MK && (lauta[6][5]->getKoodi() == MS && (lauta[6][6]->getKoodi() == MS)))
+                 summa -= 2;
+        }
+
+        //onko mustan c ja b sotilas paikallaan
+        if (lauta[7][1] != NULL && lauta[7][2] != NULL && lauta[7][1] != NULL && lauta[7][2] != NULL) {
+             if (lauta[7][1]->getKoodi() == MK || lauta[7][2]->getKoodi() == MK && (lauta[7][1]->getKoodi() == MS && (lauta[7][2]->getKoodi() == MS)))
+                 summa -= 1;
+        }
+    }
+
     return summa;
-    
-    //kertoimet asetettu sen takia että niiden avulla asioiden painoarvoa voidaan säätää helposti yhdestä paikasta
-    
-    //1. Nappuloiden arvo
-    
-    //2. Kuningas turvassa
-    
-    //3. Arvosta keskustaa
-    
-    // 4. Arvosta linjoja
-    
 }
 
 float Asema::laskeNappuloidenArvo() const
@@ -441,68 +443,67 @@ float Asema::laskeNappuloidenArvo() const
     return summa;
 }
 
-bool Asema::onkoAvausTaiKeskipeli(int vari)
+bool Asema::onkoAvausTaiKeskipeli(int vari) const
 {
-    int mustanUpseerit = 0;
-    int valkoisenUpseerit = 0;
-    
-    bool mustanDaami = false;
-    bool valkoisenDaami = false;
-    
-    for (int y = 0; y < 8; y++)
-    {
-        for (int x = 0; x < 8; x++)
-        {
+    int valkeaUpseeriLkm = 0;
+    int mustaUpseeriLkm = 0;
+    bool valkeaDaami = false;
+    bool mustaDaami = false;
+
+    for (int x = 0; x < 8; x++) {
+        for (int y = 0; y < 8; y++) {
+            if (lauta[y][x] == NULL) {
+                continue;
+            }
+            
             Nappula* nappula = lauta[y][x];
-            
-            if (nappula == &vd)
-            {
-                valkoisenDaami = true;
-                valkoisenUpseerit++;
-            }
-            if (nappula == &md)
-            {
-                mustanDaami = true;
-                mustanUpseerit++;
-            }
-            
+
             switch (nappula->getKoodi())
             {
-                case VT:
-                case MT:
-                case VL:
-                case ML:
-                case VR:
-                case MR:
-                    mustanUpseerit++;
-                    break;
-                default:
-                    break;
+            case VD:
+                valkeaUpseeriLkm += 1;
+                valkeaDaami = true;
+                break;
+            case VT:
+                valkeaUpseeriLkm += 1;
+                break;
+            case VL:
+                valkeaUpseeriLkm += 1;
+                break;
+            case VR:
+                valkeaUpseeriLkm += 1;
+                break;
+            case MD:
+                mustaUpseeriLkm += 1;
+                break;
+            case MT:
+                mustaUpseeriLkm += 1;
+                mustaDaami = true;
+                break;
+            case ML:
+                mustaUpseeriLkm += 1;
+                break;
+            case MR:
+                mustaUpseeriLkm += 1;
+                break;
+            default:
+                break;
             }
         }
     }
-    
-    if (valkoisenUpseerit + mustanUpseerit < 4 && (mustanDaami || valkoisenDaami))
-    {
-        return false;
+
+    if (vari == 0) {
+        if (mustaUpseeriLkm > 2 || (mustaDaami == true && mustaUpseeriLkm > 1))
+            return true;
+        else
+            return false;
     }
-    //
-    //
-    //    if (vari == 0)
-    //    {
-    //        return valkoisenUpseerit < 4 || mustanUpseerit > 2 || (mustanDaami && mustanUpseerit > 1);
-    //    }
-    //    else {
-    //        return mustanUpseerit < 4;
-    //    }
-    
-    // Jos upseereita 3 tai vähemmän on loppupeli
-    // mutta jos daami laudalla on loppueli vasta kun kuin vain daami jäljellä
-    
-    //Jos vari on 0 eli valkoiset
-    //niin on keskipeli jos mustalla upseereita yli 2 tai jos daami+1
-    
-    return false;
+    else {
+        if (valkeaUpseeriLkm > 2 || (valkeaDaami == true && valkeaUpseeriLkm > 1))
+            return true;
+        else
+            return false;
+    }
 }
 
 float Asema::nappuloitaKeskella() const

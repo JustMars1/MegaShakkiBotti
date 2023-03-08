@@ -111,7 +111,7 @@ private:
     int _kaksoisaskelSarake;
     
     float laskeNappuloidenArvo() const;
-    bool onkoAvausTaiKeskipeli(int vari);
+    bool onkoAvausTaiKeskipeli(int vari) const;
     float nappuloitaKeskella() const;
     float linjat(int vari) const;
     bool onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const;
