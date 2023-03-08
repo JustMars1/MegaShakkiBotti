@@ -1280,3 +1280,89 @@ std::vector<Siirto> Asema::annaLaillisetSiirrot() const
     annaLaillisetSiirrot(siirrot);
     return siirrot;
 }
+
+std::ostream& operator<<(std::ostream& os, const Asema& asema)
+{
+    // Lauta
+    int tyhjaa = 0;
+    for (int y = 7; y >= 0; y--)
+    {
+        for (int x = 0; x < 8; x++)
+        {
+            Nappula* nappula = asema.lauta[y][x];
+            if (nappula == nullptr)
+            {
+                tyhjaa++;
+            }
+            else
+            {
+                if (tyhjaa > 0)
+                {
+                    os << tyhjaa;
+                    tyhjaa = 0;
+                }
+                
+                os << nappula->getFENMerkki();
+            }
+        }
+        
+        if (tyhjaa > 0)
+        {
+            os << tyhjaa;
+            tyhjaa = 0;
+        }
+        
+        if (y > 0)
+        {
+            os << "/";
+        }
+    }
+    
+    // Siirtovuoro
+    os << " " << (asema.getSiirtovuoro() == 0 ? "w" : "b");
+    
+    // Linnoitus
+    std::string linnoitus;
+    
+    if (!asema.onkoValkeaKuningasLiikkunut())
+    {
+        if (!asema.onkoValkeaKTliikkunut())
+        {
+            linnoitus += "K";
+        }
+        
+        if (!asema.onkoValkeaDTliikkunut())
+        {
+            linnoitus += "Q";
+        }
+    }
+    
+    if (!asema.onkoMustaKuningasLiikkunut())
+    {
+        if (!asema.onkoMustaKTliikkunut())
+        {
+            linnoitus += "k";
+        }
+        
+        if (!asema.onkoValkeaKTliikkunut())
+        {
+            linnoitus += "q";
+        }
+    }
+    
+    os << " " << (linnoitus.empty() ? "-" : linnoitus);
+    
+    // Ohestalyonti
+    os << " ";
+    if (asema.getKaksoisaskelSarake() == -1)
+    {
+        os << "-";
+    }
+    else
+    {
+        int rivi = asema.getSiirtovuoro() == 0 ? 5 : 2;
+        os << Ruutu(asema.getKaksoisaskelSarake(), rivi);
+    }
+    
+    return os;
+}

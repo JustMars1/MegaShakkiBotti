@@ -21,3 +21,5 @@ public:
 private:
     Asema _aloitusAsema;
 };
+
+std::ostream& operator<<(std::ostream& os, const Peli& peli);

@@ -211,3 +211,10 @@ const Asema& Peli::getAloitusAsema()
 {
     return _aloitusAsema;
 }
+
+std::ostream& operator<<(std::ostream& os, const Peli& peli)
+{
+    size_t siirtoparilaskuri = (peli.siirtoHistoria.size() / 2) + 1;
+    os << peli.asema << " " << peli.siirtoHistoria.size() << " " << siirtoparilaskuri;
+    return os;
+}

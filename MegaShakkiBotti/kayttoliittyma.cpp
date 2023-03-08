@@ -584,7 +584,7 @@ bool Kayttoliittyma::tarkistaKomento(const string& syote, Peli& peli)
     }
     else if (komento == "fen")
     {
-        
+        cout << "FEN: " << peli << endl;
     }
     else if (komento == "kumoa"_k)
     {

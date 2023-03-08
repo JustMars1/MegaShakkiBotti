@@ -120,3 +120,5 @@ private:
     // Karsii siirrot, jotka jättävät oman K:n shakkiin.
     void huolehdiKuninkaanShakeista(std::vector<Siirto>& siirrot) const;
 };
+
+std::ostream& operator<<(std::ostream& os, const Asema& asema);
