@@ -469,17 +469,17 @@ void Kayttoliittyma::piirra(const Peli& peli) const
                 {
                     case TAVALLINEN_RUUTU:
                     {
-                        cout << taustavari(turkoosi);
+                        cout << taustavari(luumu);
                         break;
                     }
                     case SIIRTO_RUUTU:
                     {
-                        cout << taustavari(sininen);
+                        cout << taustavari(liila);
                         break;
                     }
                     case VIIMEISIN_SIIRTO_RUUTU:
                     {
-                        cout << taustavari(purppura);
+                        cout << taustavari(kulta);
                         break;
                     }
                 }
@@ -491,17 +491,17 @@ void Kayttoliittyma::piirra(const Peli& peli) const
                 {
                     case TAVALLINEN_RUUTU:
                     {
-                        cout << taustavari(valkoinen);
+                        cout << taustavari(harmaa);
                         break;
                     }
                     case SIIRTO_RUUTU:
                     {
-                        cout << taustavari(kirkkaan_sininen);
+                        cout << taustavari(kirkkaan_liila);
                         break;
                     }
                     case VIIMEISIN_SIIRTO_RUUTU:
                     {
-                        cout << taustavari(kirkkaan_purppura);
+                        cout << taustavari(kirkkaan_kulta);
                         break;
                     }
                 }
