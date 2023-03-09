@@ -53,12 +53,12 @@ void Asema::setSiirtovuoro(int vuoro)
     _siirtovuoro = vuoro;
 }
 
-Ruutu Asema::getValkeanKuninkaanRuutu() const
+const Ruutu& Asema::getValkeanKuninkaanRuutu() const
 {
     return _valkeanKuninkaanRuutu;
 }
 
-Ruutu Asema::getMustanKuninkaanRuutu() const
+const Ruutu& Asema::getMustanKuninkaanRuutu() const
 {
     return _mustanKuninkaanRuutu;
 }
@@ -183,41 +183,7 @@ void Asema::paivitaAsema(const Siirto& siirto)
         
         Nappula* nappula = lauta[alkuY][alkuX];
         
-        if (nappula == &Asema::vk)
-        {
-            _onkoValkeaKuningasLiikkunut = true;
-            _valkeanKuninkaanRuutu.setSarake(loppuX);
-            _valkeanKuninkaanRuutu.setRivi(loppuY);
-        }
-        else if (nappula == &Asema::mk)
-        {
-            _onkoMustaKuningasLiikkunut = true;
-            _mustanKuninkaanRuutu.setSarake(loppuX);
-            _mustanKuninkaanRuutu.setRivi(loppuY);
-        }
-        else if (nappula == &Asema::vt)
-        {
-            if (alkuX == 0 && !_onkoValkeaDTliikkunut)
-            {
-                _onkoValkeaDTliikkunut = true;
-            }
-            else if (alkuX == 7 && !_onkoValkeaKTliikkunut)
-            {
-                _onkoValkeaKTliikkunut = true;
-            }
-        }
-        else if (nappula == &Asema::mt)
-        {
-            if (alkuX == 0 && !_onkoMustaDTliikkunut)
-            {
-                _onkoMustaDTliikkunut = true;
-            }
-            else if (alkuX == 7 && !_onkoMustaKTliikkunut)
-            {
-                _onkoMustaKTliikkunut = true;
-            }
-        }
-        else if (nappula == &Asema::vs)
+        if (nappula == &Asema::vs)
         {
             if (alkuY == 1 && loppuY == 3)
             {
@@ -249,6 +215,40 @@ void Asema::paivitaAsema(const Siirto& siirto)
                 _kaksoisaskelSarake = -1;
             }
         }
+        else if (nappula == &Asema::vt)
+        {
+            if (alkuX == 0 && !_onkoValkeaDTliikkunut)
+            {
+                _onkoValkeaDTliikkunut = true;
+            }
+            else if (alkuX == 7 && !_onkoValkeaKTliikkunut)
+            {
+                _onkoValkeaKTliikkunut = true;
+            }
+        }
+        else if (nappula == &Asema::mt)
+        {
+            if (alkuX == 0 && !_onkoMustaDTliikkunut)
+            {
+                _onkoMustaDTliikkunut = true;
+            }
+            else if (alkuX == 7 && !_onkoMustaKTliikkunut)
+            {
+                _onkoMustaKTliikkunut = true;
+            }
+        }
+        else if (nappula == &Asema::vk)
+        {
+            _onkoValkeaKuningasLiikkunut = true;
+            _valkeanKuninkaanRuutu.setSarake(loppuX);
+            _valkeanKuninkaanRuutu.setRivi(loppuY);
+        }
+        else if (nappula == &Asema::mk)
+        {
+            _onkoMustaKuningasLiikkunut = true;
+            _mustanKuninkaanRuutu.setSarake(loppuX);
+            _mustanKuninkaanRuutu.setRivi(loppuY);
+        }
         
         if (nappula != &Asema::vs && nappula != &Asema::ms)
         {
@@ -277,13 +277,13 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
     {
         if (_siirtovuoro == 0)
         {
-            if (onkoValkeaKuningasLiikkunut())
+            if (_onkoValkeaKuningasLiikkunut)
             {
                 kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
                 return false;
             }
             
-            if (onkoValkeaKTliikkunut())
+            if (_onkoValkeaKTliikkunut)
             {
                 kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
             }
@@ -296,13 +296,13 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
         }
         else
         {
-            if (onkoMustaKuningasLiikkunut())
+            if (_onkoMustaKuningasLiikkunut)
             {
                 kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
                 return false;
             }
             
-            if (onkoMustaKTliikkunut())
+            if (_onkoMustaKTliikkunut)
             {
                 kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
             }
@@ -318,13 +318,13 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
     {
         if (_siirtovuoro == 0)
         {
-            if (onkoValkeaKuningasLiikkunut())
+            if (_onkoValkeaKuningasLiikkunut)
             {
                 kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
                 return false;
             }
             
-            if (onkoValkeaDTliikkunut())
+            if (_onkoValkeaDTliikkunut)
             {
                 kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
             }
@@ -337,13 +337,13 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
         }
         else
         {
-            if (onkoMustaKuningasLiikkunut())
+            if (_onkoMustaKuningasLiikkunut)
             {
                 kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, kuningas on jo liikkunut.");
                 return false;
             }
             
-            if (onkoMustaDTliikkunut())
+            if (_onkoMustaDTliikkunut)
             {
                 kayttoliittyma.tulostaVirhe("Tornitus ei ole mahdollinen, torni on jo liikkunut.");
             }
@@ -400,11 +400,10 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
 
 float Asema::evaluoi() const
 {
-    int vari = getSiirtovuoro();
-    float summa = laskeNappuloidenArvo() + nappuloitaKeskella() +linjat(vari);
+    float summa = laskeNappuloidenArvo() + nappuloitaKeskella() + linjat(_siirtovuoro);
     
     //jos avaus tai keskipeli, niin hyva etta kuningas on ruudussa g1 tai b1/c1
-    if (onkoAvausTaiKeskipeli(vari)) {
+    if (onkoAvausTaiKeskipeli(_siirtovuoro)) {
         //onko valkean f ja g sotilas paikallaan
         if (lauta[0][6] != NULL && lauta[1][5] != NULL && lauta[1][6] != NULL)
         {
@@ -444,13 +443,10 @@ float Asema::laskeNappuloidenArvo() const
     {
         for (int x = 0; x < 8; x++)
         {
-            Nappula* nappula = lauta[y][x];
-            if (nappula == nullptr)
+            if (lauta[y][x] != nullptr)
             {
-                continue;
+                summa += lauta[y][x]->getArvo();
             }
-            
-            summa += nappula->getArvo();
         }
     }
     
@@ -459,65 +455,77 @@ float Asema::laskeNappuloidenArvo() const
 
 bool Asema::onkoAvausTaiKeskipeli(int vari) const
 {
-    int valkeaUpseeriLkm = 0;
-    int mustaUpseeriLkm = 0;
-    bool valkeaDaami = false;
-    bool mustaDaami = false;
+    int upseeriLkm = 0;
+    bool daami = false;
     
-    for (int x = 0; x < 8; x++) {
-        for (int y = 0; y < 8; y++) {
-            if (lauta[y][x] == NULL) {
-                continue;
-            }
-            
-            Nappula* nappula = lauta[y][x];
-            
-            switch (nappula->getKoodi())
+    if (vari == 0)
+    {
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
             {
-                case VD:
-                    valkeaUpseeriLkm += 1;
-                    valkeaDaami = true;
-                    break;
-                case VT:
-                    valkeaUpseeriLkm += 1;
-                    break;
-                case VL:
-                    valkeaUpseeriLkm += 1;
-                    break;
-                case VR:
-                    valkeaUpseeriLkm += 1;
-                    break;
-                case MD:
-                    mustaUpseeriLkm += 1;
-                    break;
-                case MT:
-                    mustaUpseeriLkm += 1;
-                    mustaDaami = true;
-                    break;
-                case ML:
-                    mustaUpseeriLkm += 1;
-                    break;
-                case MR:
-                    mustaUpseeriLkm += 1;
-                    break;
-                default:
-                    break;
+                Nappula* nappula = lauta[y][x];
+                if (nappula == NULL)
+                {
+                    continue;
+                }
+                
+                switch (nappula->getKoodi())
+                {
+                    case VD:
+                        upseeriLkm += 1;
+                        daami = true;
+                        break;
+                    case VT:
+                        upseeriLkm += 1;
+                        break;
+                    case VL:
+                        upseeriLkm += 1;
+                        break;
+                    case VR:
+                        upseeriLkm += 1;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+    else
+    {
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                Nappula* nappula = lauta[y][x];
+                if (nappula == NULL)
+                {
+                    continue;
+                }
+                
+                switch (nappula->getKoodi())
+                {
+                    case MD:
+                        upseeriLkm += 1;
+                        daami = true;
+                        break;
+                    case MT:
+                        upseeriLkm += 1;
+                        break;
+                    case ML:
+                        upseeriLkm += 1;
+                        break;
+                    case MR:
+                        upseeriLkm += 1;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
     
-    if (vari == 0) {
-        if (mustaUpseeriLkm > 2 || (mustaDaami == true && mustaUpseeriLkm > 1))
-            return true;
-        else
-            return false;
-    }
-    else {
-        if (valkeaUpseeriLkm > 2 || (valkeaDaami == true && valkeaUpseeriLkm > 1))
-            return true;
-        else
-            return false;
-    }
+    return upseeriLkm > 2 || (daami == true && upseeriLkm > 1);
 }
 
 float Asema::nappuloitaKeskella() const
@@ -529,7 +537,8 @@ float Asema::nappuloitaKeskella() const
     {
         for (int x = 3; x < 5; x++)
         {
-            if (lauta[y][x] != NULL && (lauta[y][x]->getKoodi() == VS || lauta[y][x]->getKoodi() == VR)) {
+            if (lauta[y][x] != NULL && (lauta[y][x]->getKoodi() == VS || lauta[y][x]->getKoodi() == VR))
+            {
                 summa += 0.25;
             }
             
@@ -556,7 +565,8 @@ float Asema::nappuloitaKeskella() const
         }
     }
     
-    for (int y = 3; y < 5; y++) {
+    for (int y = 3; y < 5; y++)
+    {
         if (lauta[y][2] != NULL)
         {
             if (lauta[y][2]->getKoodi() == VS || lauta[y][2]->getKoodi() == VR) summa += 0.11;
@@ -576,13 +586,8 @@ float Asema::nappuloitaKeskella() const
 float Asema::linjat(int vari) const
 {
     // daami, torni ja lähetti viihtyvät avoimilla linjoilla
-    
-    int valkeanLinjat = 0;
-    int mustanLinjat = 0;
-    
-    std::vector<Siirto> valkeat;
-    std::vector<Siirto> mustat;
-    
+    std::vector<Siirto> siirrot;
+    siirrot.reserve(40);
     
     for (int y = 0; y < 8; y++)
     {
@@ -590,54 +595,35 @@ float Asema::linjat(int vari) const
         {
             Nappula* nappula = lauta[y][x];
             
-            if (lauta[y][x] == NULL)
+            if (nappula == NULL)
             {
                 continue;
             }
             
             // valkoiset
-            if (lauta[y][x]->getKoodi() == VT)
-            {
-                nappula->annaSiirrot(valkeat, Ruutu(x, y), *this, 0);
-            }
-            if (lauta[y][x]->getKoodi() == VL)
-            {
-                nappula->annaSiirrot(valkeat, Ruutu(x, y), *this, 0);
-            }
-            if (lauta[y][x]->getKoodi() == VD)
-            {
-                nappula->annaSiirrot(valkeat, Ruutu(x, y), *this, 0);
-            }
             
-            // mustat
-            if (lauta[y][x]->getKoodi() == MT)
+            if (nappula->getVari() == vari)
             {
-                nappula->annaSiirrot(mustat, Ruutu(x, y), *this, 1);
+                NappulaKoodi koodi = nappula->getKoodi();
+                if (vari == 0)
+                {
+                    if (koodi == VT || koodi == VL || koodi == VD)
+                    {
+                        nappula->annaSiirrot(siirrot, Ruutu(x, y), *this, nappula->getVari());
+                    }
+                }
+                else if (vari == 1)
+                {
+                    if (koodi == MT || koodi == ML || koodi == MD)
+                    {
+                        nappula->annaSiirrot(siirrot, Ruutu(x, y), *this, nappula->getVari());
+                    }
+                }
             }
-            if (lauta[y][x]->getKoodi() == ML)
-            {
-                nappula->annaSiirrot(mustat, Ruutu(x, y), *this, 1);
-            }
-            if (lauta[y][x]->getKoodi() == MD)
-            {
-                nappula->annaSiirrot(mustat, Ruutu(x, y), *this, 1);
-            }
-            
         }
     }
     
-    valkeanLinjat = valkeat.size();
-    mustanLinjat = mustat.size();
-    
-    if (vari == 0)
-    {
-        return valkeanLinjat;
-    }
-    else
-    {
-        return mustanLinjat;
-    }
-    
+    return siirrot.size();
 }
 
 std::vector<size_t> Asema::jaaSiirrotSaikeidenKesken(size_t siirtoLkm) const
@@ -682,14 +668,7 @@ std::vector<size_t> Asema::jaaSiirrotSaikeidenKesken(size_t siirtoLkm) const
 
 MinMaxPaluu Asema::minimax(int syvyys) const
 {
-    if (_siirtovuoro == 0)
-    {
-        return maxi(syvyys);
-    }
-    else
-    {
-        return mini(syvyys);
-    }
+    return _siirtovuoro == 0 ? maxi(syvyys) : mini(syvyys);
 }
 
 MinMaxPaluu Asema::minimaxAsync(int syvyys) const
@@ -844,6 +823,7 @@ MinMaxPaluu Asema::maxi(int syvyys) const
             maxi = arvo;
         }
     }
+    
     return maxi;
 }
 
@@ -881,6 +861,7 @@ MinMaxPaluu Asema::mini(int syvyys) const
             mini = arvo;
         }
     }
+    
     return mini;
 }
 
@@ -1133,7 +1114,7 @@ bool Asema::onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const
                 
                 nappula->annaSiirrot(vastustajanSiirrot, Ruutu(x, y), *this, vastustajanVari);
                 
-                for (auto& siirto : vastustajanSiirrot)
+                for (const auto& siirto : vastustajanSiirrot)
                 {
                     if (siirto.getLoppuruutu() == ruutu)
                     {
@@ -1151,7 +1132,7 @@ void Asema::annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const
 {
     if (vari == 0) {
         // valkea, lyhyt linna
-        if (!onkoValkeaKuningasLiikkunut() && !onkoValkeaKTliikkunut()
+        if (!_onkoValkeaKuningasLiikkunut && !_onkoValkeaKTliikkunut
             && !onkoRuutuUhattu(Ruutu(4, 0), 1)
             && !onkoRuutuUhattu(Ruutu(6, 0), 1)
             && !onkoRuutuUhattu(Ruutu(5, 0), 1)
@@ -1162,7 +1143,7 @@ void Asema::annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const
         }
         
         // valkea, pitkä linna
-        if (!onkoValkeaKuningasLiikkunut() && !onkoValkeaDTliikkunut()
+        if (!_onkoValkeaKuningasLiikkunut && !_onkoValkeaDTliikkunut
             && !onkoRuutuUhattu(Ruutu(4, 0), 1)
             && !onkoRuutuUhattu(Ruutu(3, 0), 1)
             && !onkoRuutuUhattu(Ruutu(2, 0), 1)
@@ -1177,7 +1158,7 @@ void Asema::annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const
     if (vari == 1)
     {
         // musta, lyhyt linna
-        if (!onkoMustaKuningasLiikkunut() && !onkoMustaKTliikkunut()
+        if (!_onkoMustaKuningasLiikkunut && !_onkoMustaKTliikkunut
             && !onkoRuutuUhattu(Ruutu(4, 7), 0)
             && !onkoRuutuUhattu(Ruutu(5, 7), 0)
             && !onkoRuutuUhattu(Ruutu(6, 7), 0)
@@ -1188,7 +1169,7 @@ void Asema::annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const
         }
         
         // musta, pitkä linna
-        if (!onkoMustaKuningasLiikkunut() && !onkoMustaDTliikkunut()
+        if (!_onkoMustaKuningasLiikkunut && !_onkoMustaDTliikkunut
             && !onkoRuutuUhattu(Ruutu(4, 7), 0)
             && !onkoRuutuUhattu(Ruutu(3, 7), 0)
             && !onkoRuutuUhattu(Ruutu(2, 7), 0)
@@ -1238,7 +1219,7 @@ std::vector<Siirto> Asema::annaLaillisetSiirrot() const
         for (int x = 0; x < 8; x++)
         {
             Nappula* nappula = lauta[y][x];
-            if (nappula != nullptr && nappula->getVari() == getSiirtovuoro())
+            if (nappula != nullptr && nappula->getVari() == _siirtovuoro)
             {
                 nappula->annaSiirrot(siirrot, Ruutu(x, y), *this, nappula->getVari());
             }
@@ -1262,7 +1243,8 @@ std::vector<Siirto> Asema::annaLaillisetSiirrot() const
         return arvot[a] > arvot[b];
     });
     
-    for (size_t i = 0; i < siirrot.size(); i++) {
+    for (size_t i = 0; i < siirrot.size(); i++)
+    {
         Siirto tmpSiirto = siirrot[i];
         siirrot[i] = siirrot[indeksit[i]];
         siirrot[indeksit[i]] = tmpSiirto;

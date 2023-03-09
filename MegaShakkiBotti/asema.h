@@ -14,11 +14,7 @@
 // (nappuloiden sijainti, siirtovuoro, linnoitusoikeudet jne.).
 class Asema
 {
-public:    
-    // Nappula-oliot. Huomaa, ett‰ samaa nappulaa voidaan k‰ytt‰‰ useissa eri ruuduissa.
-    // M‰‰ritelty static-m‰‰reell‰, joten nappulat ovat kaikkien lauta-olioiden "yhteisk‰ytˆss‰"
-    // (suorituskyvyn vuoksi).
-    
+public:
     static Kuningas vk;
     static Daami vd;
     static Torni vt;
@@ -39,8 +35,6 @@ public:
     
     static const float maxArvo;
     
-    // Pelilauta sis‰lt‰‰ osoittimet kunkin ruudun nappula-olioon (nullptr/NULL/0 jos ruutu on tyhj‰).
-    // Public-m‰‰reell‰, koska t‰t‰ k‰ytet‰‰n paljon muualla.
     std::array<std::array<Nappula*, 8>, 8> lauta;
     
     Asema(std::array<std::array<Nappula*, 8>, 8> lauta = {
@@ -57,8 +51,8 @@ public:
     int getSiirtovuoro() const;
     void setSiirtovuoro(int vuoro);
 
-    Ruutu getValkeanKuninkaanRuutu() const;
-    Ruutu getMustanKuninkaanRuutu() const;
+    const Ruutu& getValkeanKuninkaanRuutu() const;
+    const Ruutu& getMustanKuninkaanRuutu() const;
     
     int getKaksoisaskelSarake() const;
     void setKaksoisaskelSarake(int sarake);
@@ -112,10 +106,12 @@ private:
     Ruutu _mustanKuninkaanRuutu;
     
     int _kaksoisaskelSarake;
+    
     float laskeNappuloidenArvo() const;
     bool onkoAvausTaiKeskipeli(int vari) const;
     float nappuloitaKeskella() const;
     float linjat(int vari) const;
+    
     void annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const;
     
     // Karsii siirrot, jotka j‰tt‰v‰t oman K:n shakkiin.

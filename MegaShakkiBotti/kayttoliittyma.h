@@ -12,6 +12,9 @@ class Kayttoliittyma
 public:
     static Kayttoliittyma& getInstance();
     
+    Kayttoliittyma(const Kayttoliittyma&) = delete;
+    Kayttoliittyma& operator=(const Kayttoliittyma&) = delete;
+    
     void kysyAsetukset();
     
     void kysyKieli();
@@ -38,8 +41,6 @@ public:
 
     bool getAloitaUCI() const;
     void uciProtokolla(Kayttoliittyma kayttoliittyma) const;
-    
-    const std::string& teksti();
 private:
     bool _varitaRuudut;
     bool _ohjelmaKaynnissa;
