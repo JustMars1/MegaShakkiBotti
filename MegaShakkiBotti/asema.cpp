@@ -612,7 +612,7 @@ float Asema::linjat(int vari) const
                         nappula->annaSiirrot(siirrot, Ruutu(x, y), *this, nappula->getVari());
                     }
                 }
-                else if (vari == 1)
+                else
                 {
                     if (koodi == MT || koodi == ML || koodi == MD)
                     {
@@ -1130,7 +1130,8 @@ bool Asema::onkoRuutuUhattu(const Ruutu& ruutu, int vastustajanVari) const
 
 void Asema::annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const
 {
-    if (vari == 0) {
+    if (vari == 0)
+    {
         // valkea, lyhyt linna
         if (!_onkoValkeaKuningasLiikkunut && !_onkoValkeaKTliikkunut
             && !onkoRuutuUhattu(Ruutu(4, 0), 1)
@@ -1187,7 +1188,8 @@ void Asema::huolehdiKuninkaanShakeista(std::vector<Siirto>& siirrot) const
     std::vector<Siirto> laillisetSiirrot;
     laillisetSiirrot.reserve(siirrot.size());
     
-    for (auto& siirto : siirrot) {
+    for (auto& siirto : siirrot)
+    {
         Asema tmpAsema = *this;
         tmpAsema.paivitaAsema(siirto);
         

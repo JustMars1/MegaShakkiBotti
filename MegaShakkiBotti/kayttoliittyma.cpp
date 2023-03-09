@@ -526,8 +526,6 @@ void Kayttoliittyma::piirra(const Peli& peli) const
     }
     
     cout << sivupalkki.back() << endl;
-    
-    cout << endl;
 }
 
 void Kayttoliittyma::tulostaVirhe(string virhe) const
