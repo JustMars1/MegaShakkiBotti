@@ -623,7 +623,7 @@ float Asema::linjat(int vari) const
         }
     }
     
-    return siirrot.size();
+    return vari == 0 ? siirrot.size() : -siirrot.size();
 }
 
 std::vector<size_t> Asema::jaaSiirrotSaikeidenKesken(size_t siirtoLkm) const
