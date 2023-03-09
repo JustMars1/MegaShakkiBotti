@@ -584,7 +584,7 @@ float Asema::nappuloitaKeskella() const
     return summa;
 }
 
-float Asema::linjat(int vari) const
+float Asema::linjat() const
 {
     // daami, torni ja lähetti viihtyvät avoimilla linjoilla
     std::vector<Siirto> valkeat;

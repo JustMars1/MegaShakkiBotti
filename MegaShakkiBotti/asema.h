@@ -110,7 +110,7 @@ private:
     float laskeNappuloidenArvo() const;
     bool onkoAvausTaiKeskipeli(int vari) const;
     float nappuloitaKeskella() const;
-    float linjat(int vari) const;
+    float linjat() const;
     
     void annaLinnoitusSiirrot(std::vector<Siirto>& siirrot, int vari) const;
     
