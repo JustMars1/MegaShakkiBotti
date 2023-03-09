@@ -400,7 +400,7 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
 
 float Asema::evaluoi() const
 {
-    float linjatArvo = 0.05 * linjat(_siirtovuoro);
+    float linjatArvo = 0.05 * linjat();
     float summa = laskeNappuloidenArvo() + nappuloitaKeskella() + linjatArvo;
     
     //jos avaus tai keskipeli, niin hyva etta kuningas on ruudussa g1 tai b1/c1
