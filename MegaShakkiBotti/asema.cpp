@@ -400,7 +400,8 @@ bool Asema::tarkistaSiirto(const Siirto& siirto) const
 
 float Asema::evaluoi() const
 {
-    float summa = laskeNappuloidenArvo() + nappuloitaKeskella() + linjat(_siirtovuoro);
+    float linjatArvo = 0.05 * linjat(_siirtovuoro);
+    float summa = laskeNappuloidenArvo() + nappuloitaKeskella() + linjatArvo;
     
     //jos avaus tai keskipeli, niin hyva etta kuningas on ruudussa g1 tai b1/c1
     if (onkoAvausTaiKeskipeli(_siirtovuoro)) {
@@ -586,8 +587,10 @@ float Asema::nappuloitaKeskella() const
 float Asema::linjat(int vari) const
 {
     // daami, torni ja lähetti viihtyvät avoimilla linjoilla
-    std::vector<Siirto> siirrot;
-    siirrot.reserve(40);
+    std::vector<Siirto> valkeat;
+    valkeat.reserve(40);
+    std::vector<Siirto> mustat;
+    mustat.reserve(40);
     
     for (int y = 0; y < 8; y++)
     {
@@ -600,30 +603,28 @@ float Asema::linjat(int vari) const
                 continue;
             }
             
-            // valkoiset
-            
-            if (nappula->getVari() == vari)
+            NappulaKoodi koodi = nappula->getKoodi();
+            if (nappula->getVari() == 0)
             {
-                NappulaKoodi koodi = nappula->getKoodi();
-                if (vari == 0)
+                if (koodi == VT || koodi == VL || koodi == VD)
                 {
-                    if (koodi == VT || koodi == VL || koodi == VD)
-                    {
-                        nappula->annaSiirrot(siirrot, Ruutu(x, y), *this, nappula->getVari());
-                    }
+                    nappula->annaSiirrot(valkeat, Ruutu(x, y), *this, nappula->getVari());
                 }
-                else
+            }
+            else
+            {
+                if (koodi == MT || koodi == ML || koodi == MD)
                 {
-                    if (koodi == MT || koodi == ML || koodi == MD)
-                    {
-                        nappula->annaSiirrot(siirrot, Ruutu(x, y), *this, nappula->getVari());
-                    }
+                    nappula->annaSiirrot(mustat, Ruutu(x, y), *this, nappula->getVari());
                 }
             }
         }
     }
     
-    return vari == 0 ? siirrot.size() : -siirrot.size();
+    int valkeanLinjat = static_cast<int>(valkeat.size());
+    int mustanLinjat = static_cast<int>(mustat.size());;
+    
+    return valkeanLinjat - mustanLinjat;
 }
 
 std::vector<size_t> Asema::jaaSiirrotSaikeidenKesken(size_t siirtoLkm) const
