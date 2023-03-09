@@ -68,7 +68,7 @@ void UCI::uciLoop()
             else if (token == "go")
             {
                 //Saa komennon kuten: "go wtime 300000 btime 300000 winc 0 binc 0".
-                MinMaxPaluu minimax = _asema.alphabetaMinimaxAsync(6);
+                MinMaxPaluu minimax = _asema.alphabetaMinimaxAsync(5);
                 Siirto siirto = minimax.parasSiirto;
                 
                 _asema.paivitaAsema(siirto);
