@@ -153,13 +153,13 @@ int main(int argc, char* argv[])
                 if (peli.asema.onkoRuutuUhattu(peli.asema.getValkeanKuninkaanRuutu(), 1))
                 {
                     // valkoinen voittaa
-                    cout << "matti"_k << ". " << "valkoisenVoitto"_k;
+                    cout << "matti"_k << ". " << "mustanVoitto"_k;
 
                 }
                 else if (peli.asema.onkoRuutuUhattu(peli.asema.getMustanKuninkaanRuutu(), 0))
                 {
                     // musta voittaa
-                    cout << "matti"_k << ". " << "mustanVoitto"_k;
+                    cout << "matti"_k << ". " << "valkoisenVoitto"_k;
                 }
                 else
                 {
